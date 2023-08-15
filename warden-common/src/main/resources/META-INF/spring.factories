@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.microwarp.warden.stand.common.core.config.WardenGlobalConfig,  com.microwarp.warden.stand.common.core.config.WardenSecureConfig,com.microwarp.warden.stand.common.core.config.GlobalAdviceController,com.microwarp.warden.stand.common.core.config.ResponseResultAdvice,com.microwarp.warden.stand.common.core.config.GlobalExceptionHandler

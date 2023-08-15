@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.microwarp.warden.stand.data.config.MybatisPlusConfig,com.microwarp.warden.stand.data.config.AutoFullHandler

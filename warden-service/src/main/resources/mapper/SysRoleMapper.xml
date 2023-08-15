@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.microwarp.warden.stand.data.mapper.SysRoleMapper">
+    <sql id="base_column">
+        id,`name`,`value`,description,`orders`,create_date as createDate,update_date as updateDate
+    </sql>
+    <select id="findByUserId" resultType="com.microwarp.warden.stand.data.entity.SysRole">
+        SELECT <include refid="base_column"></include>
+        FROM wd_sys_role
+        WHERE id IN (SELECT role_id FROM wd_sys_role_user WHERE user_id = #{userId})  ORDER BY `orders`
+    </select>
+    <delete id="deleteRoleByUserId">
+        DELETE FROM wd_sys_role_user WHERE user_id = #{userId}
+    </delete>
+    <delete id="deleteRoleByIds">
+        DELETE FROM wd_sys_role_user WHERE role_id IN
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </delete>
+    <insert id="insertRoleUser">
+        INSERT INTO wd_sys_role_user(role_id, user_id) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.roleId},#{item.userId})
+        </foreach>
+    </insert>
+</mapper>

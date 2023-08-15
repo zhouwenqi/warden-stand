@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.microwarp.warden.stand.data.mapper.SysPermissionMapper">
+    <sql id="base_column">
+        id,`name`,`value`,`orders`,create_date as createDate,update_date as updateDate
+    </sql>
+    <select id="findByUserId" resultType="com.microwarp.warden.stand.data.entity.SysPermission">
+        SELECT <include refid="base_column"></include>
+        FROM wd_sys_permission
+        WHERE id IN (
+            SELECT wd_sys_role_permission WHERE role_id IN (SELECT role_id FROM wd_sys_role_user WHERE user_id = #{userId})
+        )  ORDER BY `orders`
+    </select>
+    <select id="findByRoleIds" resultType="com.microwarp.warden.stand.data.entity.SysPermission">
+        SELECT <include refid="base_column"></include>
+        FROM wd_sys_permission
+        WHERE id IN (
+        SELECT permission_id FROM wd_sys_role_permission WHERE role_id IN
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+        ) ORDER BY `orders`
+    </select>
+    <delete id="deletePermissionByRoleIds">
+        DELETE FROM wd_sys_role_permission WHERE role_id IN
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </delete>
+    <delete id="deletePermissionByIds">
+        DELETE FROM wd_sys_role_permission WHERE permission_id IN
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </delete>
+    <insert id="insertRolePermission">
+        INSERT INTO wd_sys_role_permission(role_id, permission_id) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.roleId},#{item.permissionId})
+        </foreach>
+    </insert>
+</mapper>
