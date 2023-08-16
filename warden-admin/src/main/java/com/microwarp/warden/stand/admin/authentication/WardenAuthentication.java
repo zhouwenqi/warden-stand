@@ -13,23 +13,23 @@ import java.util.Collection;
 public class WardenAuthentication extends AbstractAuthenticationToken {
     private static final long serialVersionUID = -5613305698475688186L;
     private final Object principal;
-    private SysUserDetailsDTO credentials;
+    private String credentials;
 
-    public WardenAuthentication(Object principal, SysUserDetailsDTO credentials) {
+    public WardenAuthentication(Object principal, String credentials) {
         super((Collection)null);
         this.principal = principal;
         this.credentials = credentials;
         this.setAuthenticated(false);
     }
 
-    public WardenAuthentication(Object principal, SysUserDetailsDTO credentials, Collection<? extends GrantedAuthority> authorities) {
+    public WardenAuthentication(Object principal, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.principal = principal;
-        this.credentials = credentials;
+        this.credentials = null;
         super.setAuthenticated(true);
     }
 
-    public SysUserDetailsDTO getCredentials() {
+    public String getCredentials() {
         return this.credentials;
     }
 

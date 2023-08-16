@@ -9,11 +9,11 @@ import java.util.Date;
 /**
  * entity - 基类
  * @author zhouwenqi
- * @version 1.0.0
  */
 @Entity
 public class BaseEntity implements Serializable {
     private static final long serialVersionUID = 3443596067302208839L;
+    /** 自增id */
     @TableId(type = IdType.AUTO)
     private Long id;
     /** 创建时间 */

@@ -9,7 +9,6 @@ import java.util.Map;
 
 /**
  * mapper - 系统权限
- * @author zhouwenqi
  */
 public interface SysPermissionMapper extends BaseMapper<SysPermission> {
     List<SysPermission> findByClassifyId(@Param("classifyId") Long classifyId);

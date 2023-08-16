@@ -89,9 +89,11 @@ public class UserController extends BaseController {
     public ResultModel putInfo(@RequestBody @Validated SysUserUpdateRequest updateRequest){
         SysUserDTO sysUserDTO = SysUserMapstruct.Instance.sysUserUpdateRequestToSysUserDTO(updateRequest);
         SysUserDetailsDTO sysUserDetailsDTO = sysUserService.findDetailsById(sysUserDTO.getId());
+
         if(null == sysUserDetailsDTO){
             throw new WardenParamterErrorException("用户不存在");
         }
+
         Set<String> roleValues = sysUserDetailsDTO.getRoles().stream().map(SysRoleDTO::getValue).collect(Collectors.toSet());
         if(SecurityUtil.hasAnyAuthority(roleValues, SecurityConstants.ROOT_DEFAULT_VALUE) && !SecurityUtil.inRoot()){
             throw new WardenRequireAuthorizedException("修改超级管理员权限不够");

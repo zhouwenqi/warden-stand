@@ -11,7 +11,6 @@ import org.mapstruct.factory.Mappers;
  * 对象复制 - SysUser
  * (vo 和 dto)
  *
- * 文献参考：https://mapstruct.org/documentation/installation/
  * @author zhouwenqi
  */
 @Mapper

@@ -31,7 +31,7 @@ import java.util.HashSet;
  * @author zhouwenqi
  */
 @Service
-public class SysUserServiceImpl implements SysUserService {
+public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysUserService {
     @Resource
     private SysUserDao sysUserDao;
     @Resource
@@ -184,17 +184,7 @@ public class SysUserServiceImpl implements SysUserService {
             );
         }
         if(null != iSearchPageable.getFilters()){
-            SysUserSearchDTO searchDTO = iSearchPageable.getFilters();
-            if(null != searchDTO.getDeptId()) {
-                queryWrapper.and(true, wrapper -> wrapper.eq("dept_id", searchDTO.getDeptId()));
-            }
-            if(null != searchDTO.getCreateDate() && searchDTO.getCreateDate().length > 0){
-                if(searchDTO.getCreateDate().length < 2){
-                    queryWrapper.and(true, wrapper -> wrapper.ge("create_date",searchDTO.getCreateDate()[0]));
-                }else{
-                    queryWrapper.and(true, wrapper -> wrapper.between("create_date",searchDTO.getCreateDate()[0],searchDTO.getCreateDate()[1]));
-                }
-            }
+            useBaseFilter(queryWrapper,iSearchPageable.getFilters());
         }
         PageInfo pageInfo = iSearchPageable.getPageInfo();
         Page<SysUser> page = new Page<>(pageInfo.getCurrent(),pageInfo.getPageSize());

@@ -1,7 +1,5 @@
 package com.microwarp.warden.stand.common.core.pageing;
 
-import java.util.Map;
-
 /**
  * interface - 查询分页
  */

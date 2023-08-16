@@ -4,7 +4,6 @@ import java.util.Date;
 
 /**
  * dto - 岗位
- * @author zhouwenqi
  */
 public class SysPostDTO {
     private Long id;

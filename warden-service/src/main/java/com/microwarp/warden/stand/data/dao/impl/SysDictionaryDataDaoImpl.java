@@ -13,7 +13,6 @@ import java.util.Arrays;
 
 /**
  * dao - 字典数据 - impl
- * @author zhouwenqi
  */
 @Repository
 public class SysDictionaryDataDaoImpl extends ServiceImpl<SysDictionaryDataMapper,SysDictionaryData> implements SysDictionaryDataDao {

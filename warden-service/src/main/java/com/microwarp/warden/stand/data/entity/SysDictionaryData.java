@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
  */
 @TableName("wd_sys_dictionary_data")
 public class SysDictionaryData extends LogicEntity  {
+    private static final long serialVersionUID = -3695754001554454624L;
     /** 字典id */
     private Long dictId;
     /** key */

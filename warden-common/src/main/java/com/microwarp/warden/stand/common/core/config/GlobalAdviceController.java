@@ -63,7 +63,7 @@ public class GlobalAdviceController {
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public void httpMessageNotReadableExceptionHandler(HttpMessageNotReadableException exception, HttpServletRequest request, HttpServletResponse response){
-        ResultModel resultModel = new ResultModel(ResultCode.REQUIRE_PARAMETER);
+        ResultModel resultModel = new ResultModel(ResultCode.ERROR_PARAMETER);
         boolean foreverOk = ResultUtil.isForeverOk(request.getHeader(HttpConstants.HEADER_PACKAGE_TYPE));
         ResponseResult.output(resultModel,response,foreverOk);
     }

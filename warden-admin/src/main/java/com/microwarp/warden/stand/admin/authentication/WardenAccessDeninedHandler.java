@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * security - 没有权限句柄(装配)
+ * security - 没有权限句柄
  * @author zhouwenqi
  */
 public class WardenAccessDeninedHandler implements AccessDeniedHandler {

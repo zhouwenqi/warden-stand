@@ -36,7 +36,7 @@ public class WardenAuthenticationUserFilter extends OncePerRequestFilter {
                 handlerExceptionResolver.resolveException(request,response,null,new WardenAccountFailedException("帐号已被禁用"));
                 return;
             }
-            WardenAuthentication wardenAuthentication = new WardenAuthentication(securityUser.getUsername(),securityUser.getSysUser(),securityUser.getAuthorities());
+            WardenAuthentication wardenAuthentication = new WardenAuthentication(securityUser.getSysUser(),securityUser.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(wardenAuthentication);
         }
         chain.doFilter(request,response);

@@ -12,8 +12,9 @@ import com.microwarp.warden.stand.common.core.enums.PlatformTypeEnum;
  */
 @TableName("wd_sys_operation_log")
 public class SysOperationLog extends LogicEntity {
+    private static final long serialVersionUID = 6055448125160068068L;
     /** 用户id */
-    private Long user_id;
+    private Long userId;
     /** 用户帐号 */
     private String uid;
     /** 动作类型 */
@@ -26,8 +27,90 @@ public class SysOperationLog extends LogicEntity {
     private ModuleTypeEnum moduleType;
     /** ip地址 */
     private String ip;
+    /** 位置 */
+    private String location;
     /** 日志内容 */
     private String content;
     /** 对应模块id */
     private Long mateId;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public ActionTypeEnum getActoinType() {
+        return actoinType;
+    }
+
+    public void setActoinType(ActionTypeEnum actoinType) {
+        this.actoinType = actoinType;
+    }
+
+    public AppTerminalEnum getAppTerminalType() {
+        return appTerminalType;
+    }
+
+    public void setAppTerminalType(AppTerminalEnum appTerminalType) {
+        this.appTerminalType = appTerminalType;
+    }
+
+    public PlatformTypeEnum getPlatformType() {
+        return platformType;
+    }
+
+    public void setPlatformType(PlatformTypeEnum platformType) {
+        this.platformType = platformType;
+    }
+
+    public ModuleTypeEnum getModuleType() {
+        return moduleType;
+    }
+
+    public void setModuleType(ModuleTypeEnum moduleType) {
+        this.moduleType = moduleType;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Long getMateId() {
+        return mateId;
+    }
+
+    public void setMateId(Long mateId) {
+        this.mateId = mateId;
+    }
 }

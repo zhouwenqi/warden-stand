@@ -35,6 +35,7 @@
         <bcprov-jdk15on.version>1.70</bcprov-jdk15on.version>
         <javax.persistence-api.version>2.2</javax.persistence-api.version>
         <pinyin4j.version>2.5.0</pinyin4j.version>
+        <guava.version>21.0</guava.version>
         <!-- warden - package -->
         <warden-common.version>1.0-SNAPSHOT</warden-common.version>
         <warden-facade.version>1.0-SNAPSHOT</warden-facade.version>
@@ -76,6 +77,11 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-crypto</artifactId>
                 <version>${commons-crypto.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>

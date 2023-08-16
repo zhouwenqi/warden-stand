@@ -59,8 +59,8 @@ public class LoginController {
         // 校验登录密码
         if(!bCryptPasswordEncoder.matches(loginRequest.getPwd(),sysUserDetailsDTO.getPwd())){
             int failedCount = loginService.getLoginFailed(sysUserDetailsDTO.getId()).getCount();
-            // 失败 3 次锁住
-            if(failedCount >= 3){
+            // 失败5次锁住
+            if(failedCount >= 5){
                 loginService.lock(sysUserDetailsDTO.getId());
                 throw new WardenParamterErrorException("用户已被锁住");
             }else{

@@ -4,7 +4,6 @@ import java.util.Date;
 
 /**
  * dto - 系统权限
- * @author zhouwenqi
  */
 public class SysPermissionDTO {
     private Long id;

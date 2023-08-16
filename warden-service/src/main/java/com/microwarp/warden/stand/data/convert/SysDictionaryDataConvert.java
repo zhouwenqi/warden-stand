@@ -11,9 +11,6 @@ import java.util.Set;
 /**
  * 对象复制 - SysDictionaryData
  * (dto - entity)
- *
- * 文献参考：https://mapstruct.org
- * @author zhouwenqi
  */
 @Mapper
 public interface SysDictionaryDataConvert {

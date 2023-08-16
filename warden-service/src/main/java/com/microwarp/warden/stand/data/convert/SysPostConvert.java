@@ -10,8 +10,6 @@ import java.util.List;
 /**
  * 对象复制 - SysPost
  * (dto - entity)
- *
- * 文献参考：https://mapstruct.org
  * @author zhouwenqi
  */
 @Mapper

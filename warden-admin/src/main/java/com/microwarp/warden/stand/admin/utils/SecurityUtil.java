@@ -21,7 +21,7 @@ public class SecurityUtil {
      */
     public static SysUserDetailsDTO getCurrentSysUser(){
         WardenAuthentication wardenAuthentication = getAuthentication();
-        return null != wardenAuthentication ? wardenAuthentication.getCredentials() : null;
+        return null != wardenAuthentication ? (SysUserDetailsDTO)wardenAuthentication.getPrincipal(): null;
     }
 
     /**

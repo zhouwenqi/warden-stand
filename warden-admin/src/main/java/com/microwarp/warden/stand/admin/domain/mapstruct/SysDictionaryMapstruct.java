@@ -12,7 +12,6 @@ import java.util.List;
  * 对象复制 - SysDictionary
  * (vo 和 dto)
  *
- * 文献参考：https://mapstruct.org/documentation/installation/
  * @author zhouwenqi
  */
 @Mapper

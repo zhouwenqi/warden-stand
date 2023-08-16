@@ -11,8 +11,6 @@ import java.util.List;
 /**
  * 对象复制 - SysRole
  * (dto - entity)
- *
- * 文献参考：https://mapstruct.org
  * @author zhouwenqi
  */
 @Mapper

@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 /**
  * entity - 逻辑基类
  * @author zhouwenqi
- * @version 1.0.0
  */
 public class LogicEntity extends BaseEntity {
     private static final long serialVersionUID = 7971608611387538860L;

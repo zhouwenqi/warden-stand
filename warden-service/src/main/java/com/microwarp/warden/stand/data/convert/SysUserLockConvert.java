@@ -8,8 +8,6 @@ import org.mapstruct.factory.Mappers;
 /**
  * 对象复制 - SysUserLock
  * (dto - entity)
- *
- * 文献参考：https://mapstruct.org
  * @author zhouwenqi
  */
 @Mapper

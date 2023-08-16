@@ -16,8 +16,6 @@ import java.util.Set;
 
 /**
  * 对象复制 - 翻页
- *
- * 文献参考：https://mapstruct.org
  * @author zhouwenqi
  */
 @Mapper
