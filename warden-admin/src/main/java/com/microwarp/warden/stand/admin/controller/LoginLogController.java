@@ -1,6 +1,7 @@
 package com.microwarp.warden.stand.admin.controller;
 
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysLoginLogMapstruct;
+import com.microwarp.warden.stand.admin.service.ExcelExportService;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.common.core.pageing.SearchPageable;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
@@ -9,11 +10,13 @@ import com.microwarp.warden.stand.common.model.ResultModel;
 import com.microwarp.warden.stand.facade.sysloginlog.dto.SysLoginLogDTO;
 import com.microwarp.warden.stand.facade.sysloginlog.dto.SysLoginLogSearchDTO;
 import com.microwarp.warden.stand.facade.sysloginlog.service.SysLoginLogService;
+import com.microwarp.warden.stand.facade.sysuser.dto.SysUserSearchDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * controller - 登录日志
@@ -23,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginLogController extends BaseController {
     @Autowired
     private SysLoginLogService sysLoginLogService;
+    @Autowired
+    private ExcelExportService excelExportService;
 
     /**
      * 获取登录日志信息
@@ -30,6 +35,7 @@ public class LoginLogController extends BaseController {
      * @return
      */
     @GetMapping("/loginLog/{id}")
+    @PreAuthorize("hasAuthority('login:log:view')")
     public ResultModel loginLog(@PathVariable("id") Long id){
         if(null == id){
             throw new WardenRequireParamterException("日志id不能为空");
@@ -39,8 +45,23 @@ public class LoginLogController extends BaseController {
         if(null == sysLoginLogDTO){
             throw new WardenParamterErrorException("日志信息不存在");
         }
-        resultModel.addData("operationLog", SysLoginLogMapstruct.Instance.sysLoginLogDtoToSysLoginLogVO(sysLoginLogDTO));
+        resultModel.addData("log", SysLoginLogMapstruct.Instance.sysLoginLogDtoToSysLoginLogVO(sysLoginLogDTO));
         return resultModel;
+    }
+
+
+    /**
+     * 删除登录日志
+     * @param id 日志id
+     * @return
+     */
+    @DeleteMapping("/logionLog/{id}")
+    @PreAuthorize("hasAuthority('login:log:delete')")
+    public ResultModel loginLogDelete(@PathVariable Long[] id){
+        if(null != id && id.length > 0){
+            sysLoginLogService.delete(id);
+        }
+        return ResultModel.success();
     }
 
     /**
@@ -49,12 +70,25 @@ public class LoginLogController extends BaseController {
      * @return
      */
     @PostMapping("/loginLogs/search")
+    @PreAuthorize("hasAuthority('login:log:view')")
     public ResultModel search(SearchPageable<SysLoginLogSearchDTO> searchPageable){
         ResultModel resultModel = ResultModel.success();
         ResultPage<SysLoginLogDTO> page = sysLoginLogService.findPage(searchPageable);
         resultModel.addData("list", SysLoginLogMapstruct.Instance.sysLoginLogsDtoToSysLoginLogsVO(page.getList()));
         resultModel.addData("pageInfo", page.getPageInfo());
         return resultModel;
+    }
+
+    /**
+     * 导出Excel数据
+     * @param searchPageable 查询条件
+     * @param response
+     * @throws IOException
+     */
+    @PostMapping("/loginLogs/export")
+    public void export(@RequestBody SearchPageable<SysUserSearchDTO> searchPageable, HttpServletResponse response) throws IOException{
+        String fileName = "登录日志"+System.currentTimeMillis();
+        excelExportService.sysUserPageData(fileName,"日志列表", response, searchPageable);
     }
 
 }

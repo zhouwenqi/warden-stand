@@ -5,6 +5,7 @@ import com.microwarp.warden.stand.data.entity.SysUserLock;
 import com.microwarp.warden.stand.facade.sysuser.dto.SysUserLockDTO;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * dao - 系统用户锁
@@ -12,23 +13,33 @@ import java.util.Date;
  */
 public interface SysUserLockDao extends IService<SysUserLock> {
     /**
-     * 查询一条锁记录(entity)
+     * 查询一条锁记录
      * @param userId 系统用户id
+     * @param ip ip地址
      * @return
      */
-    SysUserLock queryByUserId(Long userId);
+    SysUserLock queryByUserIdAndIp(Long userId, String ip);
     /**
      * 查询一条锁记录(dto)
      * @param userId 系统用户id
+     * @param ip ip地址
      * @return
      */
-    SysUserLockDTO findByUserId(Long userId);
+    SysUserLockDTO findByUserIdAndIp(Long userId,String ip);
+
     /**
-     * 判断用户是否被锁定
+     * 查询用户锁列表
      * @param userId 用户id
      * @return
      */
-    boolean isLocked(Long userId);
+    List<SysUserLock> findByUserId(Long userId);
+    /**
+     * 判断用户是否被锁定
+     * @param userId 用户id
+     * @param ip ip地址
+     * @return
+     */
+    boolean isLocked(Long userId, String ip);
     /**
      * 锁住一个用户
      * @param userId 用户id

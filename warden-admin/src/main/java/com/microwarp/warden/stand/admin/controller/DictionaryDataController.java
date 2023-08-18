@@ -10,6 +10,7 @@ import com.microwarp.warden.stand.common.utils.DictUtil;
 import com.microwarp.warden.stand.facade.sysdictionary.dto.SysDictionaryDataDTO;
 import com.microwarp.warden.stand.facade.sysdictionary.service.SysDictionaryDataService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -86,6 +87,7 @@ public class DictionaryDataController {
      * @return
      */
     @PostMapping("/dictionaryData")
+    @PreAuthorize("hasAuthority('dictionary:admin')")
     public ResultModel postDictionaryData(@Validated @RequestBody SysDictionaryDataRequest dataRequest){
         SysDictionaryDataDTO sysDictionaryDataDTO = SysDictionaryDataMapstruct.Instance.sysDictionaryDataRequestToSysDictionaryDataDTO(dataRequest);
         dataRequest.setId(null);
@@ -101,6 +103,7 @@ public class DictionaryDataController {
      * @return
      */
     @PutMapping("/dictionaryData")
+    @PreAuthorize("hasAuthority('dictionary:admin')")
     public ResultModel putDictionaryData(@Validated @RequestBody SysDictionaryDataRequest dataRequest){
         if(null == dataRequest.getId()){
             throw new WardenRequireParamterException("字典数据id不能为空");
@@ -116,6 +119,7 @@ public class DictionaryDataController {
      * @return
      */
     @DeleteMapping("/dictionaryData/{id}")
+    @PreAuthorize("hasAuthority('dictionary:admin')")
     public ResultModel deleteDictionaryData(@PathVariable Long... id){
         if(null != id && id.length > 0){
             sysDictionaryDataService.delete(id);

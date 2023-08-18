@@ -34,8 +34,6 @@ public class SysUserDetailsVO {
     private String status;
     /** 关闭 */
     private Boolean disabled;
-    /** 锁定*/
-    private Boolean locked;
     /** 创建时间 */
     private Date createDate;
     /** 修改时间 */
@@ -129,14 +127,6 @@ public class SysUserDetailsVO {
 
     public void setDisabled(Boolean disabled) {
         this.disabled = disabled;
-    }
-
-    public Boolean getLocked() {
-        return locked;
-    }
-
-    public void setLocked(Boolean locked) {
-        this.locked = locked;
     }
 
     public Date getCreateDate() {

@@ -1,5 +1,7 @@
 package com.microwarp.warden.stand.common.utils;
 
+import com.microwarp.warden.stand.common.core.constant.HttpConstants;
+import com.microwarp.warden.stand.common.core.enums.AppTerminalEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -26,7 +28,7 @@ public class WebUtil {
                 ip = ip.split(",")[0];
             }
         }
-        String[] forwardeds = new String[]{"Proxy-Client-IP","WL-Proxy-Client-IP","HTTP_CLIENT_IP","HTTP_X_FORWARDED_FOR","X-Real-IP"};
+        String[] forwardeds = new String[]{"Proxy-Client-IP","X-Forwarded-For","WL-Proxy-Client-IP","HTTP_CLIENT_IP","HTTP_X_FORWARDED_FOR","X-Real-IP"};
         for(String k:forwardeds){
             ip = request.getHeader(k);
             if(StringUtils.isNotBlank(ip) && !"unknown".equalsIgnoreCase(ip)){
@@ -68,5 +70,19 @@ public class WebUtil {
     public static HttpServletRequest getRequest(){
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         return ((ServletRequestAttributes) requestAttributes).getRequest();
+    }
+
+    public static AppTerminalEnum getAppTerminalType(){
+        AppTerminalEnum appTerminalEnum = AppTerminalEnum.UNKNOWN;
+        Object header = getRequest().getHeader(HttpConstants.HEADER_APP_TERMINAL);
+        if(null != header){
+            try{
+                appTerminalEnum = AppTerminalEnum.valueOf(header.toString());
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return appTerminalEnum;
     }
 }

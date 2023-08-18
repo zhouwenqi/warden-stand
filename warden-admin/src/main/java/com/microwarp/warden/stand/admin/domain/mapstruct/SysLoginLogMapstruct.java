@@ -1,5 +1,6 @@
 package com.microwarp.warden.stand.admin.domain.mapstruct;
 
+import com.microwarp.warden.stand.admin.domain.excel.SysLoginLogExcel;
 import com.microwarp.warden.stand.admin.domain.vo.SysLoginLogVO;
 import com.microwarp.warden.stand.admin.domain.vo.SysOperationLogVO;
 import com.microwarp.warden.stand.facade.sysloginlog.dto.SysLoginLogDTO;
@@ -19,4 +20,6 @@ public interface SysLoginLogMapstruct {
     SysLoginLogMapstruct Instance = Mappers.getMapper(SysLoginLogMapstruct.class);
     SysLoginLogVO sysLoginLogDtoToSysLoginLogVO(SysLoginLogDTO sysLoginLogDTO);
     List<SysLoginLogVO> sysLoginLogsDtoToSysLoginLogsVO(List<SysLoginLogDTO> sysLoginLogsDTO);
+    SysLoginLogExcel sysLoginLogDtoToSysLoginLogExcel(SysLoginLogDTO sysLoginLogDTO);
+    List<SysLoginLogExcel> sysLoginLogsDtoToSysLoginLogsExcel(List<SysLoginLogDTO> sysLoginsLogDTO);
 }

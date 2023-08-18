@@ -136,6 +136,7 @@ public class SysPostServiceImpl implements SysPostService {
         sysPostDao.page(page,queryWrapper);
         ResultPage<SysPostDTO> resultPage = new ResultPage<>();
         resultPage.setList(SysPostConvert.Instance.sysPostToSysPostsDTO(page.getRecords()));
+        pageInfo = PageConvert.Instance.pageToPageInfo(page);
         resultPage.setPageInfo(pageInfo);
         return resultPage;
     }

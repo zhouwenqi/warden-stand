@@ -1,5 +1,6 @@
-package com.microwarp.warden.stand.admin.domain.vo;
+package com.microwarp.warden.stand.admin.domain.excel;
 
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.microwarp.warden.stand.common.core.enums.ActionStatusEnum;
 import com.microwarp.warden.stand.common.core.enums.AppTerminalEnum;
 import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
@@ -8,29 +9,30 @@ import com.microwarp.warden.stand.common.core.enums.PlatformTypeEnum;
 import java.util.Date;
 
 /**
- * vo - 登录日志 - response
+ * excel - 登录日志
  */
-public class SysLoginLogVO {
+public class SysLoginLogExcel {
+    @ExcelProperty("ID")
     private Long id;
-    /** 用户id */
+    @ExcelProperty("用户ID")
     private Long userId;
-    /** 用户帐号 */
+    @ExcelProperty("用户帐号")
     private String uid;
-    /** 状态 */
+    @ExcelProperty("状态")
     private ActionStatusEnum status;
-    /** 应用终端类型 */
+    @ExcelProperty("应用终端类型")
     private AppTerminalEnum appTerminalType;
-    /** 平台类型 */
+    @ExcelProperty("平台类型")
     private PlatformTypeEnum platformType;
-    /** ip地址 */
+    @ExcelProperty("ip地址")
     private String ip;
-    /** 位置 */
+    @ExcelProperty("位置")
     private String location;
-    /** 日志内容 */
+    @ExcelProperty("日志内容")
     private String content;
-    /** 创建时间 */
+    @ExcelProperty("创建时间")
     private Date createDate;
-    /** 修改时间 */
+    @ExcelProperty("修改时间")
     private Date updateDate;
 
     public Long getId() {

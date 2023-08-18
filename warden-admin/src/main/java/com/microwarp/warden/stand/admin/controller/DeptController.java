@@ -11,6 +11,7 @@ import com.microwarp.warden.stand.facade.sysdept.dto.SysDeptDTO;
 import com.microwarp.warden.stand.facade.sysdept.dto.SysDeptSearchDTO;
 import com.microwarp.warden.stand.facade.sysdept.service.SysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,6 +48,7 @@ public class DeptController extends BaseController {
      * @return
      */
     @PostMapping("/dept")
+    @PreAuthorize("hasAuthority('dept:admin')")
     public ResultModel postInfo(@Validated @RequestBody SysDeptRequest sysDeptRequest){
         SysDeptDTO sysDeptDTO = SysDeptMapstruct.Instance.sysDeptRequestToSysDeptDTO(sysDeptRequest);
         sysDeptDTO.setId(null);
@@ -62,6 +64,7 @@ public class DeptController extends BaseController {
      * @return
      */
     @PutMapping("/dept")
+    @PreAuthorize("hasAuthority('dept:admin')")
     public ResultModel putInfo(@Validated @RequestBody SysDeptRequest sysDeptRequest){
         SysDeptDTO sysDeptDTO = SysDeptMapstruct.Instance.sysDeptRequestToSysDeptDTO(sysDeptRequest);
         if(null == sysDeptDTO.getId()){
@@ -77,6 +80,7 @@ public class DeptController extends BaseController {
      * @return
      */
     @DeleteMapping("/dept/{id}")
+    @PreAuthorize("hasAuthority('dept:admin')")
     public ResultModel deleteInfo(@PathVariable Long[] id){
         if(null != id && id.length>0){
             sysDeptService.delete(id);

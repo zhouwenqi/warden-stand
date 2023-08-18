@@ -1,7 +1,7 @@
 package com.microwarp.warden.stand.common.core.constant;
 
 /**
- * Created by Administrator on 2023/7/13.
+ * attribute constant
  */
 public class AttrConstants {
     /** Security用户属性传播字段 */

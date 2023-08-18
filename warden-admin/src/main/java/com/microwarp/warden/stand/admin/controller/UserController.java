@@ -2,6 +2,7 @@ package com.microwarp.warden.stand.admin.controller;
 
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysUserMapstruct;
 import com.microwarp.warden.stand.admin.domain.vo.*;
+import com.microwarp.warden.stand.admin.service.ExcelExportService;
 import com.microwarp.warden.stand.admin.utils.SecurityUtil;
 import com.microwarp.warden.stand.common.core.config.WardenGlobalConfig;
 import com.microwarp.warden.stand.common.core.constant.SecurityConstants;
@@ -21,6 +22,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,6 +39,8 @@ public class UserController extends BaseController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private SysRoleService sysRoleService;
+    @Autowired
+    private ExcelExportService excelExportService;
 
     /**
      * 查看用户信息
@@ -62,7 +67,7 @@ public class UserController extends BaseController {
      * @return
      */
     @PostMapping("/user")
-    @PreAuthorize("hasAnyRole('role:super','role:admin')")
+    @PreAuthorize("hasAuthority('system:user:admin')")
     public ResultModel postInfo(@RequestBody @Validated SysUserCreateRequest createRequest){
         SysUserRequestDTO requestDTO = SysUserMapstruct.Instance.sysUserCreateRequestToSysUserRequestDTO(createRequest);
         requestDTO.setPwd(bCryptPasswordEncoder.encode(createRequest.getPwd()));
@@ -85,7 +90,7 @@ public class UserController extends BaseController {
      * @return
      */
     @PutMapping("/user")
-    @PreAuthorize("hasAnyRole('role:super','role:admin')")
+    @PreAuthorize("hasAuthority('system:user:admin')")
     public ResultModel putInfo(@RequestBody @Validated SysUserUpdateRequest updateRequest){
         SysUserDTO sysUserDTO = SysUserMapstruct.Instance.sysUserUpdateRequestToSysUserDTO(updateRequest);
         SysUserDetailsDTO sysUserDetailsDTO = sysUserService.findDetailsById(sysUserDTO.getId());
@@ -119,7 +124,7 @@ public class UserController extends BaseController {
      * @return
      */
     @PutMapping("/user/password")
-    @PreAuthorize("hasAnyRole('role:super','role:admin')")
+    @PreAuthorize("hasAuthority('system:user:admin')")
     public ResultModel putPassword(@RequestBody @Validated SysUserPasswordRequest passwordRequest){
         if(null == passwordRequest.getUserId()){
             throw new WardenRequireParamterException("用户id不能为空");
@@ -145,7 +150,7 @@ public class UserController extends BaseController {
      * @return
      */
     @DeleteMapping("/user/{id}")
-    @PreAuthorize("hasAnyRole('role:super','role:admin')")
+    @PreAuthorize("hasAuthority('system:user:admin')")
     public ResultModel deleteProfile(@PathVariable("id") Long id){
         if(null == id){
             throw new WardenParamterErrorException("参数错误");
@@ -171,12 +176,24 @@ public class UserController extends BaseController {
      * @return
      */
     @PostMapping("/users/search")
-    @PreAuthorize("hasAnyRole('role:super','role:admin')")
+    @PreAuthorize("hasAuthority('system:user:admin')")
     public ResultModel postSearch(@RequestBody SearchPageable<SysUserSearchDTO> searchPageable){
         ResultModel resultModel = ResultModel.success();
         ResultPage<SysUserDTO> resultPage = sysUserService.findPage(searchPageable);
         resultModel.addData("list", resultPage.getList());
         resultModel.addData("pageInfo",resultPage.getPageInfo());
         return  resultModel;
+    }
+
+    /**
+     * 导出Excel数据
+     * @param searchPageable 查询条件
+     * @param response
+     * @throws IOException
+     */
+    @PostMapping("/users/export")
+    public void export(@RequestBody SearchPageable<SysUserSearchDTO> searchPageable, HttpServletResponse response) throws IOException{
+        String fileName = "系统用户"+System.currentTimeMillis();
+        excelExportService.sysUserPageData(fileName,"用户列表", response, searchPageable);
     }
 }

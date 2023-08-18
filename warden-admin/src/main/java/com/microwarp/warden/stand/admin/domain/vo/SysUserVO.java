@@ -28,8 +28,6 @@ public class SysUserVO implements Serializable {
     private Long postId;
     /** 关闭 */
     private Boolean disabled;
-    /** 锁定*/
-    private Boolean locked;
     /** 创建时间 */
     private Date createDate;
     /** 修改时间 */
@@ -130,13 +128,5 @@ public class SysUserVO implements Serializable {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
-    }
-
-    public Boolean getLocked() {
-        return locked;
-    }
-
-    public void setLocked(Boolean locked) {
-        this.locked = locked;
     }
 }

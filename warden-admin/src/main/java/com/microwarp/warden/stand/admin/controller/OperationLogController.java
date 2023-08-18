@@ -10,10 +10,8 @@ import com.microwarp.warden.stand.facade.sysoperationlog.dto.SysOperationLogDTO;
 import com.microwarp.warden.stand.facade.sysoperationlog.dto.SysOperationLogSearchDTO;
 import com.microwarp.warden.stand.facade.sysoperationlog.service.SysOperationLogService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * controller - 操作日志
@@ -30,6 +28,7 @@ public class OperationLogController extends BaseController {
      * @return
      */
     @GetMapping("/operationLog/{id}")
+    @PreAuthorize("hasAuthority('operatoin:log:view')")
     public ResultModel operationLog(@PathVariable("id") Long id){
         if(null == id){
             throw new WardenRequireParamterException("日志id不能为空");
@@ -39,8 +38,22 @@ public class OperationLogController extends BaseController {
         if(null == sysOperationLogDTO){
             throw new WardenParamterErrorException("日志信息不存在");
         }
-        resultModel.addData("operationLog", SysOperationLogMapstruct.Instance.sysOperationLogDtoToSysOperationLogVO(sysOperationLogDTO));
+        resultModel.addData("log", SysOperationLogMapstruct.Instance.sysOperationLogDtoToSysOperationLogVO(sysOperationLogDTO));
         return resultModel;
+    }
+
+    /**
+     * 删除操作日志
+     * @param id 日志id
+     * @return
+     */
+    @DeleteMapping("/operationLog/{id}")
+    @PreAuthorize("hasAuthority('operation:log:delete')")
+    public ResultModel operationLogDelete(@PathVariable Long[] id){
+        if(null != id && id.length > 0){
+            sysOperationLogService.delete(id);
+        }
+        return ResultModel.success();
     }
 
     /**
@@ -49,6 +62,7 @@ public class OperationLogController extends BaseController {
      * @return
      */
     @PostMapping("/operationLogs/search")
+    @PreAuthorize("hasAuthority('operatoin:log:view')")
     public ResultModel search(SearchPageable<SysOperationLogSearchDTO> searchPageable){
         ResultModel resultModel = ResultModel.success();
         ResultPage<SysOperationLogDTO> page = sysOperationLogService.findPage(searchPageable);
@@ -56,5 +70,6 @@ public class OperationLogController extends BaseController {
         resultModel.addData("pageInfo", page.getPageInfo());
         return resultModel;
     }
+
 
 }

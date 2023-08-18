@@ -20,8 +20,6 @@ public class SysLoginLog extends LogicEntity {
     private AppTerminalEnum appTerminalType;
     /** 平台类型 */
     private PlatformTypeEnum platformType;
-    /** 模块类型 */
-    private ModuleTypeEnum moduleType;
     /** ip地址 */
     private String ip;
     /** 位置 */
@@ -67,14 +65,6 @@ public class SysLoginLog extends LogicEntity {
 
     public void setPlatformType(PlatformTypeEnum platformType) {
         this.platformType = platformType;
-    }
-
-    public ModuleTypeEnum getModuleType() {
-        return moduleType;
-    }
-
-    public void setModuleType(ModuleTypeEnum moduleType) {
-        this.moduleType = moduleType;
     }
 
     public String getIp() {

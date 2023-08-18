@@ -4,7 +4,6 @@ import java.util.Date;
 
 /**
  * dto - 字典数据
- * @author zhouwenqi
  */
 public class SysDictionaryDataDTO {
     private Long id;

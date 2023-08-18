@@ -11,6 +11,7 @@ import com.microwarp.warden.stand.common.model.ResultModel;
 import com.microwarp.warden.stand.facade.sysdictionary.dto.SysDictionaryDTO;
 import com.microwarp.warden.stand.facade.sysdictionary.service.SysDictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,6 +50,7 @@ public class DictionaryController {
      * @return
      */
     @PostMapping("/dictionary")
+    @PreAuthorize("hasAuthority('dictionary:admin')")
     public ResultModel postDictionary(@Validated @RequestBody SysDictionaryRequest sysDictionaryRequest){
         SysDictionaryDTO sysDictionaryDTO = SysDictionaryMapstruct.Instance.sysDictionaryRequestToSysDictionaryDTO(sysDictionaryRequest);
         sysDictionaryDTO.setId(null);
@@ -64,6 +66,7 @@ public class DictionaryController {
      * @return
      */
     @PutMapping("/dictionary")
+    @PreAuthorize("hasAuthority('dictionary:admin')")
     public ResultModel putDictionary(@Validated @RequestBody SysDictionaryRequest sysDictionaryRequest){
         SysDictionaryDTO sysDictionaryDTO = SysDictionaryMapstruct.Instance.sysDictionaryRequestToSysDictionaryDTO(sysDictionaryRequest);
         if(null == sysDictionaryDTO.getId()){
@@ -80,6 +83,7 @@ public class DictionaryController {
      * @return
      */
     @DeleteMapping("/dictionary/{id}")
+    @PreAuthorize("hasAuthority('dictionary:admin')")
     public ResultModel deleteDictionary(@PathVariable Long... id){
         if(null != id && id.length > 0){
             sysDictionaryService.delete(id);

@@ -1,25 +1,24 @@
-package com.microwarp.warden.stand.facade.sysdictionary.dto;
+package com.microwarp.warden.stand.admin.domain.excel;
+
+import com.alibaba.excel.annotation.ExcelProperty;
 
 import java.util.Date;
 
 /**
- * dto - 字典
+ * excel - 系统权限
  */
-public class SysDictionaryDTO {
+public class SysPermissionExcel {
+    @ExcelProperty("ID")
     private Long id;
-    /** 字典名 */
+    @ExcelProperty("权限名称")
     private String name;
-    /** 字典编码 */
-    private String code;
-    /** 描述 */
-    private String description;
-    /** 排序值 */
+    @ExcelProperty("权限值")
+    private String value;
+    @ExcelProperty("排序值")
     private Integer orders;
-    /** 禁用 */
-    private Boolean disabled;
-    /** 创建时间 */
+    @ExcelProperty("创建时间")
     private Date createDate;
-    /** 修改时间 */
+    @ExcelProperty("修改时间")
     private Date updateDate;
 
     public Long getId() {
@@ -38,20 +37,12 @@ public class SysDictionaryDTO {
         this.name = name;
     }
 
-    public String getCode() {
-        return code;
+    public String getValue() {
+        return value;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public Integer getOrders() {
@@ -60,14 +51,6 @@ public class SysDictionaryDTO {
 
     public void setOrders(Integer orders) {
         this.orders = orders;
-    }
-
-    public Boolean getDisabled() {
-        return disabled;
-    }
-
-    public void setDisabled(Boolean disabled) {
-        this.disabled = disabled;
     }
 
     public Date getCreateDate() {

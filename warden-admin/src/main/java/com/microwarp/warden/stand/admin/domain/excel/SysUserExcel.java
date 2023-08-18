@@ -1,44 +1,38 @@
-package com.microwarp.warden.stand.facade.sysuser.dto;
+package com.microwarp.warden.stand.admin.domain.excel;
 
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.microwarp.warden.stand.admin.domain.ExcelBaseEnumConverter;
 import com.microwarp.warden.stand.common.core.enums.GenderEnum;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
- * dto - 系统用户
- * @author zhouwenqi
+ * excel - 系统用户
  */
-public class SysUserDTO implements Serializable {
-    private static final long serialVersionUID = -812754276540457750L;
+public class SysUserExcel {
+    @ExcelProperty("ID")
     private Long id;
-    /** 帐号 */
+    @ExcelProperty("帐号")
     private String uid;
-    /** 密码 */
-    private String pwd;
-    /** 姓名 */
+    @ExcelProperty("姓名")
     private String realName;
-    /** 全拼 */
-    private String pinyin;
-    /** 简拼 */
-    private String py;
-    /** 性别 */
+    @ExcelProperty(value = "性别", converter = ExcelBaseEnumConverter.class)
     private GenderEnum gender;
-    /** 头像 */
+    @ExcelProperty("头像")
     private String face;
-    /** 手机号 */
+    @ExcelProperty("手机号")
     private String mobile;
-    /** 电子邮箱 */
+    @ExcelProperty("电子邮箱")
     private String email;
-    /** 部门id */
+    @ExcelProperty("部门ID")
     private Long deptId;
-    /** 岗位id */
+    @ExcelProperty("岗位ID")
     private Long postId;
-    /** 关闭 */
+    @ExcelProperty(value = "禁用")
     private Boolean disabled;
-    /** 创建时间 */
+    @ExcelProperty("创建时间")
     private Date createDate;
-    /** 修改时间 */
+    @ExcelProperty("修改时间")
     private Date updateDate;
 
     public Long getId() {
@@ -57,36 +51,12 @@ public class SysUserDTO implements Serializable {
         this.uid = uid;
     }
 
-    public String getPwd() {
-        return pwd;
-    }
-
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
-
     public String getRealName() {
         return realName;
     }
 
     public void setRealName(String realName) {
         this.realName = realName;
-    }
-
-    public String getPinyin() {
-        return pinyin;
-    }
-
-    public void setPinyin(String pinyin) {
-        this.pinyin = pinyin;
-    }
-
-    public String getPy() {
-        return py;
-    }
-
-    public void setPy(String py) {
-        this.py = py;
     }
 
     public GenderEnum getGender() {

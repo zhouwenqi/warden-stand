@@ -97,6 +97,7 @@ public class SysLoginLogServiceImpl extends BaseServiceImpl<SysLoginLog> impleme
         sysLoginLogDao.page(page,queryWrapper);
         ResultPage<SysLoginLogDTO> resultPage = new ResultPage<>();
         resultPage.setList(SysLoginLogConvert.Instance.sysLoginLogsToSysLoginLogsDTO(page.getRecords()));
+        pageInfo = PageConvert.Instance.pageToPageInfo(page);
         resultPage.setPageInfo(pageInfo);
         return resultPage;
     }

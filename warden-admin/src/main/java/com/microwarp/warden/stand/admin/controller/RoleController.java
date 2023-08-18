@@ -41,7 +41,7 @@ public class RoleController extends BaseController {
      * @return
      */
     @GetMapping("/role/{id}")
-    @PreAuthorize("hasAnyRole('role:super','role:admin')")
+    @PreAuthorize("hasAuthority('role:admin')")
     public ResultModel info(@PathVariable("id") Long id){
         if(null == id){
             throw new WardenParamterErrorException("参数错误");
@@ -61,7 +61,7 @@ public class RoleController extends BaseController {
      * @return
      */
     @PostMapping("/role")
-    @PreAuthorize("hasAnyRole('role:super','role:admin')")
+    @PreAuthorize("hasAuthority('role:admin')")
     public ResultModel postRole(@Validated @RequestBody SysRoleCreateRequest createRequest){
         SysRoleDTO sysRoleDTO = SysRoleMapstruct.Instance.sysRoleCreateRequestTosysRoleDTO(createRequest);
         sysRoleDTO = sysRoleService.create(sysRoleDTO);
@@ -76,7 +76,7 @@ public class RoleController extends BaseController {
      * @return
      */
     @PutMapping("/role")
-    @PreAuthorize("hasAnyRole('role:super','role:admin')")
+    @PreAuthorize("hasAuthority('role:admin')")
     public ResultModel putRole(@Validated @RequestBody SysRoleUpdateRequest updateRequest){
         SysRoleDTO sysRoleDTO = SysRoleMapstruct.Instance.sysRoleUpdateRequestTosysRoleDTO(updateRequest);
         if(sysRoleDTO.getValue().equals(SecurityConstants.ROOT_DEFAULT_VALUE)){
@@ -92,7 +92,7 @@ public class RoleController extends BaseController {
      * @return
      */
     @PutMapping("/role/permissions")
-    @PreAuthorize("hasAnyRole('role:super','role:admin')")
+    @PreAuthorize("hasAuthority('role:admin')")
     public ResultModel putRolePermissions(@Validated @RequestBody SysRolePermissionRequest roleRequest){
         SysRoleDTO sysRoleDTO = sysRoleService.findById(roleRequest.getRoleId());
         if(null == sysRoleDTO){

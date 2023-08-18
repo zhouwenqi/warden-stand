@@ -45,14 +45,14 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     @Resource
     private SysPermissionDao sysPermissionDao;
 
+    /**
+     * 查询用户基本信息
+     * @param id  用户id
+     * @return
+     */
     @Override
     public SysUserDTO findById(Long id){
-        SysUserDTO sysUserDTO = sysUserDao.findById(id);
-        if(null == sysUserDTO) {
-            return null;
-        }
-        sysUserDTO.setLocked(sysUserLockDao.isLocked(sysUserDTO.getId()));
-        return sysUserDTO;
+        return sysUserDao.findById(id);
     }
 
     /**
@@ -62,12 +62,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
      */
     @Override
     public SysUserDTO findByUid(String uid){
-        SysUserDTO sysUserDTO = sysUserDao.findByUid(uid);
-        if(null == sysUserDTO) {
-            return null;
-        }
-        sysUserDTO.setLocked(sysUserLockDao.isLocked(sysUserDTO.getId()));
-        return sysUserDTO;
+        return sysUserDao.findByUid(uid);
     }
     @Override
     public SysUserDetailsDTO findDetailsById(Long id){
@@ -192,6 +187,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
         sysUserDao.page(page,queryWrapper);
         ResultPage<SysUserDTO> resultPage = new ResultPage<>();
         resultPage.setList(SysUserConvert.Instance.sysUsersToSysUsersDTO(page.getRecords()));
+        pageInfo = PageConvert.Instance.pageToPageInfo(page);
         resultPage.setPageInfo(pageInfo);
         return resultPage;
     }

@@ -102,6 +102,7 @@ public class SysOperationLogServiceImpl extends BaseServiceImpl<SysOperationLog>
         sysOperationLogDao.page(page,queryWrapper);
         ResultPage<SysOperationLogDTO> resultPage = new ResultPage<>();
         resultPage.setList(SysOperationLogConvert.Instance.sysOperationLogsToSysOperationLogsDTO(page.getRecords()));
+        pageInfo = PageConvert.Instance.pageToPageInfo(page);
         resultPage.setPageInfo(pageInfo);
         return resultPage;
     }

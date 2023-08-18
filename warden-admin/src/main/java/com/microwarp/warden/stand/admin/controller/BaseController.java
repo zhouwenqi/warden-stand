@@ -11,7 +11,8 @@ import org.springframework.web.util.WebUtils;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Created by Administrator on 2023/7/14.
+ * controller - base
+ * @author zhouwenqi
  */
 public class BaseController {
     @InitBinder

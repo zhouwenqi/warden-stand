@@ -3,6 +3,7 @@ package com.microwarp.warden.stand.admin.controller;
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysPermissionMapstruct;
 import com.microwarp.warden.stand.admin.domain.vo.SysPermissionRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysPermissionVO;
+import com.microwarp.warden.stand.admin.service.ExcelExportService;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.common.core.pageing.SearchPageable;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
@@ -15,6 +16,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -25,6 +28,8 @@ import java.util.List;
 public class PermissionController {
     @Autowired
     private SysPermissionService sysPermissionService;
+    @Autowired
+    private ExcelExportService excelExportService;
 
     /**
      * 获取权限信息
@@ -52,7 +57,7 @@ public class PermissionController {
      * @return
      */
     @DeleteMapping("/permission/{id}")
-    @PreAuthorize("hasAnyRole('role:super','role:admin')")
+    @PreAuthorize("hasAuthority('permission:admin')")
     public ResultModel deletePermission(@PathVariable("id") Long id){
         if(null == id){
             throw new WardenParamterErrorException("权限id不能为空");
@@ -67,7 +72,7 @@ public class PermissionController {
      * @return
      */
     @PostMapping("/permission")
-    @PreAuthorize("hasAnyRole('role:super','role:admin')")
+    @PreAuthorize("hasAuthority('permission:admin')")
     public ResultModel postPermission(@Validated @RequestBody SysPermissionRequest permissionRequest){
         SysPermissionDTO sysPermissionDTO = SysPermissionMapstruct.Instance.sysPermissionRequestToSysPermissionDTO(permissionRequest);
         ResultModel resultModel = ResultModel.success();
@@ -82,7 +87,7 @@ public class PermissionController {
      * @return
      */
     @PutMapping("/permission")
-    @PreAuthorize("hasAnyRole('role:super','role:admin')")
+    @PreAuthorize("hasAuthority('permission:admin')")
     public ResultModel putPermission(@Validated @RequestBody SysPermissionRequest permissionRequest){
         SysPermissionDTO sysPermissionDTO = SysPermissionMapstruct.Instance.sysPermissionRequestToSysPermissionDTO(permissionRequest);
         if(null == sysPermissionDTO.getId()){
@@ -97,25 +102,38 @@ public class PermissionController {
      * @return
      */
     @GetMapping("/permissions")
-    @PreAuthorize("hasAnyRole('role:super','role:admin')")
+    @PreAuthorize("hasAuthority('permission:admin')")
     public ResultModel all(){
         ResultModel resultModel = ResultModel.success();
         List<SysPermissionDTO> sysPermissionDTOS = sysPermissionService.findAll();
         resultModel.addData("list",SysPermissionMapstruct.Instance.sysPermissionsDtoToSysPermissionsVO(sysPermissionDTOS));
         return resultModel;
     }
+
     /**
      * 权限页分查询
      * @param searchPageable 查询参数
      * @return
      */
     @PostMapping("/permissions/search")
-    @PreAuthorize("hasAnyRole('role:super','role:admin')")
+    @PreAuthorize("hasAuthority('permission:admin')")
     public ResultModel search(@RequestBody SearchPageable<SysPermissionSearchDTO> searchPageable){
         ResultPage<SysPermissionDTO> resultPage = sysPermissionService.findPage(searchPageable);
         ResultModel resultModel = ResultModel.success();
         resultModel.addData("list",SysPermissionMapstruct.Instance.sysPermissionsDtoToSysPermissionsVO(resultPage.getList()));
         resultModel.addData("pageInfo",resultPage.getPageInfo());
         return resultModel;
+    }
+
+    /**
+     * 导出Excel数据
+     * @param searchPageable 查询条件
+     * @param response
+     * @throws IOException
+     */
+    @PostMapping("/permissions/export")
+    public void export(@RequestBody SearchPageable<SysPermissionSearchDTO> searchPageable, HttpServletResponse response) throws IOException{
+        String fileName = "系统权限"+System.currentTimeMillis();
+        excelExportService.sysPermissionPageData(fileName,"权限列表", response, searchPageable);
     }
 }

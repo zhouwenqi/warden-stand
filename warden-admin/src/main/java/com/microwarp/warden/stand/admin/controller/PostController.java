@@ -12,6 +12,7 @@ import com.microwarp.warden.stand.common.model.ResultModel;
 import com.microwarp.warden.stand.facade.syspost.dto.SysPostDTO;
 import com.microwarp.warden.stand.facade.syspost.service.SysPostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +51,7 @@ public class PostController {
      * @return
      */
     @PostMapping("/post")
+    @PreAuthorize("hasAuthority('post:admin')")
     public ResultModel postInfo(@Validated @RequestBody SysPostRequest sysPostRequest){
         SysPostDTO sysPostDTO = SysPostMapstruct.Instance.sysPostRequestToSysPostDTO(sysPostRequest);
         sysPostDTO.setId(null);
@@ -65,6 +67,7 @@ public class PostController {
      * @return
      */
     @PutMapping("/post")
+    @PreAuthorize("hasAuthority('post:admin')")
     public ResultModel putInfo(@Validated @RequestBody SysPostRequest sysPostRequest){
         SysPostDTO sysPostDTO = SysPostMapstruct.Instance.sysPostRequestToSysPostDTO(sysPostRequest);
         if(null == sysPostDTO.getId()){
@@ -80,6 +83,7 @@ public class PostController {
      * @return
      */
     @DeleteMapping("/post/{id}")
+    @PreAuthorize("hasAuthority('post:admin')")
     public ResultModel deleteInfo(@PathVariable Long[] id){
         if(null != id && id.length>0){
             sysPostService.delete(id);
@@ -93,6 +97,7 @@ public class PostController {
      * @return
      */
     @PostMapping("/post/search")
+    @PreAuthorize("hasAuthority('post:admin')")
     public ResultModel search(@RequestBody SearchPageable<BasicSearchDTO> searchPageable){
         ResultModel resultModel = ResultModel.success();
         ResultPage<SysPostDTO> resultPage = sysPostService.findPage(searchPageable);

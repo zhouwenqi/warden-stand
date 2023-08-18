@@ -33,7 +33,6 @@ public class SecurityUser implements UserDetails {
             this.sysUser = sysUser;
             this.credentialsNonExpired = true;
             this.accountNonExpired = true;
-            this.accountNonLocked = !sysUser.getLocked();
             this.enabled = !sysUser.getDisabled();
             this.username = sysUser.getUid();
             this.password = sysUser.getPwd();

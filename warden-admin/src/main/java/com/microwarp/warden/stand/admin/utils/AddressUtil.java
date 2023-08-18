@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
  * @author zhouwenqi
  */
 public class AddressUtil {
+
     /**
      * 通过IP地址在线获取完整的地址信息
      * @param ip IP地址

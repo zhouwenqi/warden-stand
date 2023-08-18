@@ -8,14 +8,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "warden.global")
 public class WardenGlobalConfig {
-    /**
-     * Token键名
-     */
+    /** Token键名 */
     private String tokenKeyName = "warden-token";
 
-    /**
-     * 有效时间(单位:小时)
-     */
+    /** 有效时间(单位:小时) */
     private int tokenEffectiveHour = 24 * 7;
     /**
      * 启用启用接口永远返回200

@@ -166,9 +166,7 @@ public class SysRoleServiceImpl implements SysRoleService {
         sysRoleDao.page(page,queryWrapper);
         ResultPage<SysRoleDTO> resultPage = new ResultPage<>();
         resultPage.setList(SysRoleConvert.Instance.sysRolesToSysRolesDTO(page.getRecords()));
-        pageInfo.setTotal(page.getTotal());
-        pageInfo.setPageCount(page.getPages());
-        pageInfo.setCurrent(page.getCurrent());
+        pageInfo = PageConvert.Instance.pageToPageInfo(page);
         resultPage.setPageInfo(pageInfo);
         return resultPage;
     }

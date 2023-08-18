@@ -134,6 +134,7 @@ public class SysDictionaryServiceImpl implements SysDictionaryService {
         resultPage.setList(SysDictionaryConvert.Instance.sysDictionarysToSysDictionarysDTO(page.getRecords()));
         pageInfo = PageConvert.Instance.pageToPageInfo(page);
         resultPage.setPageInfo(pageInfo);
+
         return resultPage;
     }
 }

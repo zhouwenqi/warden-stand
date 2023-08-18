@@ -36,9 +36,7 @@ public class WardenAuthenticationTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,FilterChain chain) throws ServletException, IOException {
-        logger.info("path:"+request.getServletPath());
         String token = request.getHeader(wardenGlobalConfig.getTokenKeyName());
-        logger.info("token:"+token);
         if(StringUtils.isNotBlank(token)){
             TokenUser tokenUser = TokenUtil.parse(token);
             if(null == tokenUser){
