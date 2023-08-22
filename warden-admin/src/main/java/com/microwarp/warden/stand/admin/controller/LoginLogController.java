@@ -10,7 +10,6 @@ import com.microwarp.warden.stand.common.model.ResultModel;
 import com.microwarp.warden.stand.facade.sysloginlog.dto.SysLoginLogDTO;
 import com.microwarp.warden.stand.facade.sysloginlog.dto.SysLoginLogSearchDTO;
 import com.microwarp.warden.stand.facade.sysloginlog.service.SysLoginLogService;
-import com.microwarp.warden.stand.facade.sysuser.dto.SysUserSearchDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -82,13 +81,11 @@ public class LoginLogController extends BaseController {
     /**
      * 导出Excel数据
      * @param searchPageable 查询条件
-     * @param response
      * @throws IOException
      */
     @PostMapping("/loginLogs/export")
-    public void export(@RequestBody SearchPageable<SysUserSearchDTO> searchPageable, HttpServletResponse response) throws IOException{
+    public void export(@RequestBody SearchPageable<SysLoginLogSearchDTO> searchPageable,HttpServletResponse response) throws IOException{
         String fileName = "登录日志"+System.currentTimeMillis();
-        excelExportService.sysUserPageData(fileName,"日志列表", response, searchPageable);
+        excelExportService.sysLoginLogPageData(fileName, "日志列表", response, searchPageable);
     }
-
 }

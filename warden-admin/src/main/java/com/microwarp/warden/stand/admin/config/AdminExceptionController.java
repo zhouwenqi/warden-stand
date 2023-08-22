@@ -1,14 +1,12 @@
 package com.microwarp.warden.stand.admin.config;
-
-/**
- * Created by Administrator on 2023/7/18.
- */
-
+import com.alibaba.excel.exception.ExcelWriteDataConvertException;
 import com.microwarp.warden.stand.common.core.constant.HttpConstants;
 import com.microwarp.warden.stand.common.model.ResponseResult;
 import com.microwarp.warden.stand.common.model.ResultCode;
 import com.microwarp.warden.stand.common.model.ResultModel;
 import com.microwarp.warden.stand.common.utils.ResultUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
@@ -27,6 +25,7 @@ import java.io.IOException;
 @Component
 @ControllerAdvice
 public class AdminExceptionController {
+    private static final Logger logger = LoggerFactory.getLogger(AdminExceptionController.class);
     /**
      * Security 没有权限句柄(控制器注解)
      * @param request
@@ -53,5 +52,19 @@ public class AdminExceptionController {
         ResultModel resultModel = new ResultModel(ResultCode.ERROR_PARAMETER,"唯一索引内容不能重复");
         boolean foreverOk = ResultUtil.isForeverOk(request.getHeader(HttpConstants.HEADER_PACKAGE_TYPE));
         ResponseResult.output(resultModel,response,foreverOk);
+    }
+
+    /**
+     * excel 写异常
+     * @param exception
+     * @param request
+     * @param response
+     */
+    @ExceptionHandler(ExcelWriteDataConvertException.class)
+    public void excelWriteDataConvertException(ExcelWriteDataConvertException exception, HttpServletRequest request, HttpServletResponse response){
+        logger.error("excel导出失败 {}",exception.getMessage());
+        ResultModel resultModel = new ResultModel(ResultCode.ERROR_PARAMETER,"Excel导出失败");
+        boolean foreverOk = ResultUtil.isForeverOk(request.getHeader(HttpConstants.HEADER_PACKAGE_TYPE));
+        ResponseResult.print(resultModel,response,foreverOk);
     }
 }

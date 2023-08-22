@@ -1,11 +1,13 @@
 package com.microwarp.warden.stand.facade.sysrole.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * dto - 系统角色
  */
-public class SysRoleDTO {
+public class SysRoleDTO implements Serializable {
+    private static final long serialVersionUID = -7760811610271544828L;
     private Long id;
     /** 角色名称 */
     private String name;

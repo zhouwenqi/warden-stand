@@ -19,6 +19,11 @@ import java.util.Map;
 @RequestMapping("/enums")
 @RestController
 public class EnumController {
+    /**
+     * 获取枚举字典列表
+     * @param keys 枚举名称列表
+     * @return
+     */
     @PostMapping("dictionarys")
     public ResultModel enums(@RequestBody String[] keys){
         if(null == keys || keys.length < 1){

@@ -9,7 +9,6 @@ import com.microwarp.warden.stand.admin.domain.excel.SysUserExcel;
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysLoginLogMapstruct;
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysPermissionMapstruct;
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysUserMapstruct;
-import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.common.core.pageing.SearchPageable;
 import com.microwarp.warden.stand.facade.sysloginlog.dto.SysLoginLogDTO;
@@ -31,6 +30,7 @@ import java.util.List;
 
 /**
  * service - 导出excel
+ * 统一异常拦截已经在 AdminExceptionController 处理了
  */
 @Service
 public class ExcelExportService {
@@ -66,18 +66,19 @@ public class ExcelExportService {
      */
     public void sysUserPageData(String fileName, String sheetName, HttpServletResponse response, SearchPageable<SysUserSearchDTO> searchPageable) throws IOException{
         useResponse(fileName, response);
-        try (ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream(), SysUserExcel.class).build()){
-            WriteSheet writeSheet = EasyExcel.writerSheet(sheetName).build();
-            ResultPage<SysUserDTO> page = sysUserService.findPage(searchPageable);
-            for(int i=1;i<=page.getPageInfo().getPageCount();i++){
-                if(i > 1){
-                    searchPageable.getPageInfo().setCurrent(i);
-                    page = sysUserService.findPage(searchPageable);
-                }
-                List<SysUserExcel> list = SysUserMapstruct.Instance.sysUsersDtoToSysUsersExcel(page.getList());
-                excelWriter.write(list,writeSheet);
+        ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream(), SysUserExcel.class).autoCloseStream(false).build();
+        WriteSheet writeSheet = EasyExcel.writerSheet(sheetName).build();
+        ResultPage<SysUserDTO> page = sysUserService.findPage(searchPageable);
+        for(int i=1;i<=page.getPageInfo().getPageCount();i++){
+            if(i > 1){
+                searchPageable.getPageInfo().setCurrent(i);
+                page = sysUserService.findPage(searchPageable);
             }
+            List<SysUserExcel> list = SysUserMapstruct.Instance.sysUsersDtoToSysUsersExcel(page.getList());
+            excelWriter.write(list,writeSheet);
         }
+        excelWriter.finish();
+        excelWriter.close();
     }
 
     /**
@@ -90,18 +91,19 @@ public class ExcelExportService {
      */
     public void sysPermissionPageData(String fileName, String sheetName, HttpServletResponse response, SearchPageable<SysPermissionSearchDTO> searchPageable) throws IOException{
         useResponse(fileName, response);
-        try (ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream(), SysPermissionExcel.class).build()){
-            WriteSheet writeSheet = EasyExcel.writerSheet(sheetName).build();
-            ResultPage<SysPermissionDTO> page = sysPermissionService.findPage(searchPageable);
-            for(int i=1;i<=page.getPageInfo().getPageCount();i++){
-                if(i > 1){
-                    searchPageable.getPageInfo().setCurrent(i);
-                    page = sysPermissionService.findPage(searchPageable);
-                }
-                List<SysPermissionExcel> list = SysPermissionMapstruct.Instance.sysPermissionsDtoToSysPermissionsExcel(page.getList());
-                excelWriter.write(list,writeSheet);
+        ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream(), SysPermissionExcel.class).autoCloseStream(false).build();
+        WriteSheet writeSheet = EasyExcel.writerSheet(sheetName).build();
+        ResultPage<SysPermissionDTO> page = sysPermissionService.findPage(searchPageable);
+        for(int i=1;i<=page.getPageInfo().getPageCount();i++){
+            if(i > 1){
+                searchPageable.getPageInfo().setCurrent(i);
+                page = sysPermissionService.findPage(searchPageable);
             }
+            List<SysPermissionExcel> list = SysPermissionMapstruct.Instance.sysPermissionsDtoToSysPermissionsExcel(page.getList());
+            excelWriter.write(list,writeSheet);
         }
+        excelWriter.finish();
+        excelWriter.close();
     }
 
     /**
@@ -112,20 +114,20 @@ public class ExcelExportService {
      * @param searchPageable 查询条件
      * @throws IOException
      */
-    public void sysLoginLogPageData(String fileName, String sheetName, HttpServletResponse response, SearchPageable<SysLoginLogSearchDTO> searchPageable) throws IOException{
+    public void sysLoginLogPageData(String fileName, String sheetName,  HttpServletResponse response, SearchPageable<SysLoginLogSearchDTO> searchPageable) throws IOException{
         useResponse(fileName, response);
-        try (ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream(), SysLoginLogExcel.class).build()){
-            WriteSheet writeSheet = EasyExcel.writerSheet(sheetName).build();
-            ResultPage<SysLoginLogDTO> page = sysLoginLogService.findPage(searchPageable);
-            for(int i=1;i<=page.getPageInfo().getPageCount();i++){
-                if(i > 1){
-                    searchPageable.getPageInfo().setCurrent(i);
-                    page = sysLoginLogService.findPage(searchPageable);
-                }
-                List<SysLoginLogExcel> list = SysLoginLogMapstruct.Instance.sysLoginLogsDtoToSysLoginLogsExcel(page.getList());
-                excelWriter.write(list,writeSheet);
+        ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream(), SysLoginLogExcel.class).autoCloseStream(false).build();
+        WriteSheet writeSheet = EasyExcel.writerSheet(sheetName).build();
+        ResultPage<SysLoginLogDTO> page = sysLoginLogService.findPage(searchPageable);
+        for(int i=1;i<=page.getPageInfo().getPageCount();i++){
+            if(i > 1){
+                searchPageable.getPageInfo().setCurrent(i);
+                page = sysLoginLogService.findPage(searchPageable);
             }
+            List<SysLoginLogExcel> list = SysLoginLogMapstruct.Instance.sysLoginLogsDtoToSysLoginLogsExcel(page.getList());
+            excelWriter.write(list,writeSheet);
         }
+        excelWriter.finish();
+        excelWriter.close();
     }
-
 }

@@ -1,11 +1,13 @@
 package com.microwarp.warden.stand.facade.syspermission.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * dto - 系统权限
  */
-public class SysPermissionDTO {
+public class SysPermissionDTO implements Serializable {
+    private static final long serialVersionUID = -2560792862551826445L;
     private Long id;
     /** 权限名称 */
     private String name;

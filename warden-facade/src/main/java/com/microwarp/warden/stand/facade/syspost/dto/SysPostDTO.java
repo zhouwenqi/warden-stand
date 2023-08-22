@@ -1,11 +1,13 @@
 package com.microwarp.warden.stand.facade.syspost.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * dto - 岗位
  */
-public class SysPostDTO {
+public class SysPostDTO implements Serializable {
+    private static final long serialVersionUID = -4056414358611389090L;
     private Long id;
     /** 岗位名称 */
     private String name;

@@ -2,9 +2,8 @@ package com.microwarp.warden.stand.data.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.microwarp.warden.stand.common.core.cache.ICacheService;
 import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
 import com.microwarp.warden.stand.common.core.pageing.PageInfo;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
@@ -19,11 +18,12 @@ import com.microwarp.warden.stand.facade.sysuser.dto.*;
 import com.microwarp.warden.stand.facade.sysuser.service.SysUserService;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
 import java.util.HashSet;
 
 /**
@@ -37,13 +37,13 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     @Resource
     private SysRoleDao sysRoleDao;
     @Resource
-    private SysUserLockDao sysUserLockDao;
-    @Resource
     private SysDeptDao sysDeptDao;
     @Resource
     private SysPostDao sysPostDao;
     @Resource
     private SysPermissionDao sysPermissionDao;
+    @Resource
+    private ICacheService iCacheService;
 
     /**
      * 查询用户基本信息
@@ -74,6 +74,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
      * @param uid 用户名(帐号)
      * @return
      */
+    @Cacheable(value = "sysUserDetails", key="#uid", unless = "#result eq null")
     @Override
     public SysUserDetailsDTO findDetailsByUid(String uid){
         SysUserDTO sysUserDTO = findByUid(uid);
@@ -121,6 +122,8 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
      * 更新用户信息
      * @param sysUserDTO 用户信息
      */
+    @CachePut(value ="sysUserDetails",key="sysUserDTO.uid", unless = "#result eq null")
+    @Transactional
     public void update(SysUserDTO sysUserDTO){
         // 真实姓名拼音处理
         if(StringUtils.isNotBlank(sysUserDTO.getRealName())){
@@ -136,6 +139,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
      * 更新用户密码
      * @param sysUserPasswordDTO 密码参数
      */
+    @Override
     public void updatePassowrd(SysUserPasswordDTO sysUserPasswordDTO){
         if(null == sysUserPasswordDTO.getUserId()){
             throw new WardenRequireParamterException();
@@ -143,7 +147,6 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
         UpdateWrapper<SysUser> updateWrapper = new UpdateWrapper<>();
         updateWrapper.set("pwd",sysUserPasswordDTO.getNewPassword());
         updateWrapper.eq("id",sysUserPasswordDTO.getUserId());
-
         sysUserDao.update(updateWrapper);
     }
 
@@ -198,6 +201,11 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
      */
     @Transactional
     public void delete(Long userId){
+        // 因为系统用户以uid为key缓存，所在要手动清理一下
+        SysUser sysUser = sysUserDao.getById(userId);
+        if(null != sysUser){
+            iCacheService.batchRemove("sysUserDetails",sysUser.getUid());
+        }
         sysUserDao.removeById(userId);
         sysRoleDao.deleteRoleByUserId(userId);
     }

@@ -8,6 +8,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -70,6 +71,11 @@ public class WebUtil {
     public static HttpServletRequest getRequest(){
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         return ((ServletRequestAttributes) requestAttributes).getRequest();
+    }
+
+    public static HttpServletResponse getResponse(){
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        return ((ServletRequestAttributes) requestAttributes).getResponse();
     }
 
     public static AppTerminalEnum getAppTerminalType(){

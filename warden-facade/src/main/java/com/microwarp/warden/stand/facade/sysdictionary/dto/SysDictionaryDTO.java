@@ -1,11 +1,13 @@
 package com.microwarp.warden.stand.facade.sysdictionary.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * dto - 字典
  */
-public class SysDictionaryDTO {
+public class SysDictionaryDTO implements Serializable {
+    private static final long serialVersionUID = -8514585864501033091L;
     private Long id;
     /** 字典名 */
     private String name;

@@ -1,12 +1,14 @@
 package com.microwarp.warden.stand.facade.sysdept.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * dto - 部门
  * @author zhouwenqi
  */
-public class SysDeptDTO {
+public class SysDeptDTO implements Serializable {
+    private static final long serialVersionUID = 352830185956123050L;
     private Long id;
     /** 部门名称 */
     private String name;

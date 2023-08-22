@@ -27,4 +27,18 @@ public class ResponseResult {
             e.printStackTrace();
         }
     }
+    public static void print(ResultModel resultModel, HttpServletResponse response, boolean foreverOk){
+        response.reset();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("utf-8");
+        int statusCode = foreverOk ? HttpStatus.OK.value() : resultModel.getCode();
+        response.setStatus(statusCode);
+        String data = JsonUtil.objectToJson(resultModel);
+        try {
+            response.getWriter().println(data);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }
