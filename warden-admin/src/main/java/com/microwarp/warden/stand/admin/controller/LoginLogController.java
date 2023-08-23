@@ -84,6 +84,7 @@ public class LoginLogController extends BaseController {
      * @throws IOException
      */
     @PostMapping("/loginLogs/export")
+    @PreAuthorize("hasAuthority('data:export')")
     public void export(@RequestBody SearchPageable<SysLoginLogSearchDTO> searchPageable,HttpServletResponse response) throws IOException{
         String fileName = "登录日志"+System.currentTimeMillis();
         excelExportService.sysLoginLogPageData(fileName, "日志列表", response, searchPageable);

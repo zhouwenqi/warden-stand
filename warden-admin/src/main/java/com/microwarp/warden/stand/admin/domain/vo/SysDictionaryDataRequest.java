@@ -1,8 +1,6 @@
 package com.microwarp.warden.stand.admin.domain.vo;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 
 /**
  * vo - 字典数据 - request
@@ -14,7 +12,7 @@ public class SysDictionaryDataRequest {
     private Long dictId;
     /** key */
     @NotBlank(message = "Key不能为空")
-    @Pattern(regexp = "^[a-zA-Z0-9_]{6,20}",message = "Key只能是6-20位字母和数字和下划线字符")
+    @Pattern(regexp = "^[a-zA-Z0-9_]{1,20}",message = "Key只能是1-20位字母和数字和下划线字符")
     private String dataKey;
     /** 值 */
     @NotBlank(message = "数据值不能为空")
@@ -22,12 +20,14 @@ public class SysDictionaryDataRequest {
     private String dataValue;
     /** 标签 */
     @Pattern(regexp = "^[a-zA-Z0-9_]{2,20}",message = "标签只能是6-20位字母和数字和下划线字符")
-    private String dataTag;
+    private String dataAlias;
     /** 描述 */
     private String description;
     /** 默认项 */
     private Boolean dataDefault;
     /** 排序 */
+    @Max(value = 99999, message = "排序值只能在0-100000之间")
+    @Min(value = 0, message = "排序值只能在0-100000之间")
     private Integer orders;
     /** 是否禁用 */
     private Boolean disabled;
@@ -64,12 +64,12 @@ public class SysDictionaryDataRequest {
         this.dataValue = dataValue;
     }
 
-    public String getDataTag() {
-        return dataTag;
+    public String getDataAlias() {
+        return dataAlias;
     }
 
-    public void setDataTag(String dataTag) {
-        this.dataTag = dataTag;
+    public void setDataAlias(String dataAlias) {
+        this.dataAlias = dataAlias;
     }
 
     public String getDescription() {

@@ -9,7 +9,9 @@ import com.microwarp.warden.stand.data.mapper.SysDictionaryDataMapper;
 import com.microwarp.warden.stand.facade.sysdictionary.dto.SysDictionaryDataDTO;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * dao - 字典数据 - impl
@@ -31,6 +33,22 @@ public class SysDictionaryDataDaoImpl extends ServiceImpl<SysDictionaryDataMappe
         }
         return SysDictionaryDataConvert.Instance.sysDictionaryDataToSysDictionaryDataDTO(sysDictionaryData);
     }
+
+
+    /**
+     * 反向查询字典code
+     * @param ids 字典数据id列表
+     * @return
+     */
+    public String[] findDictCodeByIds(Long...ids){
+        List<String> list = baseMapper.findDictCodeByIds(ids);
+
+        if(null != list && list.size()>0){
+            return list.toArray(new String[list.size()]);
+        }
+        return new String[0];
+    }
+
 
     /**
      * 删除字典数据

@@ -10,6 +10,8 @@ import com.microwarp.warden.stand.facade.sysdictionary.dto.SysDictionaryDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * dao - 字典 - impl
  * @author zhouwenqi

@@ -2,6 +2,8 @@ package com.microwarp.warden.stand.data.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.microwarp.warden.stand.common.core.cache.ICacheService;
+import com.microwarp.warden.stand.common.core.constant.CacheConstants;
 import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
 import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
 import com.microwarp.warden.stand.common.core.pageing.PageInfo;
@@ -19,6 +21,7 @@ import com.microwarp.warden.stand.facade.sysdictionary.dto.SysDictionaryDataDTO;
 import com.microwarp.warden.stand.facade.sysdictionary.service.SysDictionaryDataService;
 import com.microwarp.warden.stand.facade.sysdictionary.service.SysDictionaryService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -34,6 +37,8 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
     private SysDictionaryDataDao sysDictionaryDataDao;
     @Resource
     private SysDictionaryDao sysDictionaryDao;
+    @Resource
+    private ICacheService iCacheService;
 
     /**
      * 查询字典数据
@@ -58,6 +63,13 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
         }
         SysDictionaryData sysDictionaryData = SysDictionaryDataConvert.Instance.sysDictionaryDataDtoToSysDictionaryData(sysDictionaryDataDTO);
         sysDictionaryDataDao.save(sysDictionaryData);
+
+        // 手动删除缓存
+        String[] dictCodes = sysDictionaryDataDao.findDictCodeByIds(sysDictionaryData.getId());
+        if(dictCodes.length> 0){
+            iCacheService.batchRemove(CacheConstants.CACHE_DICT_DATAS, dictCodes);
+        }
+
         return findById(sysDictionaryData.getId());
     }
 
@@ -75,6 +87,11 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
         }
         SysDictionaryData sysDictionaryData = SysDictionaryDataConvert.Instance.sysDictionaryDataDtoToSysDictionaryData(sysDictionaryDataDTO);
         sysDictionaryDataDao.updateById(sysDictionaryData);
+        // 手动删除缓存
+        String[] dictCodes = sysDictionaryDataDao.findDictCodeByIds(sysDictionaryData.getId());
+        if(dictCodes.length> 0){
+            iCacheService.batchRemove(CacheConstants.CACHE_DICT_DATAS, dictCodes);
+        }
     }
 
     /**
@@ -84,6 +101,11 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
     public void delete(Long...id){
         if(null == id || id.length < 1){
             return;
+        }
+        // 手动删除缓存
+        String[] dictCodes = sysDictionaryDataDao.findDictCodeByIds(id);
+        if(dictCodes.length> 0){
+            iCacheService.batchRemove(CacheConstants.CACHE_DICT_DATAS, dictCodes);
         }
         sysDictionaryDataDao.removeBatchByIds(Arrays.asList(id));
     }
@@ -106,6 +128,7 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
      * @param code 字典编码
      * @return
      */
+    @Cacheable(value = "dictionaryDatas", key="#code", unless = "#result.size() < 1")
     public List<SysDictionaryDataDTO> findByDictCode(String code){
         SysDictionaryDTO sysDictionaryDTO = sysDictionaryDao.findByCode(code);
         if(null == sysDictionaryDTO || sysDictionaryDTO.getDisabled()){

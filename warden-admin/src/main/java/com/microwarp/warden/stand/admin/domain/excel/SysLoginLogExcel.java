@@ -1,6 +1,7 @@
 package com.microwarp.warden.stand.admin.domain.excel;
 
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.microwarp.warden.stand.admin.domain.ExcelBaseEnumConverter;
 import com.microwarp.warden.stand.common.core.enums.ActionStatusEnum;
 import com.microwarp.warden.stand.common.core.enums.AppTerminalEnum;
 import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
@@ -18,11 +19,11 @@ public class SysLoginLogExcel {
     private Long userId;
     @ExcelProperty("用户帐号")
     private String uid;
-    @ExcelProperty("状态")
+    @ExcelProperty(value = "状态", converter = ExcelBaseEnumConverter.class)
     private ActionStatusEnum status;
-    @ExcelProperty("应用终端类型")
+    @ExcelProperty(value = "应用终端类型", converter = ExcelBaseEnumConverter.class)
     private AppTerminalEnum appTerminalType;
-    @ExcelProperty("平台类型")
+    @ExcelProperty(value = "平台类型", converter = ExcelBaseEnumConverter.class)
     private PlatformTypeEnum platformType;
     @ExcelProperty("ip地址")
     private String ip;

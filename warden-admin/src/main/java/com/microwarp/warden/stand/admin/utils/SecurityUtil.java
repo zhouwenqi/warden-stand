@@ -193,7 +193,7 @@ public class SecurityUtil {
      * @return
      */
     public static boolean inAdmin(){
-        return WebUtil.getRequest().isUserInRole(SecurityConstants.ADMIN_DEFAULT_VALUE);
+        return WebUtil.getRequest().isUserInRole(SecurityConstants.ROLE_ADMIN_VALUE);
     }
 
     /**
@@ -201,7 +201,7 @@ public class SecurityUtil {
      * @return
      */
     public static boolean inRoot(){
-        return WebUtil.getRequest().isUserInRole(SecurityConstants.ROOT_DEFAULT_VALUE);
+        return WebUtil.getRequest().isUserInRole(SecurityConstants.ROLE_ROOT_VALUE);
     }
 
     /**

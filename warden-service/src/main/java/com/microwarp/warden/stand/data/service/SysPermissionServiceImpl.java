@@ -54,6 +54,7 @@ public class SysPermissionServiceImpl implements SysPermissionService {
         SysPermission sysPermission = sysPermissionDao.getById(id);
         return null == sysPermission ? null : SysPermissionConvert.Instance.sysPermissionToSysPermissionDTO(sysPermission);
     }
+
     /**
      * 创建权限
      * @param sysPermissionDTO 权限内容

@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -34,6 +35,13 @@ public class SysRoleServiceImpl implements SysRoleService {
     @Resource
     private  SysPermissionDao sysPermissionDao;
 
+    /**
+     * 查询所有角色
+     * @return
+     */
+    public List<SysRoleDTO> findAll(){
+        return sysRoleDao.findAll();
+    }
     /**
      * 查询系统角色信息
      * @param id 角色id
@@ -49,7 +57,7 @@ public class SysRoleServiceImpl implements SysRoleService {
      * @param ids 角色id
      * @return
      */
-    public Set<SysRoleDTO> findByIds(Long...ids){
+    public List<SysRoleDTO> findByIds(Long...ids){
         return sysRoleDao.findByIds(ids);
     }
 
@@ -103,6 +111,9 @@ public class SysRoleServiceImpl implements SysRoleService {
      */
     @Transactional
     public void update(SysRoleDTO sysRoleDTO){
+        if(null == sysRoleDTO.getId()){
+            return;
+        }
         QueryWrapper<SysRole> queryWrapper = new QueryWrapper<>();
         queryWrapper.ne("id",sysRoleDTO.getId());
         queryWrapper.eq("value",sysRoleDTO.getValue());
@@ -130,7 +141,7 @@ public class SysRoleServiceImpl implements SysRoleService {
      * @param values 角色值
      * @return
      */
-    public Set<SysRoleDTO> findByValues(String...values){
+    public List<SysRoleDTO> findByValues(String...values){
         return sysRoleDao.findByValues(values);
     }
 

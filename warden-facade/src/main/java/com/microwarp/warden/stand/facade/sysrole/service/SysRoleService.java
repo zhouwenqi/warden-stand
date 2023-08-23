@@ -6,12 +6,18 @@ import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.facade.sysrole.dto.SysRoleDTO;
 import com.microwarp.warden.stand.facade.sysrole.dto.SysRoleDetailsDTO;
 
+import java.util.List;
 import java.util.Set;
 
 /**
  * service - 系统角色
  */
 public interface SysRoleService {
+    /**
+     * 查询所有角色
+     * @return
+     */
+    List<SysRoleDTO> findAll();
     /**
      * 查询系统角色信息
      * @param id 角色id
@@ -24,7 +30,7 @@ public interface SysRoleService {
      * @param ids 角色id
      * @return
      */
-    Set<SysRoleDTO> findByIds(Long...ids);
+    List<SysRoleDTO> findByIds(Long...ids);
 
     /**
      * 查询系统角色详情
@@ -61,7 +67,7 @@ public interface SysRoleService {
      * @param values 角色值
      * @return
      */
-    Set<SysRoleDTO> findByValues(String... values);
+    List<SysRoleDTO> findByValues(String... values);
 
     /**
      * 分页查询角色列表

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.microwarp.warden.stand.data.entity.SysRole;
 import com.microwarp.warden.stand.facade.sysrole.dto.SysRoleDTO;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -16,19 +17,24 @@ public interface SysRoleDao extends IService<SysRole> {
      * @param id 用户id
      * @return
      */
-    Set<SysRoleDTO> findByUserId(Long id);
+    List<SysRoleDTO> findByUserId(Long id);
     /**
      * 查询角色列表
      * @param ids 角色id
      * @return
      */
-    Set<SysRoleDTO> findByIds(Long...ids);
+    List<SysRoleDTO> findByIds(Long...ids);
+    /**
+     * 查询所有角色列表
+     * @return
+     */
+    List<SysRoleDTO> findAll();
     /**
      * 查询角色列表
      * @param values 角色值
      * @return
      */
-    Set<SysRoleDTO> findByValues(String...values);
+    List<SysRoleDTO> findByValues(String...values);
 
     /**
      * 删除用户角色关联信息

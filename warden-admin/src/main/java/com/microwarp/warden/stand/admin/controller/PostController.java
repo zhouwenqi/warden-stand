@@ -97,7 +97,6 @@ public class PostController {
      * @return
      */
     @PostMapping("/post/search")
-    @PreAuthorize("hasAuthority('post:admin')")
     public ResultModel search(@RequestBody SearchPageable<BasicSearchDTO> searchPageable){
         ResultModel resultModel = ResultModel.success();
         ResultPage<SysPostDTO> resultPage = sysPostService.findPage(searchPageable);

@@ -1,5 +1,6 @@
 package com.microwarp.warden.stand.data.dao.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.microwarp.warden.stand.data.convert.SysPermissionConvert;
@@ -17,6 +18,20 @@ import java.util.*;
  */
 @Repository
 public class SysPermissionDaoImpl extends ServiceImpl<SysPermissionMapper,SysPermission> implements SysPermissionDao {
+    /**
+     * 查询所有权限
+     * @return
+     */
+    public List<SysPermissionDTO> findAll(){
+        QueryWrapper<SysPermission> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByAsc("orders");
+        List<SysPermission> list = baseMapper.selectList(queryWrapper);
+        if(null == list || list.size() < 0){
+            return new ArrayList<>();
+        }
+        return SysPermissionConvert.Instance.sysPermissionsToSysPermissionsDTO(list);
+    }
+
     /**
      * 根据角色id数组查询权限列表(entity)
      * @param roleIds 角色id数组
@@ -69,17 +84,6 @@ public class SysPermissionDaoImpl extends ServiceImpl<SysPermissionMapper,SysPer
             list.add(map);
         }
         baseMapper.insertRolePermission(list);
-    }
-
-    /**
-     * 设置权限分类字段为null
-     * @param classifyId 权限分类id
-     */
-    public void clearClassifyId(Long classifyId){
-        UpdateWrapper<SysPermission> wrapper = new UpdateWrapper<>();
-        wrapper.in("classify_id",classifyId);
-        wrapper.set("classify_id",null);
-        baseMapper.update(null,wrapper);
     }
 
     /**

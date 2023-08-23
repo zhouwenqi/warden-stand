@@ -9,7 +9,9 @@ import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.common.core.pageing.SearchPageable;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
+import com.microwarp.warden.stand.common.exception.WardenRequireParamterException;
 import com.microwarp.warden.stand.common.model.ResultModel;
+import com.microwarp.warden.stand.data.entity.SysRole;
 import com.microwarp.warden.stand.facade.syspermission.dto.SysPermissionDTO;
 import com.microwarp.warden.stand.facade.syspermission.service.SysPermissionService;
 import com.microwarp.warden.stand.facade.sysrole.dto.SysRoleDTO;
@@ -78,11 +80,15 @@ public class RoleController extends BaseController {
     @PutMapping("/role")
     @PreAuthorize("hasAuthority('role:admin')")
     public ResultModel putRole(@Validated @RequestBody SysRoleUpdateRequest updateRequest){
-        SysRoleDTO sysRoleDTO = SysRoleMapstruct.Instance.sysRoleUpdateRequestTosysRoleDTO(updateRequest);
-        if(sysRoleDTO.getValue().equals(SecurityConstants.ROOT_DEFAULT_VALUE)){
-            updateRequest.setValue(SecurityConstants.ROOT_DEFAULT_VALUE);
+        SysRoleDTO sysRoleDTO = sysRoleService.findById(updateRequest.getId());
+        if(null == sysRoleDTO){
+            throw new WardenParamterErrorException("角色信息不存在");
         }
-        sysRoleService.update(sysRoleDTO);
+        if(sysRoleDTO.getValue().equals(SecurityConstants.ROLE_ROOT_VALUE)){
+            throw new WardenParamterErrorException("保留角色信息不可修改");
+        }
+        SysRoleDTO sysRolRequesteDTO = SysRoleMapstruct.Instance.sysRoleUpdateRequestTosysRoleDTO(updateRequest);
+        sysRoleService.update(sysRolRequesteDTO);
         return ResultModel.success();
     }
 
@@ -98,7 +104,7 @@ public class RoleController extends BaseController {
         if(null == sysRoleDTO){
             throw new WardenParamterErrorException("角色信息不存在");
         }
-        if(sysRoleDTO.getValue().equals(SecurityConstants.ROOT_DEFAULT_VALUE)){
+        if(sysRoleDTO.getValue().equals(SecurityConstants.ROLE_ROOT_VALUE)){
             throw new WardenParamterErrorException("保留角色权限不能修改");
         }
         sysPermissionService.saveRolePermission(roleRequest.getRoleId(), roleRequest.getPermissionIds());
@@ -111,7 +117,7 @@ public class RoleController extends BaseController {
      * @return
      */
     @DeleteMapping("/role/{id}")
-    @PreAuthorize("hasAnyRole('role:super','role:admin')")
+    @PreAuthorize("hasAuthority('role:admin')")
     public ResultModel deleteRoles(@PathVariable("id") Long id){
         if(null == id){
             throw new WardenParamterErrorException("角色id不能为空");
@@ -120,7 +126,7 @@ public class RoleController extends BaseController {
         if(null == sysRoleDTO){
             return ResultModel.success();
         }
-        if(sysRoleDTO.getValue().equals(SecurityConstants.ROOT_DEFAULT_VALUE)){
+        if(sysRoleDTO.getValue().equals(SecurityConstants.ROLE_ROOT_VALUE) || sysRoleDTO.getValue().equals(SecurityConstants.ROLE_ADMIN_VALUE)){
             throw new WardenParamterErrorException("保留角色权限不能删除");
         }
         sysRoleService.delete(id);
@@ -133,7 +139,7 @@ public class RoleController extends BaseController {
      * @return
      */
     @PostMapping("/roles/search")
-    @PreAuthorize("hasAnyRole('role:super','role:admin')")
+    @PreAuthorize("hasAuthority('role:admin')")
     public ResultModel postSearch(@RequestBody SearchPageable<BasicSearchDTO> searchPageable){
         ResultModel resultModel = ResultModel.success();
         ResultPage<SysRoleDTO> resultPage = sysRoleService.findPage(searchPageable);

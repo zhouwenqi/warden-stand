@@ -72,9 +72,9 @@ public class UserController extends BaseController {
         SysUserRequestDTO requestDTO = SysUserMapstruct.Instance.sysUserCreateRequestToSysUserRequestDTO(createRequest);
         requestDTO.setPwd(bCryptPasswordEncoder.encode(createRequest.getPwd()));
         if(null != createRequest.getRoleIds()){
-            Set<SysRoleDTO> roleDTOS = sysRoleService.findByIds(createRequest.getRoleIds());
+            List<SysRoleDTO> roleDTOS = sysRoleService.findByIds(createRequest.getRoleIds());
             Set<String> roleValues = roleDTOS.stream().map(SysRoleDTO::getValue).collect(Collectors.toSet());
-            if(SecurityUtil.hasAnyAuthority(roleValues, SecurityConstants.ROOT_DEFAULT_VALUE) && !SecurityUtil.inRoot()){
+            if(SecurityUtil.hasAnyAuthority(roleValues, SecurityConstants.ROLE_ROOT_VALUE) && !SecurityUtil.inRoot()){
                 throw new WardenRequireAuthorizedException("创建超级管理员权限不够");
             }
         }
@@ -100,7 +100,7 @@ public class UserController extends BaseController {
         }
 
         Set<String> roleValues = sysUserDetailsDTO.getRoles().stream().map(SysRoleDTO::getValue).collect(Collectors.toSet());
-        if(SecurityUtil.hasAnyAuthority(roleValues, SecurityConstants.ROOT_DEFAULT_VALUE) && !SecurityUtil.inRoot()){
+        if(SecurityUtil.hasAnyAuthority(roleValues, SecurityConstants.ROLE_ROOT_VALUE) && !SecurityUtil.inRoot()){
             throw new WardenRequireAuthorizedException("修改超级管理员权限不够");
         }
 
@@ -108,9 +108,9 @@ public class UserController extends BaseController {
         sysUserService.update(sysUserDTO);
         // 角色更新
         if(null != updateRequest.getRoleIds()){
-            Set<SysRoleDTO> roleDTOS = sysRoleService.findByIds(updateRequest.getRoleIds());
+            List<SysRoleDTO> roleDTOS = sysRoleService.findByIds(updateRequest.getRoleIds());
             Set<String> values = roleDTOS.stream().map(SysRoleDTO::getValue).collect(Collectors.toSet());
-            if(SecurityUtil.hasAnyAuthority(values, SecurityConstants.ROOT_DEFAULT_VALUE) && !SecurityUtil.inRoot()){
+            if(SecurityUtil.hasAnyAuthority(values, SecurityConstants.ROLE_ROOT_VALUE) && !SecurityUtil.inRoot()){
                 throw new WardenRequireAuthorizedException("提权超级管理员权限不够");
             }
             sysRoleService.saveUserRoles(sysUserDetailsDTO.getId(),updateRequest.getRoleIds());
@@ -134,7 +134,7 @@ public class UserController extends BaseController {
             throw new WardenParamterErrorException("用户不存在");
         }
         Set<String> roleValues = sysUserDetailsDTO.getRoles().stream().map(SysRoleDTO::getValue).collect(Collectors.toSet());
-        if(SecurityUtil.hasAnyAuthority(roleValues, SecurityConstants.ROOT_DEFAULT_VALUE) && !SecurityUtil.inRoot()){
+        if(SecurityUtil.hasAnyAuthority(roleValues, SecurityConstants.ROLE_ROOT_VALUE) && !SecurityUtil.inRoot()){
             throw new WardenRequireAuthorizedException("修改超级管理员权限不够");
         }
         SysUserPasswordDTO sysUserPasswordDTO = new SysUserPasswordDTO();
@@ -159,11 +159,11 @@ public class UserController extends BaseController {
         if(null == sysUserDetailsDTO){
             throw new WardenParamterErrorException("用户不存在");
         }
-        if(sysUserDetailsDTO.getUid().equals(SecurityConstants.RESERVE_ROOT_USER)){
+        if(sysUserDetailsDTO.getUid().equals(SecurityConstants.RESERVE_ROOT_USER_NAME)){
             throw new WardenParamterErrorException("保留帐号不可删除");
         }
         Set<String> roleValues = sysUserDetailsDTO.getRoles().stream().map(SysRoleDTO::getValue).collect(Collectors.toSet());
-        if(SecurityUtil.hasAnyAuthority(roleValues, SecurityConstants.ROOT_DEFAULT_VALUE) && !SecurityUtil.inRoot()){
+        if(SecurityUtil.hasAnyAuthority(roleValues, SecurityConstants.ROLE_ROOT_VALUE) && !SecurityUtil.inRoot()){
             throw new WardenRequireAuthorizedException("删除超级管理员权限不够");
         }
         sysUserService.delete(sysUserDetailsDTO.getId());
@@ -192,6 +192,7 @@ public class UserController extends BaseController {
      * @throws IOException
      */
     @PostMapping("/users/export")
+    @PreAuthorize("hasAuthority('data:export')")
     public void export(@RequestBody SearchPageable<SysUserSearchDTO> searchPageable, HttpServletResponse response) throws IOException{
         String fileName = "系统用户"+System.currentTimeMillis();
         excelExportService.sysUserPageData(fileName,"用户列表", response, searchPageable);

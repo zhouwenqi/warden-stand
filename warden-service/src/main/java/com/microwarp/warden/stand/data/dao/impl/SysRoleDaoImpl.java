@@ -25,10 +25,9 @@ public class SysRoleDaoImpl extends ServiceImpl<SysRoleMapper,SysRole> implement
      * @return
      */
     @Override
-    public Set<SysRoleDTO> findByUserId(Long userId){
+    public List<SysRoleDTO> findByUserId(Long userId){
         List<SysRole> list = this.baseMapper.findByUserId(userId);
-        List<SysRoleDTO> roleDTOS = SysRoleConvert.Instance.sysRolesToSysRolesDTO(list);
-        return new HashSet<>(roleDTOS);
+        return null == list ? new ArrayList<>() : SysRoleConvert.Instance.sysRolesToSysRolesDTO(list);
     }
 
     /**
@@ -37,10 +36,20 @@ public class SysRoleDaoImpl extends ServiceImpl<SysRoleMapper,SysRole> implement
      * @return
      */
     @Override
-    public Set<SysRoleDTO> findByIds(Long...ids){
+    public List<SysRoleDTO> findByIds(Long...ids){
         List<SysRole> list = baseMapper.selectBatchIds(Arrays.asList(ids));
-        List<SysRoleDTO> roleDTOS = SysRoleConvert.Instance.sysRolesToSysRolesDTO(list);
-        return new HashSet<>(roleDTOS);
+        return null == list ? new ArrayList<>() : SysRoleConvert.Instance.sysRolesToSysRolesDTO(list);
+    }
+
+    /**
+     * 查询所有角色列表
+     * @return
+     */
+    public List<SysRoleDTO> findAll(){
+        QueryWrapper<SysRole> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByAsc("orders");
+        List<SysRole> list = baseMapper.selectList(queryWrapper);
+        return null == list ? new ArrayList<>() : SysRoleConvert.Instance.sysRolesToSysRolesDTO(list);
     }
 
     /**
@@ -49,12 +58,11 @@ public class SysRoleDaoImpl extends ServiceImpl<SysRoleMapper,SysRole> implement
      * @return
      */
     @Override
-    public Set<SysRoleDTO> findByValues(String...values){
+    public List<SysRoleDTO> findByValues(String...values){
         QueryWrapper<SysRole> queryWrapper = new QueryWrapper<>();
         queryWrapper.in("value",Arrays.asList(values));
         List<SysRole> list = baseMapper.selectList(queryWrapper);
-        List<SysRoleDTO> roleDTOS = SysRoleConvert.Instance.sysRolesToSysRolesDTO(list);
-        return new HashSet<>(roleDTOS);
+        return null == list ? new ArrayList<>() : SysRoleConvert.Instance.sysRolesToSysRolesDTO(list);
     }
 
 

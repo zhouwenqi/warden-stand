@@ -13,18 +13,22 @@ import com.microwarp.warden.stand.data.convert.PageConvert;
 import com.microwarp.warden.stand.data.convert.SysUserConvert;
 import com.microwarp.warden.stand.data.dao.*;
 import com.microwarp.warden.stand.data.entity.SysUser;
+import com.microwarp.warden.stand.facade.syspermission.dto.SysPermissionDTO;
 import com.microwarp.warden.stand.facade.sysrole.dto.SysRoleDTO;
 import com.microwarp.warden.stand.facade.sysuser.dto.*;
 import com.microwarp.warden.stand.facade.sysuser.service.SysUserService;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * service - 系统用户 - impl
@@ -64,18 +68,26 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     public SysUserDTO findByUid(String uid){
         return sysUserDao.findByUid(uid);
     }
+
+    /**
+     * 查询用户详情
+     * @param id 用户ID
+     * @return
+     */
     @Override
+    @Cacheable(value = "sysUserDetailsId", key="#id", unless = "#result eq null")
     public SysUserDetailsDTO findDetailsById(Long id){
         SysUserDTO sysUserDTO = findById(id);
         return findDetailsByUserDTO(sysUserDTO);
     }
+
     /**
      * 查询用户详情
      * @param uid 用户名(帐号)
      * @return
      */
-    @Cacheable(value = "sysUserDetails", key="#uid", unless = "#result eq null")
     @Override
+    @Cacheable(value = "sysUserDetailsUid", key="#uid", unless = "#result eq null")
     public SysUserDetailsDTO findDetailsByUid(String uid){
         SysUserDTO sysUserDTO = findByUid(uid);
         return findDetailsByUserDTO(sysUserDTO);
@@ -122,9 +134,15 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
      * 更新用户信息
      * @param sysUserDTO 用户信息
      */
-    @CachePut(value ="sysUserDetails",key="sysUserDTO.uid", unless = "#result eq null")
+    @Override
+    @Caching(
+            put = {
+                    @CachePut(value ="sysUserDetailsId",key="#sysUserDTO.id", unless = "#sysUserDTO.id eq null"),
+                    @CachePut(value ="sysUserDetailsUid",key="#result.uid", unless = "#result eq null")
+            }
+    )
     @Transactional
-    public void update(SysUserDTO sysUserDTO){
+    public SysUserDetailsDTO update(SysUserDTO sysUserDTO){
         // 真实姓名拼音处理
         if(StringUtils.isNotBlank(sysUserDTO.getRealName())){
             String[] pinyins = StringUtil.getPinyins(sysUserDTO.getRealName());
@@ -133,21 +151,32 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
         }
         SysUser sysUser = SysUserConvert.Instance.sysUserDtoToSysUser(sysUserDTO);
         sysUserDao.updateById(sysUser);
+        // 因为还有以uid为key的缓存，所在要手动清理一下
+        return findDetailsById(sysUser.getId());
+
     }
 
     /**
      * 更新用户密码
      * @param sysUserPasswordDTO 密码参数
      */
-    @Override
+    @Transactional
+    @CacheEvict(value = "sysUserDetailsId", key = "#sysUserPasswordDTO.userId")
     public void updatePassowrd(SysUserPasswordDTO sysUserPasswordDTO){
         if(null == sysUserPasswordDTO.getUserId()){
             throw new WardenRequireParamterException();
         }
+
         UpdateWrapper<SysUser> updateWrapper = new UpdateWrapper<>();
         updateWrapper.set("pwd",sysUserPasswordDTO.getNewPassword());
         updateWrapper.eq("id",sysUserPasswordDTO.getUserId());
         sysUserDao.update(updateWrapper);
+
+        // 因为还有以uid为key的缓存，所在要手动清理一下
+        SysUser user = sysUserDao.getById(sysUserPasswordDTO.getUserId());
+        if(null != user){
+            iCacheService.batchRemove("sysUserDetailsUid", user.getUid());
+        }
     }
 
     /**
@@ -160,14 +189,21 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
             return null;
         }
         SysUserDetailsDTO sysUserDetailsDTO = SysUserConvert.Instance.sysUserDtoToUserDetailsDTO(sysUserDTO);
-        sysUserDetailsDTO.setRoles(sysRoleDao.findByUserId(sysUserDTO.getId()));
+        Set<SysRoleDTO> roleDTOS = new HashSet<>(sysRoleDao.findByUserId(sysUserDTO.getId()));
+        Long[] roleIds = roleDTOS.stream().map(SysRoleDTO::getId).toArray(Long[]::new);
+        Set<SysPermissionDTO> permissionDTOS = new HashSet<>(sysPermissionDao.findByRoleIds(roleIds));
         sysUserDetailsDTO.setDept(sysDeptDao.findById(sysUserDTO.getDeptId()));
         sysUserDetailsDTO.setPost(sysPostDao.findById(sysUserDTO.getPostId()));
-        Long[] roleIds = sysUserDetailsDTO.getRoles().stream().map(SysRoleDTO::getId).toArray(Long[]::new);
-        sysUserDetailsDTO.setPermissions(new HashSet<>(sysPermissionDao.findByRoleIds(roleIds)));
+        sysUserDetailsDTO.setRoles(roleDTOS);
+        sysUserDetailsDTO.setPermissions(permissionDTOS);
         return sysUserDetailsDTO;
     }
 
+    /**
+     * 分页查询用户列表信息
+     * @param iSearchPageable 查询参数
+     * @return
+     */
     public ResultPage<SysUserDTO> findPage(ISearchPageable<SysUserSearchDTO> iSearchPageable){
         QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
         if(StringUtils.isNotBlank(iSearchPageable.getSearchValue())) {
@@ -200,11 +236,12 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
      * @param userId 用户id
      */
     @Transactional
+    @CacheEvict(value = "sysUserDetailsId", key = "#userId")
     public void delete(Long userId){
-        // 因为系统用户以uid为key缓存，所在要手动清理一下
+        // 因为还有以uid为key的缓存，所在要手动清理一下
         SysUser sysUser = sysUserDao.getById(userId);
         if(null != sysUser){
-            iCacheService.batchRemove("sysUserDetails",sysUser.getUid());
+            iCacheService.batchRemove("sysUserDetailsUid", sysUser.getUid());
         }
         sysUserDao.removeById(userId);
         sysRoleDao.deleteRoleByUserId(userId);

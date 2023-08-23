@@ -53,7 +53,7 @@ public interface SysUserService {
      * 更新用户信息
      * @param sysUserDTO 用户信息
      */
-    void update(SysUserDTO sysUserDTO);
+    SysUserDetailsDTO update(SysUserDTO sysUserDTO);
 
     /**
      * 更新用户密码

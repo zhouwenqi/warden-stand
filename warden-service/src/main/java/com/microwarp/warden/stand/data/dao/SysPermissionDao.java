@@ -11,6 +11,11 @@ import java.util.List;
  */
 public interface SysPermissionDao extends IService<SysPermission> {
     /**
+     * 查询所有权限
+     * @return
+     */
+    List<SysPermissionDTO> findAll();
+    /**
      * 根据角色id数组查询权限列表
      * @param roleIds 角色id数组
      * @return
@@ -30,12 +35,6 @@ public interface SysPermissionDao extends IService<SysPermission> {
      * @param permissionIds 权限id
      */
     void saveRolePermission(Long roleId, Long... permissionIds);
-
-    /**
-     * 设置权限分类字段为null
-     * @param classifyId 权限分类id
-     */
-    void clearClassifyId(Long classifyId);
     /**
      * 根据角色id删除权限与角色关联
      * @param roleIds 角色id

@@ -24,7 +24,6 @@ public class SysDeptRequest {
     /** 描述 */
     private String description;
     /** 排序值 */
-    /** 排序值 */
     @Max(value = 99999, message = "排序值只能在0-100000之间")
     @Min(value = 0, message = "排序值只能在0-100000之间")
     private Integer orders;

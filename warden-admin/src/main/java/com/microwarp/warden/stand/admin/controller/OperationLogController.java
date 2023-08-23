@@ -70,6 +70,4 @@ public class OperationLogController extends BaseController {
         resultModel.addData("pageInfo", page.getPageInfo());
         return resultModel;
     }
-
-
 }

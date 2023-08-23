@@ -1,8 +1,6 @@
 package com.microwarp.warden.stand.admin.domain.vo;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 /**
  * vo - 字典 - request
@@ -21,6 +19,8 @@ public class SysDictionaryRequest {
     /** 描述 */
     private String description;
     /** 排序值 */
+    @Max(value = 99999, message = "排序值只能在0-100000之间")
+    @Min(value = 0, message = "排序值只能在0-100000之间")
     private Integer orders;
     /** 禁用 */
     private Boolean disabled;

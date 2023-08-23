@@ -27,6 +27,11 @@ public class RegisterController {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    /**
+     * 注册系统用户
+     * @param registerRequest 注册信息
+     * @return
+     */
     @PostMapping("/register")
     public ResultModel register(@RequestBody @Validated SysUserRegisterRequest registerRequest){
         if(!wardenGlobalConfig.getEnableRegister()){
