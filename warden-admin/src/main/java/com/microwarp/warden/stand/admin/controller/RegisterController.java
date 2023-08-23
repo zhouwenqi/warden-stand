@@ -39,7 +39,7 @@ public class RegisterController {
         }
         SysUserDTO sysUserDTO = SysUserMapstruct.Instance.sysUserRegisterRequestToSysUserDTO(registerRequest);
         sysUserDTO.setPwd(bCryptPasswordEncoder.encode(registerRequest.getPwd()));
-        ResultModel resultModel = ResultModel.success();
-        return resultModel.addData("user",sysUserService.insert(sysUserDTO));
+        sysUserService.insert(sysUserDTO);
+        return ResultModel.success();
     }
 }
