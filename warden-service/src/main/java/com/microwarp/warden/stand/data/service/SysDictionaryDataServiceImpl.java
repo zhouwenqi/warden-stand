@@ -78,6 +78,13 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
      * @param sysDictionaryDataDTO 字典数据
      */
     public void update(SysDictionaryDataDTO sysDictionaryDataDTO){
+        if(null == sysDictionaryDataDTO.getId()){
+            return;
+        }
+        SysDictionaryData dictionaryData = sysDictionaryDataDao.getById(sysDictionaryDataDTO.getId());
+        if(null == dictionaryData){
+            throw new WardenParamterErrorException("字典数据不存在");
+        }
         QueryWrapper<SysDictionaryData> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("dict_id",sysDictionaryDataDTO.getDictId());
         queryWrapper.eq("data_key",sysDictionaryDataDTO.getDataKey());

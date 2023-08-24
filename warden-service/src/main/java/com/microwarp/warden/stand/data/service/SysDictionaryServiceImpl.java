@@ -79,6 +79,13 @@ public class SysDictionaryServiceImpl implements SysDictionaryService {
      */
     @Transactional
     public void update(SysDictionaryDTO sysDictionaryDTO){
+        if(null == sysDictionaryDTO.getId()){
+            return;
+        }
+        SysDictionary dictionary = sysDictionaryDao.getById(sysDictionaryDTO.getId());
+        if(null == dictionary){
+            throw new WardenParamterErrorException("字典不存在");
+        }
         QueryWrapper<SysDictionary> queryWrapper = new QueryWrapper<>();
         if(StringUtils.isNotBlank(sysDictionaryDTO.getCode())){
             queryWrapper.eq("code",sysDictionaryDTO.getCode());
@@ -87,7 +94,6 @@ public class SysDictionaryServiceImpl implements SysDictionaryService {
                 throw new WardenParamterErrorException("字典编码不能重复");
             }
             // 手动删除缓存
-            SysDictionary dictionary = sysDictionaryDao.getById(sysDictionaryDTO.getId());
             iCacheService.batchRemove(CacheConstants.CACHE_DICT_DATAS, dictionary.getCode());
         }
 

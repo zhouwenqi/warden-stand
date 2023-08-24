@@ -76,7 +76,6 @@ public class DictionaryController {
         return ResultModel.success();
     }
 
-
     /**
      * 删除字典
      * @param id 字典id
