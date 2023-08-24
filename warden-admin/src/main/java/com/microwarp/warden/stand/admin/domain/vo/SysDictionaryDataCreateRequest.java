@@ -3,10 +3,9 @@ package com.microwarp.warden.stand.admin.domain.vo;
 import javax.validation.constraints.*;
 
 /**
- * vo - 字典数据 - request
+ * vo - 创建字典数据 - request
  */
-public class SysDictionaryDataRequest {
-    private Long id;
+public class SysDictionaryDataCreateRequest {
     /** 字典id */
     @NotNull(message = "字典id不能为空")
     private Long dictId;
@@ -16,7 +15,7 @@ public class SysDictionaryDataRequest {
     private String dataKey;
     /** 值 */
     @NotBlank(message = "数据值不能为空")
-    @Pattern(regexp = "^[0-9a-zA-Z\\u4e00-\\u9fa5]{1,40}",message = "字典名称只能是1-40个中文或数字或英文字符")
+    @Pattern(regexp = "^[0-9a-zA-Z\\u4e00-\\u9fa5]{1,40}",message = "字典数据只能是1-40个中文或数字或英文字符")
     private String dataValue;
     /** 标签 */
     @Pattern(regexp = "^[a-zA-Z0-9_]{2,20}",message = "标签只能是6-20位字母和数字和下划线字符")
@@ -31,14 +30,6 @@ public class SysDictionaryDataRequest {
     private Integer orders;
     /** 是否禁用 */
     private Boolean disabled;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Long getDictId() {
         return dictId;

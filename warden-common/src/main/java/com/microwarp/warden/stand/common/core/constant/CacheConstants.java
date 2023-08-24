@@ -1,7 +1,8 @@
 package com.microwarp.warden.stand.common.core.constant;
 
 /**
- * Created by Administrator on 2023/8/23.
+ * constant - cache
+ * @author zhouwenqi
  */
 public class CacheConstants {
     public static  final String CACHE_USER_UID = "sysUserDetailsUid";

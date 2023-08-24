@@ -10,6 +10,5 @@ import java.util.List;
  * @author zhouwenqi
  */
 public interface SysDictionaryDataMapper extends BaseMapper<SysDictionaryData> {
-    /** 返向查询字典code */
-    List<String> findDictCodeByIds(Long...ids);
+
 }

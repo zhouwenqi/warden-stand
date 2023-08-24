@@ -65,7 +65,7 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
         sysDictionaryDataDao.save(sysDictionaryData);
 
         // 手动删除缓存
-        String[] dictCodes = sysDictionaryDataDao.findDictCodeByIds(sysDictionaryData.getId());
+        String[] dictCodes = sysDictionaryDao.findCodeByDataIds(sysDictionaryData.getId());
         if(dictCodes.length> 0){
             iCacheService.batchRemove(CacheConstants.CACHE_DICT_DATAS, dictCodes);
         }
@@ -88,7 +88,7 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
         SysDictionaryData sysDictionaryData = SysDictionaryDataConvert.Instance.sysDictionaryDataDtoToSysDictionaryData(sysDictionaryDataDTO);
         sysDictionaryDataDao.updateById(sysDictionaryData);
         // 手动删除缓存
-        String[] dictCodes = sysDictionaryDataDao.findDictCodeByIds(sysDictionaryData.getId());
+        String[] dictCodes = sysDictionaryDao.findCodeByDataIds(sysDictionaryData.getId());
         if(dictCodes.length> 0){
             iCacheService.batchRemove(CacheConstants.CACHE_DICT_DATAS, dictCodes);
         }
@@ -103,7 +103,7 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
             return;
         }
         // 手动删除缓存
-        String[] dictCodes = sysDictionaryDataDao.findDictCodeByIds(id);
+        String[] dictCodes = sysDictionaryDao.findCodeByDataIds(id);
         if(dictCodes.length> 0){
             iCacheService.batchRemove(CacheConstants.CACHE_DICT_DATAS, dictCodes);
         }

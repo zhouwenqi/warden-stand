@@ -1,7 +1,8 @@
 package com.microwarp.warden.stand.admin.controller;
 
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysDictionaryMapstruct;
-import com.microwarp.warden.stand.admin.domain.vo.SysDictionaryRequest;
+import com.microwarp.warden.stand.admin.domain.vo.SysDictionaryCreateRequest;
+import com.microwarp.warden.stand.admin.domain.vo.SysDictionaryUpdateRequest;
 import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.common.core.pageing.SearchPageable;
@@ -51,9 +52,8 @@ public class DictionaryController {
      */
     @PostMapping("/dictionary")
     @PreAuthorize("hasAuthority('dictionary:admin')")
-    public ResultModel postDictionary(@Validated @RequestBody SysDictionaryRequest sysDictionaryRequest){
-        SysDictionaryDTO sysDictionaryDTO = SysDictionaryMapstruct.Instance.sysDictionaryRequestToSysDictionaryDTO(sysDictionaryRequest);
-        sysDictionaryDTO.setId(null);
+    public ResultModel postDictionary(@Validated @RequestBody SysDictionaryCreateRequest sysDictionaryRequest){
+        SysDictionaryDTO sysDictionaryDTO = SysDictionaryMapstruct.Instance.sysDictionaryCreateRequestToSysDictionaryDTO(sysDictionaryRequest);
         SysDictionaryDTO newDictionaryDTO = sysDictionaryService.create(sysDictionaryDTO);
         ResultModel resultModel = ResultModel.success();
         resultModel.addData("dictionary", SysDictionaryMapstruct.Instance.sysDictionaryDtoToSysDictionaryVO(newDictionaryDTO));
@@ -67,12 +67,12 @@ public class DictionaryController {
      */
     @PutMapping("/dictionary")
     @PreAuthorize("hasAuthority('dictionary:admin')")
-    public ResultModel putDictionary(@Validated @RequestBody SysDictionaryRequest sysDictionaryRequest){
-        SysDictionaryDTO sysDictionaryDTO = SysDictionaryMapstruct.Instance.sysDictionaryRequestToSysDictionaryDTO(sysDictionaryRequest);
+    public ResultModel putDictionary(@Validated @RequestBody SysDictionaryUpdateRequest sysDictionaryRequest){
+        SysDictionaryDTO sysDictionaryDTO = SysDictionaryMapstruct.Instance.sysDictionaryUpdateRequestToSysDictionaryDTO(sysDictionaryRequest);
         if(null == sysDictionaryDTO.getId()){
             throw new WardenRequireParamterException("字典id不能为空");
         }
-       sysDictionaryService.update(sysDictionaryDTO);
+        sysDictionaryService.update(sysDictionaryDTO);
         return ResultModel.success();
     }
 

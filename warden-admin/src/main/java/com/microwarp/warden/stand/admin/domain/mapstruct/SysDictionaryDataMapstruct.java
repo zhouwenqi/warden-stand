@@ -1,6 +1,7 @@
 package com.microwarp.warden.stand.admin.domain.mapstruct;
 
-import com.microwarp.warden.stand.admin.domain.vo.SysDictionaryDataRequest;
+import com.microwarp.warden.stand.admin.domain.vo.SysDictionaryDataCreateRequest;
+import com.microwarp.warden.stand.admin.domain.vo.SysDictionaryDataUpdateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysDictionaryDataVO;
 import com.microwarp.warden.stand.common.dictionary.DictionaryItem;
 import com.microwarp.warden.stand.facade.sysdictionary.dto.SysDictionaryDataDTO;
@@ -20,7 +21,8 @@ public interface SysDictionaryDataMapstruct {
     SysDictionaryDataMapstruct Instance = Mappers.getMapper(SysDictionaryDataMapstruct.class);
     SysDictionaryDataVO sysDictionaryDataDtoToSysDictionaryDataVO(SysDictionaryDataDTO sysDictionaryDataDTO);
     List<SysDictionaryDataVO> sysDictionaryDatasDtoToSysDictionaryDatasVO(List<SysDictionaryDataDTO> sysDictionarysDTO);
-    SysDictionaryDataDTO sysDictionaryDataRequestToSysDictionaryDataDTO(SysDictionaryDataRequest sysDictionaryDataRequest);
+    SysDictionaryDataDTO sysDictionaryDataUpdateRequestToSysDictionaryDataDTO(SysDictionaryDataUpdateRequest sysDictionaryDataRequest);
+    SysDictionaryDataDTO sysDictionaryDataCreateRequestToSysDictionaryDataDTO(SysDictionaryDataCreateRequest sysDictionaryDataRequest);
     DictionaryItem sysDictionaryDataDtoToDictionaryItem(SysDictionaryDataDTO sysDictionaryDataDTO);
     List<DictionaryItem> sysDictionaryDatasDtoToDictionaryItems(List<SysDictionaryDataDTO> sysDictionarysDTO);
 }

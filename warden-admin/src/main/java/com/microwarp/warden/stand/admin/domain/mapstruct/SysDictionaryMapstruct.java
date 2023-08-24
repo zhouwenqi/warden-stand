@@ -1,6 +1,7 @@
 package com.microwarp.warden.stand.admin.domain.mapstruct;
 
-import com.microwarp.warden.stand.admin.domain.vo.SysDictionaryRequest;
+import com.microwarp.warden.stand.admin.domain.vo.SysDictionaryCreateRequest;
+import com.microwarp.warden.stand.admin.domain.vo.SysDictionaryUpdateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysDictionaryVO;
 import com.microwarp.warden.stand.facade.sysdictionary.dto.SysDictionaryDTO;
 import org.mapstruct.Mapper;
@@ -19,5 +20,6 @@ public interface SysDictionaryMapstruct {
     SysDictionaryMapstruct Instance = Mappers.getMapper(SysDictionaryMapstruct.class);
     SysDictionaryVO sysDictionaryDtoToSysDictionaryVO(SysDictionaryDTO sysDictionaryDTO);
     List<SysDictionaryVO> sysDictionarysDtoToSysDictionarysVO(List<SysDictionaryDTO> sysDictionarysDTO);
-    SysDictionaryDTO sysDictionaryRequestToSysDictionaryDTO(SysDictionaryRequest sysDictionaryRequest);
+    SysDictionaryDTO sysDictionaryCreateRequestToSysDictionaryDTO(SysDictionaryCreateRequest sysDictionaryCreateRequest);
+    SysDictionaryDTO sysDictionaryUpdateRequestToSysDictionaryDTO(SysDictionaryUpdateRequest sysDictionaryUpdateRequest);
 }

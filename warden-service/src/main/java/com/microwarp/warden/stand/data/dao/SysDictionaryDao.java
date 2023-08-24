@@ -15,6 +15,19 @@ public interface SysDictionaryDao extends IService<SysDictionary> {
      * @return
      */
     SysDictionaryDTO findById(Long id);
+
+    /**
+     * 使用字典id反向查询字典code
+     * @param ids 字典数据id列表
+     * @return
+     */
+    String[] findDCodeByIds(Long...ids);
+    /**
+     * 使用字典数据id反向查询字典code
+     * @param ids 字典数据id列表
+     * @return
+     */
+    String[] findCodeByDataIds(Long...ids);
     /**
      * 查询字典信息
      * @param code 字典编码

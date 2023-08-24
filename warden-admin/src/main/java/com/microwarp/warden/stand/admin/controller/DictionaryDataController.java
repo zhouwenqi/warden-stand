@@ -1,12 +1,11 @@
 package com.microwarp.warden.stand.admin.controller;
 
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysDictionaryDataMapstruct;
-import com.microwarp.warden.stand.admin.domain.vo.SysDictionaryDataRequest;
-import com.microwarp.warden.stand.common.dictionary.WardenDictionary;
+import com.microwarp.warden.stand.admin.domain.vo.SysDictionaryDataCreateRequest;
+import com.microwarp.warden.stand.admin.domain.vo.SysDictionaryDataUpdateRequest;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
 import com.microwarp.warden.stand.common.exception.WardenRequireParamterException;
 import com.microwarp.warden.stand.common.model.ResultModel;
-import com.microwarp.warden.stand.common.utils.DictUtil;
 import com.microwarp.warden.stand.facade.sysdictionary.dto.SysDictionaryDataDTO;
 import com.microwarp.warden.stand.facade.sysdictionary.service.SysDictionaryDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +68,7 @@ public class DictionaryDataController {
     @PostMapping("/dictionaryDatas")
     public ResultModel getDictionaryDatas(@RequestBody String[] codes){
         if(null == codes || codes.length < 1){
-            throw new WardenRequireParamterException("字典编码不为为空");
+            throw new WardenRequireParamterException("字典编码不能为空");
         }
         Map<String,Object> map = new HashMap<>();
         for(String code:codes){
@@ -88,9 +87,8 @@ public class DictionaryDataController {
      */
     @PostMapping("/dictionaryData")
     @PreAuthorize("hasAuthority('dictionary:admin')")
-    public ResultModel postDictionaryData(@Validated @RequestBody SysDictionaryDataRequest dataRequest){
-        SysDictionaryDataDTO sysDictionaryDataDTO = SysDictionaryDataMapstruct.Instance.sysDictionaryDataRequestToSysDictionaryDataDTO(dataRequest);
-        dataRequest.setId(null);
+    public ResultModel postDictionaryData(@Validated @RequestBody SysDictionaryDataCreateRequest dataRequest){
+        SysDictionaryDataDTO sysDictionaryDataDTO = SysDictionaryDataMapstruct.Instance.sysDictionaryDataCreateRequestToSysDictionaryDataDTO(dataRequest);
         SysDictionaryDataDTO newDataDTO =  sysDictionaryDataService.create(sysDictionaryDataDTO);
         ResultModel resultModel = ResultModel.success();
         resultModel.addData("dictionaryData", SysDictionaryDataMapstruct.Instance.sysDictionaryDataDtoToSysDictionaryDataVO(newDataDTO));
@@ -104,11 +102,11 @@ public class DictionaryDataController {
      */
     @PutMapping("/dictionaryData")
     @PreAuthorize("hasAuthority('dictionary:admin')")
-    public ResultModel putDictionaryData(@Validated @RequestBody SysDictionaryDataRequest dataRequest){
+    public ResultModel putDictionaryData(@Validated @RequestBody SysDictionaryDataUpdateRequest dataRequest){
         if(null == dataRequest.getId()){
             throw new WardenRequireParamterException("字典数据id不能为空");
         }
-        SysDictionaryDataDTO sysDictionaryDataDTO = SysDictionaryDataMapstruct.Instance.sysDictionaryDataRequestToSysDictionaryDataDTO(dataRequest);
+        SysDictionaryDataDTO sysDictionaryDataDTO = SysDictionaryDataMapstruct.Instance.sysDictionaryDataUpdateRequestToSysDictionaryDataDTO(dataRequest);
         sysDictionaryDataService.update(sysDictionaryDataDTO);
         return ResultModel.success();
     }

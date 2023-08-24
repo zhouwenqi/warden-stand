@@ -2,6 +2,8 @@ package com.microwarp.warden.stand.data.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.microwarp.warden.stand.common.core.cache.ICacheService;
+import com.microwarp.warden.stand.common.core.constant.CacheConstants;
 import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
 import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
 import com.microwarp.warden.stand.common.core.pageing.PageInfo;
@@ -31,6 +33,8 @@ public class SysDictionaryServiceImpl implements SysDictionaryService {
     private SysDictionaryDao sysDictionaryDao;
     @Resource
     private SysDictionaryDataDao sysDictionaryDataDao;
+    @Resource
+    private ICacheService iCacheService;
 
 
 
@@ -76,11 +80,17 @@ public class SysDictionaryServiceImpl implements SysDictionaryService {
     @Transactional
     public void update(SysDictionaryDTO sysDictionaryDTO){
         QueryWrapper<SysDictionary> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("code",sysDictionaryDTO.getCode());
-        queryWrapper.ne("id",sysDictionaryDTO.getId());
-        if(sysDictionaryDao.count(queryWrapper) > 0){
-            throw new WardenParamterErrorException("字典编码不能重复");
+        if(StringUtils.isNotBlank(sysDictionaryDTO.getCode())){
+            queryWrapper.eq("code",sysDictionaryDTO.getCode());
+            queryWrapper.ne("id",sysDictionaryDTO.getId());
+            if(sysDictionaryDao.count(queryWrapper) > 0){
+                throw new WardenParamterErrorException("字典编码不能重复");
+            }
+            // 手动删除缓存
+            SysDictionary dictionary = sysDictionaryDao.getById(sysDictionaryDTO.getId());
+            iCacheService.batchRemove(CacheConstants.CACHE_DICT_DATAS, dictionary.getCode());
         }
+
         SysDictionary sysDictionary = SysDictionaryConvert.Instance.sysDictionaryDtoToSysDictionary(sysDictionaryDTO);
         sysDictionaryDao.updateById(sysDictionary);
     }
@@ -96,6 +106,11 @@ public class SysDictionaryServiceImpl implements SysDictionaryService {
         }
         sysDictionaryDao.removeBatchByIds(Arrays.asList(id));
         sysDictionaryDataDao.deleteByDictId(id);
+        // 手动删除缓存
+        String[] dictCodes = sysDictionaryDao.findDCodeByIds(id);
+        if(dictCodes.length> 0){
+            iCacheService.batchRemove(CacheConstants.CACHE_DICT_DATAS, dictCodes);
+        }
     }
 
     /**

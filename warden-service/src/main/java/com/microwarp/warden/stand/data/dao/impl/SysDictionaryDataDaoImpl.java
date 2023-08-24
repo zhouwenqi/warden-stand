@@ -36,21 +36,6 @@ public class SysDictionaryDataDaoImpl extends ServiceImpl<SysDictionaryDataMappe
 
 
     /**
-     * 反向查询字典code
-     * @param ids 字典数据id列表
-     * @return
-     */
-    public String[] findDictCodeByIds(Long...ids){
-        List<String> list = baseMapper.findDictCodeByIds(ids);
-
-        if(null != list && list.size()>0){
-            return list.toArray(new String[list.size()]);
-        }
-        return new String[0];
-    }
-
-
-    /**
      * 删除字典数据
      * @param dictId 字典id
      */

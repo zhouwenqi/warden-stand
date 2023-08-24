@@ -35,6 +35,32 @@ public class SysDictionaryDaoImpl extends ServiceImpl<SysDictionaryMapper,SysDic
     }
 
     /**
+     * 使用字典id反向查询字典code
+     * @param ids 字典数据id列表
+     * @return
+     */
+    public String[] findDCodeByIds(Long...ids){
+        List<String> list = baseMapper.findCodeByIds(ids);
+        if(null != list && list.size()>0){
+            return list.toArray(new String[list.size()]);
+        }
+        return new String[0];
+    }
+
+    /**
+     * 使用字典数据id反向查询字典code
+     * @param ids 字典数据id列表
+     * @return
+     */
+    public String[] findCodeByDataIds(Long...ids){
+        List<String> list = baseMapper.findCodeByDataIds(ids);
+        if(null != list && list.size()>0){
+            return list.toArray(new String[list.size()]);
+        }
+        return new String[0];
+    }
+
+    /**
      * 查询字典信息
      * @param code 字典编码
      * @return

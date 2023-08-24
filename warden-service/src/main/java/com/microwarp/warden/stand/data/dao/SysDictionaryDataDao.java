@@ -19,13 +19,6 @@ public interface SysDictionaryDataDao extends IService<SysDictionaryData> {
     SysDictionaryDataDTO findById(Long id);
 
     /**
-     * 反向查询字典code
-     * @param ids 字典数据id列表
-     * @return
-     */
-    String[] findDictCodeByIds(Long...ids);
-
-    /**
      * 删除字典数据
      * @param dictId 字典id
      */
