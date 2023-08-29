@@ -1,7 +1,5 @@
 package com.microwarp.warden.stand.admin.domain.vo;
 
-import org.hibernate.validator.constraints.Length;
-
 import javax.validation.constraints.*;
 
 /**

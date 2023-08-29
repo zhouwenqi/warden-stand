@@ -3,11 +3,18 @@ package com.microwarp.warden.stand.admin.controller;
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysDeptMapstruct;
 import com.microwarp.warden.stand.admin.domain.vo.SysDeptCreateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysDeptUpdateRequest;
+import com.microwarp.warden.stand.admin.service.LogService;
+import com.microwarp.warden.stand.admin.utils.SecurityUtil;
+import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
+import com.microwarp.warden.stand.common.core.enums.AppTerminalEnum;
+import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
+import com.microwarp.warden.stand.common.core.enums.PlatformTypeEnum;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.common.core.pageing.SearchPageable;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
 import com.microwarp.warden.stand.common.exception.WardenRequireParamterException;
 import com.microwarp.warden.stand.common.model.ResultModel;
+import com.microwarp.warden.stand.common.utils.WebUtil;
 import com.microwarp.warden.stand.facade.sysdept.dto.SysDeptDTO;
 import com.microwarp.warden.stand.facade.sysdept.dto.SysDeptSearchDTO;
 import com.microwarp.warden.stand.facade.sysdept.service.SysDeptService;
@@ -15,6 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * controller - 部门
@@ -24,6 +35,8 @@ import org.springframework.web.bind.annotation.*;
 public class DeptController extends BaseController {
     @Autowired
     private SysDeptService sysDeptService;
+    @Autowired
+    private LogService logService;
     /**
      * 获取部门信息
      * @param id 部门id
@@ -55,6 +68,9 @@ public class DeptController extends BaseController {
         ResultModel resultModel = ResultModel.success();
         SysDeptDTO newDeptDTO = sysDeptService.create(sysDeptDTO);
         resultModel.addData("dept",newDeptDTO);
+
+        // 写入日志
+        logService.syncPcBackWrite("创建部门信息:"+newDeptDTO.getName()+"["+newDeptDTO.getCode()+"]", ActionTypeEnum.CREATE, ModuleTypeEnum.SYS_DEPT,newDeptDTO.getId());
         return resultModel;
     }
 
@@ -68,6 +84,8 @@ public class DeptController extends BaseController {
     public ResultModel putInfo(@Validated @RequestBody SysDeptUpdateRequest sysDeptRequest){
         SysDeptDTO sysDeptDTO = SysDeptMapstruct.Instance.sysDeptUpdateRequestToSysDeptDTO(sysDeptRequest);
         sysDeptService.update(sysDeptDTO);
+        // 写入日志
+        logService.syncPcBackWrite("修改部门信息:"+sysDeptDTO.getName()+"["+sysDeptDTO.getCode()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_DEPT,sysDeptDTO.getId());
         return ResultModel.success();
     }
 
@@ -81,6 +99,8 @@ public class DeptController extends BaseController {
     public ResultModel deleteInfo(@PathVariable Long[] id){
         if(null != id && id.length>0){
             sysDeptService.delete(id);
+            // 写入日志
+            logService.syncPcBackWrite("删除部门信息:"+"["+ Arrays.toString(id)+"]", ActionTypeEnum.DELETE, ModuleTypeEnum.SYS_DEPT,id);
         }
         return ResultModel.success();
     }

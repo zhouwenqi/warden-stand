@@ -3,6 +3,9 @@ package com.microwarp.warden.stand.admin.controller;
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysDictionaryDataMapstruct;
 import com.microwarp.warden.stand.admin.domain.vo.SysDictionaryDataCreateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysDictionaryDataUpdateRequest;
+import com.microwarp.warden.stand.admin.service.LogService;
+import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
+import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
 import com.microwarp.warden.stand.common.exception.WardenRequireParamterException;
 import com.microwarp.warden.stand.common.model.ResultModel;
@@ -23,6 +26,8 @@ import java.util.*;
 public class DictionaryDataController {
     @Autowired
     private SysDictionaryDataService sysDictionaryDataService;
+    @Autowired
+    private LogService logService;
 
     /**
      * 获取一条字典数据
@@ -92,6 +97,9 @@ public class DictionaryDataController {
         SysDictionaryDataDTO newDataDTO =  sysDictionaryDataService.create(sysDictionaryDataDTO);
         ResultModel resultModel = ResultModel.success();
         resultModel.addData("dictionaryData", SysDictionaryDataMapstruct.Instance.sysDictionaryDataDtoToSysDictionaryDataVO(newDataDTO));
+
+        // 写入日志
+        logService.syncPcBackWrite("追加字典数据:"+newDataDTO.getDictId()+" -> [" +newDataDTO.getDataKey()+","+newDataDTO.getDataValue()+","+newDataDTO.getDataAlias()+"]", ActionTypeEnum.CREATE, ModuleTypeEnum.DICTIONARY_DATA,newDataDTO.getId());
         return resultModel;
     }
 
@@ -105,6 +113,8 @@ public class DictionaryDataController {
     public ResultModel putDictionaryData(@Validated @RequestBody SysDictionaryDataUpdateRequest dataRequest){
         SysDictionaryDataDTO sysDictionaryDataDTO = SysDictionaryDataMapstruct.Instance.sysDictionaryDataUpdateRequestToSysDictionaryDataDTO(dataRequest);
         sysDictionaryDataService.update(sysDictionaryDataDTO);
+        // 写入日志
+        logService.syncPcBackWrite("修改字典数据:"+sysDictionaryDataDTO.getDictId()+" -> [" +sysDictionaryDataDTO.getDataKey()+","+sysDictionaryDataDTO.getDataValue()+","+sysDictionaryDataDTO.getDataAlias()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.DICTIONARY_DATA,sysDictionaryDataDTO.getId());
         return ResultModel.success();
     }
 
@@ -118,6 +128,9 @@ public class DictionaryDataController {
     public ResultModel deleteDictionaryData(@PathVariable Long... id){
         if(null != id && id.length > 0){
             sysDictionaryDataService.delete(id);
+
+            // 写入日志
+            logService.syncPcBackWrite("删除字典数据:"+"[" + Arrays.toString(id) +"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.DICTIONARY_DATA,id);
         }
         return ResultModel.success();
     }

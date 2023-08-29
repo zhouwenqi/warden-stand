@@ -4,7 +4,10 @@ import com.microwarp.warden.stand.admin.domain.mapstruct.SysRoleMapstruct;
 import com.microwarp.warden.stand.admin.domain.vo.SysRoleCreateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysRolePermissionRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysRoleUpdateRequest;
+import com.microwarp.warden.stand.admin.service.LogService;
 import com.microwarp.warden.stand.common.core.constant.SecurityConstants;
+import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
+import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
 import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.common.core.pageing.SearchPageable;
@@ -36,6 +39,8 @@ public class RoleController extends BaseController {
     private SysRoleService sysRoleService;
     @Autowired
     private SysPermissionService sysPermissionService;
+    @Autowired
+    private LogService logService;
 
     /**
      * 获取角色信息
@@ -69,6 +74,9 @@ public class RoleController extends BaseController {
         sysRoleDTO = sysRoleService.create(sysRoleDTO);
         ResultModel resultModel = ResultModel.success();
         resultModel.addData("role",SysRoleMapstruct.Instance.sysRoleDtoToSysRoleVO(sysRoleDTO));
+
+        // 写入日志
+        logService.syncPcBackWrite("创建角色信息:"+sysRoleDTO.getName()+"["+sysRoleDTO.getValue()+"]", ActionTypeEnum.CREATE, ModuleTypeEnum.SYS_ROLE,sysRoleDTO.getId());
         return resultModel;
     }
 
@@ -89,6 +97,8 @@ public class RoleController extends BaseController {
         }
         SysRoleDTO sysRolRequesteDTO = SysRoleMapstruct.Instance.sysRoleUpdateRequestTosysRoleDTO(updateRequest);
         sysRoleService.update(sysRolRequesteDTO);
+        // 写入日志
+        logService.syncPcBackWrite("修改角色信息:"+sysRolRequesteDTO.getName()+"["+sysRolRequesteDTO.getValue()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_ROLE,sysRolRequesteDTO.getId());
         return ResultModel.success();
     }
 
@@ -108,6 +118,8 @@ public class RoleController extends BaseController {
             throw new WardenParamterErrorException("保留角色权限不能修改");
         }
         sysPermissionService.saveRolePermission(roleRequest.getRoleId(), roleRequest.getPermissionIds());
+        // 写入日志
+        logService.syncPcBackWrite("修改角色权限:"+sysRoleDTO.getName()+"["+sysRoleDTO.getValue()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_ROLE,sysRoleDTO.getId());
         return ResultModel.success();
     }
 
@@ -130,6 +142,8 @@ public class RoleController extends BaseController {
             throw new WardenParamterErrorException("保留角色权限不能删除");
         }
         sysRoleService.delete(id);
+        // 写入日志
+        logService.syncPcBackWrite("删除角色ID:"+sysRoleDTO.getName()+"["+sysRoleDTO.getValue()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_ROLE,sysRoleDTO.getId());
         return ResultModel.success();
     }
 

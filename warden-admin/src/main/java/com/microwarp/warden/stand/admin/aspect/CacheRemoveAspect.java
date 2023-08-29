@@ -13,7 +13,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 /**
- * Created by Administrator on 2023/8/22.
+ * aspect - 批量清理缓存
+ * @author zhouwenqi
  */
 @Aspect
 @Component

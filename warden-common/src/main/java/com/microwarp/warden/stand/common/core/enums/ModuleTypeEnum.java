@@ -10,7 +10,9 @@ public enum ModuleTypeEnum implements BaseEnum {
     SYS_DICTIONARY(3,"系统字典"),
     DICTIONARY_DATA(4,"字典数据"),
     SYS_DEPT(5,"部门"),
-    SYS_POST(6,"岗位");
+    SYS_POST(6,"岗位"),
+    LOGIN_LOG(7,"登录日志"),
+    OPERATION_LOG(8,"操作日志");
     int code;
     String tag;
     ModuleTypeEnum(int code, String tag){

@@ -4,11 +4,19 @@ import com.microwarp.warden.stand.admin.domain.mapstruct.SysPermissionMapstruct;
 import com.microwarp.warden.stand.admin.domain.vo.SysPermissionCreateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysPermissionUpdateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysPermissionVO;
+import com.microwarp.warden.stand.admin.domain.vo.SysUserDetailsVO;
 import com.microwarp.warden.stand.admin.service.ExcelExportService;
+import com.microwarp.warden.stand.admin.service.LogService;
+import com.microwarp.warden.stand.admin.utils.SecurityUtil;
+import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
+import com.microwarp.warden.stand.common.core.enums.AppTerminalEnum;
+import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
+import com.microwarp.warden.stand.common.core.enums.PlatformTypeEnum;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.common.core.pageing.SearchPageable;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
 import com.microwarp.warden.stand.common.model.ResultModel;
+import com.microwarp.warden.stand.common.utils.WebUtil;
 import com.microwarp.warden.stand.facade.syspermission.dto.SysPermissionDTO;
 import com.microwarp.warden.stand.facade.syspermission.dto.SysPermissionSearchDTO;
 import com.microwarp.warden.stand.facade.syspermission.service.SysPermissionService;
@@ -31,6 +39,8 @@ public class PermissionController {
     private SysPermissionService sysPermissionService;
     @Autowired
     private ExcelExportService excelExportService;
+    @Autowired
+    private LogService logService;
 
     /**
      * 获取权限信息
@@ -133,5 +143,8 @@ public class PermissionController {
     public void export(@RequestBody SearchPageable<SysPermissionSearchDTO> searchPageable, HttpServletResponse response) throws IOException{
         String fileName = "系统权限"+System.currentTimeMillis();
         excelExportService.sysPermissionPageData(fileName,"权限列表", response, searchPageable);
+
+        // 写入日志
+        logService.syncPcBackWrite("导出权限数据:"+fileName, ActionTypeEnum.EXPORT, ModuleTypeEnum.SYS_PERMISSION,null);
     }
 }

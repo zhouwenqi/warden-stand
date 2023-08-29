@@ -3,9 +3,12 @@ package com.microwarp.warden.stand.admin.controller;
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysUserMapstruct;
 import com.microwarp.warden.stand.admin.domain.vo.*;
 import com.microwarp.warden.stand.admin.service.ExcelExportService;
+import com.microwarp.warden.stand.admin.service.LogService;
 import com.microwarp.warden.stand.admin.utils.SecurityUtil;
 import com.microwarp.warden.stand.common.core.config.WardenGlobalConfig;
 import com.microwarp.warden.stand.common.core.constant.SecurityConstants;
+import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
+import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.common.core.pageing.SearchPageable;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
@@ -41,6 +44,8 @@ public class UserController extends BaseController {
     private SysRoleService sysRoleService;
     @Autowired
     private ExcelExportService excelExportService;
+    @Autowired
+    private LogService logService;
 
     /**
      * 查看用户信息
@@ -78,8 +83,14 @@ public class UserController extends BaseController {
                 throw new WardenRequireAuthorizedException("创建超级管理员权限不够");
             }
         }
-        sysUserService.create(requestDTO);
-        return ResultModel.success();
+        Long userId = sysUserService.create(requestDTO);
+        SysUserDTO userDTO = sysUserService.findById(userId);
+        ResultModel resultModel = ResultModel.success();
+        resultModel.addData("user",SysUserMapstruct.Instance.sysUserDtoToSysUserVo(userDTO));
+
+        // 写入日志
+        logService.syncPcBackWrite("创建系统用户:"+userDTO.getUid()+"["+userDTO.getId()+"]", ActionTypeEnum.CREATE, ModuleTypeEnum.SYS_USER,userDTO.getId());
+        return resultModel;
     }
 
     /**
@@ -113,6 +124,9 @@ public class UserController extends BaseController {
             }
             sysRoleService.saveUserRoles(sysUserDetailsDTO.getId(),updateRequest.getRoleIds());
         }
+
+        // 写入日志
+        logService.syncPcBackWrite("修改系统用户:"+sysUserDTO.getUid()+"["+sysUserDTO.getId()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_USER,sysUserDTO.getId());
         return resultModel;
     }
 
@@ -136,6 +150,9 @@ public class UserController extends BaseController {
         sysUserPasswordDTO.setUserId(passwordRequest.getUserId());
         sysUserPasswordDTO.setNewPassword(bCryptPasswordEncoder.encode(passwordRequest.getNewPassword()));
         sysUserService.updatePassowrd(sysUserPasswordDTO);
+
+        // 写入日志
+        logService.syncPcBackWrite("修改系统用户密码:"+sysUserDetailsDTO.getUid()+"["+sysUserDetailsDTO.getId()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_USER,sysUserDetailsDTO.getId());
         return ResultModel.success();
     }
 
@@ -162,6 +179,8 @@ public class UserController extends BaseController {
             throw new WardenRequireAuthorizedException("删除超级管理员权限不够");
         }
         sysUserService.delete(sysUserDetailsDTO.getId());
+        // 写入日志
+        logService.syncPcBackWrite("删除系统用户:"+sysUserDetailsDTO.getUid()+"["+sysUserDetailsDTO.getId()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_USER,sysUserDetailsDTO.getId());
         return  ResultModel.success();
     }
 
@@ -191,5 +210,8 @@ public class UserController extends BaseController {
     public void export(@RequestBody SearchPageable<SysUserSearchDTO> searchPageable, HttpServletResponse response) throws IOException{
         String fileName = "系统用户"+System.currentTimeMillis();
         excelExportService.sysUserPageData(fileName,"用户列表", response, searchPageable);
+
+        // 写入日志
+        logService.syncPcBackWrite("导出系统用户信息:"+fileName, ActionTypeEnum.EXPORT, ModuleTypeEnum.SYS_USER,null);
     }
 }

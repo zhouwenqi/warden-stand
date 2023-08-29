@@ -3,6 +3,9 @@ package com.microwarp.warden.stand.admin.controller;
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysPostMapstruct;
 import com.microwarp.warden.stand.admin.domain.vo.SysPostCreateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysPostUpdateRequest;
+import com.microwarp.warden.stand.admin.service.LogService;
+import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
+import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
 import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.common.core.pageing.SearchPageable;
@@ -16,6 +19,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+
 /**
  * controller - 岗位
  * @author zhouwenqi
@@ -24,6 +29,8 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
     @Autowired
     private SysPostService sysPostService;
+    @Autowired
+    private LogService logService;
 
     /**
      * 获取岗位信息
@@ -57,6 +64,9 @@ public class PostController {
         ResultModel resultModel = ResultModel.success();
         SysPostDTO newPostDTO = sysPostService.create(sysPostDTO);
         resultModel.addData("post",newPostDTO);
+
+        // 写入日志
+        logService.syncPcBackWrite("创建岗位信息:"+newPostDTO.getName()+"["+newPostDTO.getCode()+"]", ActionTypeEnum.CREATE, ModuleTypeEnum.SYS_POST,newPostDTO.getId());
         return resultModel;
     }
 
@@ -70,6 +80,9 @@ public class PostController {
     public ResultModel putInfo(@Validated @RequestBody SysPostUpdateRequest sysPostRequest){
         SysPostDTO sysPostDTO = SysPostMapstruct.Instance.sysPostUpdateRequestToSysPostDTO(sysPostRequest);
         sysPostService.update(sysPostDTO);
+
+        // 写入日志
+        logService.syncPcBackWrite("修改岗位信息:"+sysPostDTO.getName()+"["+sysPostDTO.getCode()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_POST,sysPostDTO.getId());
         return ResultModel.success();
     }
 
@@ -83,6 +96,8 @@ public class PostController {
     public ResultModel deleteInfo(@PathVariable Long[] id){
         if(null != id && id.length>0){
             sysPostService.delete(id);
+            logService.syncPcBackWrite("删除岗位信息:["+ Arrays.toString(id)+"]", ActionTypeEnum.DELETE, ModuleTypeEnum.SYS_POST,id);
+
         }
         return ResultModel.success();
     }

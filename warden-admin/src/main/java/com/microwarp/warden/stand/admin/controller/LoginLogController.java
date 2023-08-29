@@ -2,11 +2,18 @@ package com.microwarp.warden.stand.admin.controller;
 
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysLoginLogMapstruct;
 import com.microwarp.warden.stand.admin.service.ExcelExportService;
+import com.microwarp.warden.stand.admin.service.LogService;
+import com.microwarp.warden.stand.admin.utils.SecurityUtil;
+import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
+import com.microwarp.warden.stand.common.core.enums.AppTerminalEnum;
+import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
+import com.microwarp.warden.stand.common.core.enums.PlatformTypeEnum;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.common.core.pageing.SearchPageable;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
 import com.microwarp.warden.stand.common.exception.WardenRequireParamterException;
 import com.microwarp.warden.stand.common.model.ResultModel;
+import com.microwarp.warden.stand.common.utils.WebUtil;
 import com.microwarp.warden.stand.facade.sysloginlog.dto.SysLoginLogDTO;
 import com.microwarp.warden.stand.facade.sysloginlog.dto.SysLoginLogSearchDTO;
 import com.microwarp.warden.stand.facade.sysloginlog.service.SysLoginLogService;
@@ -16,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * controller - 登录日志
@@ -27,6 +35,8 @@ public class LoginLogController extends BaseController {
     private SysLoginLogService sysLoginLogService;
     @Autowired
     private ExcelExportService excelExportService;
+    @Autowired
+    private LogService logService;
 
     /**
      * 获取登录日志信息
@@ -54,11 +64,13 @@ public class LoginLogController extends BaseController {
      * @param id 日志id
      * @return
      */
-    @DeleteMapping("/logionLog/{id}")
+    @DeleteMapping("/loginLog/{id}")
     @PreAuthorize("hasAuthority('login:log:delete')")
     public ResultModel loginLogDelete(@PathVariable Long[] id){
         if(null != id && id.length > 0){
             sysLoginLogService.delete(id);
+            // 写入日志
+            logService.syncPcBackWrite("删除登录日志:["+ Arrays.toString(id)+"]", ActionTypeEnum.EXPORT, ModuleTypeEnum.LOGIN_LOG,id);
         }
         return ResultModel.success();
     }
@@ -88,5 +100,8 @@ public class LoginLogController extends BaseController {
     public void export(@RequestBody SearchPageable<SysLoginLogSearchDTO> searchPageable,HttpServletResponse response) throws IOException{
         String fileName = "登录日志"+System.currentTimeMillis();
         excelExportService.sysLoginLogPageData(fileName, "日志列表", response, searchPageable);
+
+        // 写入日志
+        logService.syncPcBackWrite("导出登录日志数据:"+fileName, ActionTypeEnum.EXPORT, ModuleTypeEnum.LOGIN_LOG,null);
     }
 }

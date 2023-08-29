@@ -88,8 +88,8 @@ public class SysOperationLogServiceImpl extends BaseServiceImpl<SysOperationLog>
             if(null != searchDTO.getMateId()) {
                 queryWrapper.and(true, wrapper -> wrapper.eq("user_id", searchDTO.getMateId()));
             }
-            if(null != searchDTO.getActoinType()) {
-                queryWrapper.and(true, wrapper -> wrapper.eq("action_type", searchDTO.getActoinType()));
+            if(null != searchDTO.getActionType()) {
+                queryWrapper.and(true, wrapper -> wrapper.eq("action_type", searchDTO.getActionType()));
             }
             if(null != searchDTO.getModuleType()) {
                 queryWrapper.and(true, wrapper -> wrapper.eq("module_type", searchDTO.getModuleType()));

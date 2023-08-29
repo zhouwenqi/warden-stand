@@ -4,7 +4,10 @@ import com.microwarp.warden.stand.admin.domain.mapstruct.SysUserMapstruct;
 import com.microwarp.warden.stand.admin.domain.vo.ProfilePasswordRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysUserDetailsVO;
 import com.microwarp.warden.stand.admin.domain.vo.SysUserProfileRequest;
+import com.microwarp.warden.stand.admin.service.LogService;
 import com.microwarp.warden.stand.admin.utils.SecurityUtil;
+import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
+import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
 import com.microwarp.warden.stand.common.exception.WardenRequireParamterException;
 import com.microwarp.warden.stand.common.model.ResultModel;
 import com.microwarp.warden.stand.facade.sysuser.dto.SysUserDTO;
@@ -26,6 +29,8 @@ public class ProfileController extends BaseController {
     private SysUserService sysUserService;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private LogService logService;
     /**
      * 获取当前用户信息
      * @return
@@ -49,6 +54,8 @@ public class ProfileController extends BaseController {
         SysUserDTO sysUserDTO = SysUserMapstruct.Instance.sysUserProfileRequestToSysUserDTO(profileRequest);
         sysUserDTO.setId(getSecruityUser().getSysUser().getId());
         sysUserService.update(sysUserDTO);
+        // 写入日志
+        logService.syncPcBackWrite("修改个人资料:"+sysUserDTO.getUid()+"["+sysUserDTO.getId()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_USER,sysUserDTO.getId());
         return resultModel;
     }
 
@@ -67,6 +74,9 @@ public class ProfileController extends BaseController {
         sysUserPasswordDTO.setUserId(sysUserDetailsDTO.getId());
         sysUserPasswordDTO.setNewPassword(bCryptPasswordEncoder.encode(passwordRequest.getNewPassword()));
         sysUserService.updatePassowrd(sysUserPasswordDTO);
+
+        // 写入日志
+        logService.syncPcBackWrite("修改登录密码:"+sysUserDetailsDTO.getUid()+"["+sysUserPasswordDTO.getUserId()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_USER,sysUserPasswordDTO.getUserId());
         return ResultModel.success();
     }
 }

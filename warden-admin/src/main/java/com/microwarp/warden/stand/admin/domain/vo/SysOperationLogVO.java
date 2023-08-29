@@ -17,7 +17,7 @@ public class SysOperationLogVO {
     /** 用户帐号 */
     private String uid;
     /** 动作类型 */
-    private ActionTypeEnum actoinType;
+    private ActionTypeEnum actionType;
     /** 应用终端类型 */
     private AppTerminalEnum appTerminalType;
     /** 平台类型 */
@@ -61,12 +61,12 @@ public class SysOperationLogVO {
         this.uid = uid;
     }
 
-    public ActionTypeEnum getActoinType() {
-        return actoinType;
+    public ActionTypeEnum getActionType() {
+        return actionType;
     }
 
-    public void setActoinType(ActionTypeEnum actoinType) {
-        this.actoinType = actoinType;
+    public void setActionType(ActionTypeEnum actionType) {
+        this.actionType = actionType;
     }
 
     public AppTerminalEnum getAppTerminalType() {
