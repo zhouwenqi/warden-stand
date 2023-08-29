@@ -1,13 +1,12 @@
 package com.microwarp.warden.stand.admin.controller;
 
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysUserMapstruct;
+import com.microwarp.warden.stand.admin.domain.vo.ProfilePasswordRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysUserDetailsVO;
-import com.microwarp.warden.stand.admin.domain.vo.SysUserPasswordRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysUserProfileRequest;
 import com.microwarp.warden.stand.admin.utils.SecurityUtil;
 import com.microwarp.warden.stand.common.exception.WardenRequireParamterException;
 import com.microwarp.warden.stand.common.model.ResultModel;
-import com.microwarp.warden.stand.facade.sysrole.service.SysRoleService;
 import com.microwarp.warden.stand.facade.sysuser.dto.SysUserDTO;
 import com.microwarp.warden.stand.facade.sysuser.dto.SysUserDetailsDTO;
 import com.microwarp.warden.stand.facade.sysuser.dto.SysUserPasswordDTO;
@@ -15,10 +14,7 @@ import com.microwarp.warden.stand.facade.sysuser.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * controller - 个人信息
@@ -47,7 +43,7 @@ public class ProfileController extends BaseController {
      * 更新当前用户信息
      * @return
      */
-    @PutMapping("/profile")
+    @PatchMapping("/profile")
     public ResultModel putProfile(@RequestBody @Validated SysUserProfileRequest profileRequest){
         ResultModel resultModel = ResultModel.success();
         SysUserDTO sysUserDTO = SysUserMapstruct.Instance.sysUserProfileRequestToSysUserDTO(profileRequest);
@@ -61,7 +57,7 @@ public class ProfileController extends BaseController {
      * @return
      */
     @PutMapping("/user/current/password")
-    public ResultModel putProfilePassword(@RequestBody @Validated SysUserPasswordRequest passwordRequest){
+    public ResultModel putProfilePassword(@RequestBody @Validated ProfilePasswordRequest passwordRequest){
         String oldPassword = passwordRequest.getOldPassword();
         SysUserDetailsDTO sysUserDetailsDTO = getSecruityUser().getSysUser();
         if(!bCryptPasswordEncoder.matches(oldPassword,sysUserDetailsDTO.getPwd())){

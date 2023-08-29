@@ -1,7 +1,8 @@
 package com.microwarp.warden.stand.admin.controller;
 
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysPermissionMapstruct;
-import com.microwarp.warden.stand.admin.domain.vo.SysPermissionRequest;
+import com.microwarp.warden.stand.admin.domain.vo.SysPermissionCreateRequest;
+import com.microwarp.warden.stand.admin.domain.vo.SysPermissionUpdateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysPermissionVO;
 import com.microwarp.warden.stand.admin.service.ExcelExportService;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
@@ -73,8 +74,8 @@ public class PermissionController {
      */
     @PostMapping("/permission")
     @PreAuthorize("hasAuthority('permission:admin')")
-    public ResultModel postPermission(@Validated @RequestBody SysPermissionRequest permissionRequest){
-        SysPermissionDTO sysPermissionDTO = SysPermissionMapstruct.Instance.sysPermissionRequestToSysPermissionDTO(permissionRequest);
+    public ResultModel postPermission(@Validated @RequestBody SysPermissionCreateRequest permissionRequest){
+        SysPermissionDTO sysPermissionDTO = SysPermissionMapstruct.Instance.sysPermissionCreateRequestToSysPermissionDTO(permissionRequest);
         ResultModel resultModel = ResultModel.success();
         SysPermissionDTO newSysPermission = sysPermissionService.create(sysPermissionDTO);
         resultModel.addData("permission", SysPermissionMapstruct.Instance.sysPermissionDtoToSysPermissionVO(newSysPermission));
@@ -82,17 +83,14 @@ public class PermissionController {
     }
 
     /**
-     * 创建权限
+     * 修改权限
      * @param permissionRequest 权限信息
      * @return
      */
-    @PutMapping("/permission")
+    @PatchMapping("/permission")
     @PreAuthorize("hasAuthority('permission:admin')")
-    public ResultModel putPermission(@Validated @RequestBody SysPermissionRequest permissionRequest){
-        SysPermissionDTO sysPermissionDTO = SysPermissionMapstruct.Instance.sysPermissionRequestToSysPermissionDTO(permissionRequest);
-        if(null == sysPermissionDTO.getId()){
-            throw new WardenParamterErrorException("权限id不能为空");
-        }
+    public ResultModel putPermission(@Validated @RequestBody SysPermissionUpdateRequest permissionRequest){
+        SysPermissionDTO sysPermissionDTO = SysPermissionMapstruct.Instance.sysPermissionUpdateRequestToSysPermissionDTO(permissionRequest);
         sysPermissionService.update(sysPermissionDTO);
         return ResultModel.success();
     }

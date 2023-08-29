@@ -2,7 +2,8 @@ package com.microwarp.warden.stand.admin.domain.mapstruct;
 
 import com.microwarp.warden.stand.admin.authentication.SecurityAuthority;
 import com.microwarp.warden.stand.admin.domain.excel.SysPermissionExcel;
-import com.microwarp.warden.stand.admin.domain.vo.SysPermissionRequest;
+import com.microwarp.warden.stand.admin.domain.vo.SysPermissionCreateRequest;
+import com.microwarp.warden.stand.admin.domain.vo.SysPermissionUpdateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysPermissionVO;
 import com.microwarp.warden.stand.facade.syspermission.dto.SysPermissionDTO;
 import org.mapstruct.Mapper;
@@ -26,7 +27,8 @@ public interface SysPermissionMapstruct {
     List<SecurityAuthority> toSecurityAuthoritys(Set<SysPermissionDTO> sysPermissionsDTO);
     SysPermissionVO sysPermissionDtoToSysPermissionVO(SysPermissionDTO sysPermissionDTO);
     List<SysPermissionVO> sysPermissionsDtoToSysPermissionsVO(List<SysPermissionDTO> sysPermissionsDTO);
-    SysPermissionDTO sysPermissionRequestToSysPermissionDTO(SysPermissionRequest sysPermissionRequest);
+    SysPermissionDTO sysPermissionCreateRequestToSysPermissionDTO(SysPermissionCreateRequest sysPermissionRequest);
+    SysPermissionDTO sysPermissionUpdateRequestToSysPermissionDTO(SysPermissionUpdateRequest sysPermissionRequest);
     SysPermissionExcel sysPermissionDtoToSysPermissionExcel(SysPermissionDTO sysPermissionDTO);
     List<SysPermissionExcel> sysPermissionsDtoToSysPermissionsExcel(List<SysPermissionDTO> sysPermissionsDTO);
 }

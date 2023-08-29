@@ -1,9 +1,9 @@
 package com.microwarp.warden.stand.admin.controller;
 
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysPostMapstruct;
-import com.microwarp.warden.stand.admin.domain.vo.SysPostRequest;
+import com.microwarp.warden.stand.admin.domain.vo.SysPostCreateRequest;
+import com.microwarp.warden.stand.admin.domain.vo.SysPostUpdateRequest;
 import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
-import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.common.core.pageing.SearchPageable;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
@@ -52,9 +52,8 @@ public class PostController {
      */
     @PostMapping("/post")
     @PreAuthorize("hasAuthority('post:admin')")
-    public ResultModel postInfo(@Validated @RequestBody SysPostRequest sysPostRequest){
-        SysPostDTO sysPostDTO = SysPostMapstruct.Instance.sysPostRequestToSysPostDTO(sysPostRequest);
-        sysPostDTO.setId(null);
+    public ResultModel postInfo(@Validated @RequestBody SysPostCreateRequest sysPostRequest){
+        SysPostDTO sysPostDTO = SysPostMapstruct.Instance.sysPostCreateRequestToSysPostDTO(sysPostRequest);
         ResultModel resultModel = ResultModel.success();
         SysPostDTO newPostDTO = sysPostService.create(sysPostDTO);
         resultModel.addData("post",newPostDTO);
@@ -66,13 +65,10 @@ public class PostController {
      * @param sysPostRequest 岗位信息
      * @return
      */
-    @PutMapping("/post")
+    @PatchMapping("/post")
     @PreAuthorize("hasAuthority('post:admin')")
-    public ResultModel putInfo(@Validated @RequestBody SysPostRequest sysPostRequest){
-        SysPostDTO sysPostDTO = SysPostMapstruct.Instance.sysPostRequestToSysPostDTO(sysPostRequest);
-        if(null == sysPostDTO.getId()){
-            throw new WardenRequireParamterException("岗位id不能为空");
-        }
+    public ResultModel putInfo(@Validated @RequestBody SysPostUpdateRequest sysPostRequest){
+        SysPostDTO sysPostDTO = SysPostMapstruct.Instance.sysPostUpdateRequestToSysPostDTO(sysPostRequest);
         sysPostService.update(sysPostDTO);
         return ResultModel.success();
     }
@@ -96,7 +92,7 @@ public class PostController {
      * @param searchPageable 查询条件
      * @return
      */
-    @PostMapping("/post/search")
+    @PostMapping("/posts/search")
     public ResultModel search(@RequestBody SearchPageable<BasicSearchDTO> searchPageable){
         ResultModel resultModel = ResultModel.success();
         ResultPage<SysPostDTO> resultPage = sysPostService.findPage(searchPageable);

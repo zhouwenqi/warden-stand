@@ -39,9 +39,9 @@ public class SysUserDetailsVO {
     /** 修改时间 */
     private Date updateDate;
     /** 角色列表 */
-    private Set<SysRoleDTO> roles;
+    private Set<SysRoleVO> roles;
     /** 权限列表 */
-    private Set<SysPermissionDTO> permissions;
+    private Set<SysPermissionVO> permissions;
     /** 权限值列表 */
     private String[] authorities;
     /** 部门 */
@@ -145,19 +145,19 @@ public class SysUserDetailsVO {
         this.updateDate = updateDate;
     }
 
-    public Set<SysRoleDTO> getRoles() {
+    public Set<SysRoleVO> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<SysRoleDTO> roles) {
+    public void setRoles(Set<SysRoleVO> roles) {
         this.roles = roles;
     }
 
-    public Set<SysPermissionDTO> getPermissions() {
+    public Set<SysPermissionVO> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(Set<SysPermissionDTO> permissions) {
+    public void setPermissions(Set<SysPermissionVO> permissions) {
         this.permissions = permissions;
     }
 

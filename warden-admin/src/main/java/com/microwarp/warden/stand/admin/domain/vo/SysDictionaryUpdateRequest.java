@@ -6,6 +6,7 @@ import javax.validation.constraints.*;
  * vo - 更新字典 - request
  */
 public class SysDictionaryUpdateRequest {
+    @NotNull(message = "字典ID不能为空")
     private Long id;
     /** 字典名 */
     @Size(max = 40, message = "字典名称不能超过40个字符")

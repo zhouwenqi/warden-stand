@@ -15,6 +15,7 @@ public class DictUtil {
         addEnum(SystemTerminalEnum.class,SystemTerminalEnum.values(),"系统终端");
         addEnum(AppTerminalEnum.class,AppTerminalEnum.values(),"应用终端");
         addEnum(TerminalEnum.class,TerminalEnum.values(),"设备终端");
+        addEnum(ModuleTypeEnum.class,ModuleTypeEnum.values(),"模块类型");
     }
     public static WardenDictionary getEnumDictionary(String key){
         return  WardenDictionary.DictMap.get(key);

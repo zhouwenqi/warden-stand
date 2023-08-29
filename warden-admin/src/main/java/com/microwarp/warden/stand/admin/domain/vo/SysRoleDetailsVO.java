@@ -1,7 +1,5 @@
 package com.microwarp.warden.stand.admin.domain.vo;
 
-import com.microwarp.warden.stand.facade.syspermission.dto.SysPermissionDTO;
-
 import java.util.Date;
 import java.util.Set;
 
@@ -23,7 +21,7 @@ public class SysRoleDetailsVO {
     /** 修改时间 */
     private Date updateDate;
     /** 权限列表 */
-    private Set<SysPermissionDTO> permissions;
+    private Set<SysPermissionVO> permissions;
 
     public Long getId() {
         return id;
@@ -81,11 +79,11 @@ public class SysRoleDetailsVO {
         this.updateDate = updateDate;
     }
 
-    public Set<SysPermissionDTO> getPermissions() {
+    public Set<SysPermissionVO> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(Set<SysPermissionDTO> permissions) {
+    public void setPermissions(Set<SysPermissionVO> permissions) {
         this.permissions = permissions;
     }
 }

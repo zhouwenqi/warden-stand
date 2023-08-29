@@ -6,6 +6,7 @@ import javax.validation.constraints.*;
  * vo - 更新字典数据 - request
  */
 public class SysDictionaryDataUpdateRequest {
+    @NotNull(message = "字典数据ID不能为空")
     private Long id;
     /** 字典id */
     private Long dictId;

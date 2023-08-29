@@ -16,7 +16,7 @@ public class SysUserRegisterRequest {
     private String uid;
     /** 密码 */
     @NotBlank(message = "密码不能为空")
-    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,16}",message = "密码必需包含字母数字和特殊字符，长度为6-18")
+    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[$@!%*#?&])[A-Za-z\\d$@!%*#?&]{6,18}",message = "密码必需包含字母数字和特殊字符，长度为6-18")
     private String pwd;
     /** 电子邮箱 */
     @Email(message = "E-mail格式不正确，可以为空")

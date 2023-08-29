@@ -17,7 +17,7 @@ public class SysUserCreateRequest {
     private String uid;
     /** 密码 */
     @NotBlank(message = "密码不能为空")
-    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,16}",message = "密码必需包含字母数字和特殊字符，长度为6-18")
+    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@!%*#?&]{8,16}",message = "密码必需包含字母数字和特殊字符，长度为6-18")
     private String pwd;
     /** 姓名 */
     @Pattern(regexp = "^[a-zA-Z0-9\\u4e00-\\u9fa5]{2,20}",message = "姓名只能是2-20个中文或英文字符")

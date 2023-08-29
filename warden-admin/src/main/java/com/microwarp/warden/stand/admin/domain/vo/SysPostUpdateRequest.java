@@ -3,18 +3,16 @@ package com.microwarp.warden.stand.admin.domain.vo;
 import javax.validation.constraints.*;
 
 /**
- * vo - 岗位 - request
+ * vo - 创建岗位 - request
  */
-public class SysPostRequest {
+public class SysPostUpdateRequest {
+    @NotNull(message = "岗位ID不能为空")
     private Long id;
     /** 岗位名称 */
-    @NotBlank(message = "岗位名称不能为空")
-    @Size(max = 40, message = "岗位名称不能超过40个字符")
     @Pattern(regexp = "^[0-9a-zA-Z\\u4e00-\\u9fa5]{4,40}",message = "岗位名称只能是4-40个中文或数字或英文字符")
     private String name;
     /** 岗位编号 */
-    @NotBlank(message = " 岗位编号不能为空")
-    @Pattern(regexp = "^[a-zA-Z0-9]{6,20}",message = " 岗位编号只能是6-20位字母和数字字符")
+    @Pattern(regexp = "^[a-zA-Z0-9]{6,20}",message = "岗位编号只能是6-20位字母和数字字符")
     private String code;
     /** 描述 */
     private String description;

@@ -65,13 +65,10 @@ public class DictionaryController {
      * @param sysDictionaryRequest 字典信息
      * @return
      */
-    @PutMapping("/dictionary")
+    @PatchMapping("/dictionary")
     @PreAuthorize("hasAuthority('dictionary:admin')")
     public ResultModel putDictionary(@Validated @RequestBody SysDictionaryUpdateRequest sysDictionaryRequest){
         SysDictionaryDTO sysDictionaryDTO = SysDictionaryMapstruct.Instance.sysDictionaryUpdateRequestToSysDictionaryDTO(sysDictionaryRequest);
-        if(null == sysDictionaryDTO.getId()){
-            throw new WardenRequireParamterException("字典id不能为空");
-        }
         sysDictionaryService.update(sysDictionaryDTO);
         return ResultModel.success();
     }

@@ -6,17 +6,16 @@ import javax.validation.constraints.*;
 /**
  * vo - 部门 - response
  */
-public class SysDeptRequest {
+public class SysDeptUpdateRequest {
+    @NotNull(message = "部门ID不能为空")
     private Long id;
     /** 部门名称 */
-    @NotBlank(message = "部门名称不能为空")
     @Size(max = 40, message = "部门名称不能超过40个字符")
     @Pattern(regexp = "^[0-9a-zA-Z\\u4e00-\\u9fa5]{4,40}",message = "部门名称只能是4-40个中文或数字或英文字符")
     private String name;
     /** 部门电话 */
     private String phone;
     /** 部门编号 */
-    @NotBlank(message = "部门编号不能为空")
     @Pattern(regexp = "^[a-zA-Z0-9]{6,20}",message = "部门编号只能是6-20位字母和数字字符")
     private String code;
     /** 负责人id */

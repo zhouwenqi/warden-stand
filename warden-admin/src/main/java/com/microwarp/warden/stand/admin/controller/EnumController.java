@@ -16,7 +16,7 @@ import java.util.Map;
  * controller - 枚举字典数据
  * @author zhouwenqi
  */
-@RequestMapping("/enums")
+@RequestMapping("/enum")
 @RestController
 public class EnumController {
     /**
@@ -24,8 +24,8 @@ public class EnumController {
      * @param keys 枚举名称列表
      * @return
      */
-    @PostMapping("dictionarys")
-    public ResultModel enums(@RequestBody String[] keys){
+    @GetMapping("dictionarys/{keys}")
+    public ResultModel enums(@PathVariable String[] keys){
         if(null == keys || keys.length < 1){
             throw new WardenRequireParamterException("Key(枚举类名)不为为空");
         }

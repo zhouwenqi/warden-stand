@@ -1,7 +1,8 @@
 package com.microwarp.warden.stand.admin.controller;
 
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysDeptMapstruct;
-import com.microwarp.warden.stand.admin.domain.vo.SysDeptRequest;
+import com.microwarp.warden.stand.admin.domain.vo.SysDeptCreateRequest;
+import com.microwarp.warden.stand.admin.domain.vo.SysDeptUpdateRequest;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.common.core.pageing.SearchPageable;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
@@ -49,9 +50,8 @@ public class DeptController extends BaseController {
      */
     @PostMapping("/dept")
     @PreAuthorize("hasAuthority('dept:admin')")
-    public ResultModel postInfo(@Validated @RequestBody SysDeptRequest sysDeptRequest){
-        SysDeptDTO sysDeptDTO = SysDeptMapstruct.Instance.sysDeptRequestToSysDeptDTO(sysDeptRequest);
-        sysDeptDTO.setId(null);
+    public ResultModel postInfo(@Validated @RequestBody SysDeptCreateRequest sysDeptRequest){
+        SysDeptDTO sysDeptDTO = SysDeptMapstruct.Instance.sysDeptCreateRequestToSysDeptDTO(sysDeptRequest);
         ResultModel resultModel = ResultModel.success();
         SysDeptDTO newDeptDTO = sysDeptService.create(sysDeptDTO);
         resultModel.addData("dept",newDeptDTO);
@@ -63,13 +63,10 @@ public class DeptController extends BaseController {
      * @param sysDeptRequest 部门信息
      * @return
      */
-    @PutMapping("/dept")
+    @PatchMapping("/dept")
     @PreAuthorize("hasAuthority('dept:admin')")
-    public ResultModel putInfo(@Validated @RequestBody SysDeptRequest sysDeptRequest){
-        SysDeptDTO sysDeptDTO = SysDeptMapstruct.Instance.sysDeptRequestToSysDeptDTO(sysDeptRequest);
-        if(null == sysDeptDTO.getId()){
-            throw new WardenRequireParamterException("部门id不能为空");
-        }
+    public ResultModel putInfo(@Validated @RequestBody SysDeptUpdateRequest sysDeptRequest){
+        SysDeptDTO sysDeptDTO = SysDeptMapstruct.Instance.sysDeptUpdateRequestToSysDeptDTO(sysDeptRequest);
         sysDeptService.update(sysDeptDTO);
         return ResultModel.success();
     }
@@ -93,7 +90,7 @@ public class DeptController extends BaseController {
      * @param searchPageable 查询条件
      * @return
      */
-    @PostMapping("/dept/search")
+    @PostMapping("/depts/search")
     public ResultModel search(@RequestBody SearchPageable<SysDeptSearchDTO> searchPageable){
         ResultModel resultModel = ResultModel.success();
         ResultPage<SysDeptDTO> resultPage = sysDeptService.findPage(searchPageable);

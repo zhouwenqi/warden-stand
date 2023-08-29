@@ -65,8 +65,8 @@ public class DictionaryDataController {
      * @param codes 字典编码
      * @return
      */
-    @PostMapping("/dictionaryDatas")
-    public ResultModel getDictionaryDatas(@RequestBody String[] codes){
+    @GetMapping("/data/dictionarys/{codes}")
+    public ResultModel getDataDictionarys(@PathVariable String[] codes){
         if(null == codes || codes.length < 1){
             throw new WardenRequireParamterException("字典编码不能为空");
         }
@@ -100,12 +100,9 @@ public class DictionaryDataController {
      * @param dataRequest 字典数据
      * @return
      */
-    @PutMapping("/dictionaryData")
+    @PatchMapping("/dictionaryData")
     @PreAuthorize("hasAuthority('dictionary:admin')")
     public ResultModel putDictionaryData(@Validated @RequestBody SysDictionaryDataUpdateRequest dataRequest){
-        if(null == dataRequest.getId()){
-            throw new WardenRequireParamterException("字典数据id不能为空");
-        }
         SysDictionaryDataDTO sysDictionaryDataDTO = SysDictionaryDataMapstruct.Instance.sysDictionaryDataUpdateRequestToSysDictionaryDataDTO(dataRequest);
         sysDictionaryDataService.update(sysDictionaryDataDTO);
         return ResultModel.success();

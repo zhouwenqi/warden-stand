@@ -1,27 +1,24 @@
 package com.microwarp.warden.stand.admin.domain.vo;
 
-import org.hibernate.validator.constraints.Length;
-
 import javax.validation.constraints.*;
 
 /**
- * vo - 创建角色 - request
+ * vo - 创建岗位 - request
  */
-public class SysRoleCreateRequest {
-    /** 角色名称 */
-    @NotBlank(message = "角色名不能为空")
-    @Pattern(regexp = "^[0-9a-zA-Z\\u4e00-\\u9fa5]{4,40}",message = "角色名只能是4-40个中文或数字或英文字符")
+public class SysPostCreateRequest {
+    /** 岗位名称 */
+    @NotBlank(message = "岗位名称不能为空")
+    @Pattern(regexp = "^[0-9a-zA-Z\\u4e00-\\u9fa5]{4,40}",message = "岗位名称只能是4-40个中文或数字或英文字符")
     private String name;
-    /** 角色值 */
-    @NotBlank(message = "角色值不能为空")
-    @Pattern(regexp = "^[a-zA-Z0-9_:]{6,50}",message = "帐号只能是a-zA-Z0-9_:等6-50位字符")
-    private String value;
+    /** 岗位编号 */
+    @Pattern(regexp = "^[a-zA-Z0-9]{6,20}",message = " 岗位编号只能是6-20位字母和数字字符")
+    private String code;
     /** 描述 */
     private String description;
     /** 排序值 */
     @Max(value = 99999, message = "排序值只能在0-100000之间")
     @Min(value = 0, message = "排序值只能在0-100000之间")
-    private Integer orders = 0;
+    private Integer orders;
 
     public String getName() {
         return name;
@@ -31,12 +28,12 @@ public class SysRoleCreateRequest {
         this.name = name;
     }
 
-    public String getValue() {
-        return value;
+    public String getCode() {
+        return code;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getDescription() {

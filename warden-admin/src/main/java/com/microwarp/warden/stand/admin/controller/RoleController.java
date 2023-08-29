@@ -77,7 +77,7 @@ public class RoleController extends BaseController {
      * @param updateRequest 角色信息
      * @return
      */
-    @PutMapping("/role")
+    @PatchMapping("/role")
     @PreAuthorize("hasAuthority('role:admin')")
     public ResultModel putRole(@Validated @RequestBody SysRoleUpdateRequest updateRequest){
         SysRoleDTO sysRoleDTO = sysRoleService.findById(updateRequest.getId());

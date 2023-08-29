@@ -78,10 +78,8 @@ public class UserController extends BaseController {
                 throw new WardenRequireAuthorizedException("创建超级管理员权限不够");
             }
         }
-        Long userId = sysUserService.create(requestDTO);
-        ResultModel resultModel = ResultModel.success();
-        resultModel.addData("userId",userId);
-        return resultModel;
+        sysUserService.create(requestDTO);
+        return ResultModel.success();
     }
 
     /**
@@ -89,7 +87,7 @@ public class UserController extends BaseController {
      * @param updateRequest 更新用户信息
      * @return
      */
-    @PutMapping("/user")
+    @PatchMapping("/user")
     @PreAuthorize("hasAuthority('system:user:admin')")
     public ResultModel putInfo(@RequestBody @Validated SysUserUpdateRequest updateRequest){
         SysUserDTO sysUserDTO = SysUserMapstruct.Instance.sysUserUpdateRequestToSysUserDTO(updateRequest);
@@ -126,9 +124,6 @@ public class UserController extends BaseController {
     @PutMapping("/user/password")
     @PreAuthorize("hasAuthority('system:user:admin')")
     public ResultModel putPassword(@RequestBody @Validated SysUserPasswordRequest passwordRequest){
-        if(null == passwordRequest.getUserId()){
-            throw new WardenRequireParamterException("用户id不能为空");
-        }
         SysUserDetailsDTO sysUserDetailsDTO = sysUserService.findDetailsById(passwordRequest.getUserId());
         if(null == sysUserDetailsDTO){
             throw new WardenParamterErrorException("用户不存在");
@@ -180,7 +175,7 @@ public class UserController extends BaseController {
     public ResultModel postSearch(@RequestBody SearchPageable<SysUserSearchDTO> searchPageable){
         ResultModel resultModel = ResultModel.success();
         ResultPage<SysUserDTO> resultPage = sysUserService.findPage(searchPageable);
-        resultModel.addData("list", resultPage.getList());
+        resultModel.addData("list",  SysUserMapstruct.Instance.sysUsersDtoToSysUsersVo(resultPage.getList()));
         resultModel.addData("pageInfo",resultPage.getPageInfo());
         return  resultModel;
     }
