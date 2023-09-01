@@ -13,6 +13,7 @@ import com.microwarp.warden.stand.data.entity.SysPermission;
 import com.microwarp.warden.stand.facade.syspermission.dto.SysPermissionDTO;
 import com.microwarp.warden.stand.facade.syspermission.dto.SysPermissionSearchDTO;
 import com.microwarp.warden.stand.facade.syspermission.service.SysPermissionService;
+import com.microwarp.warden.stand.facade.sysuser.service.SysUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,8 @@ import java.util.List;
 public class SysPermissionServiceImpl implements SysPermissionService {
     @Resource
     private SysPermissionDao sysPermissionDao;
+    @Resource
+    private SysUserService sysUserService;
 
     /**
      * 查询所有权限
@@ -86,6 +89,9 @@ public class SysPermissionServiceImpl implements SysPermissionService {
         }
         SysPermission sysPermission = SysPermissionConvert.Instance.sysPermissionDtoToSysPermission(sysPermissionDTO);
         sysPermissionDao.updateById(sysPermission);
+
+        // 清除用户缓存
+        sysUserService.clearAll();
     }
 
     /**
@@ -95,6 +101,8 @@ public class SysPermissionServiceImpl implements SysPermissionService {
     @Transactional
     public void delete(Long... id){
         sysPermissionDao.delete(id);
+        // 清除用户缓存
+        sysUserService.clearAll();
     }
 
     /**
@@ -105,6 +113,8 @@ public class SysPermissionServiceImpl implements SysPermissionService {
     @Transactional
     public void saveRolePermission(Long roleId,Long... permissionIds){
         sysPermissionDao.saveRolePermission(roleId, permissionIds);
+        // 清除用户缓存
+        sysUserService.clearAll();
     }
 
     /**

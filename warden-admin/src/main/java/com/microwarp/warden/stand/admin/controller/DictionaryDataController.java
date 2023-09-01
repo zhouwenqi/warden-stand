@@ -23,7 +23,7 @@ import java.util.*;
  * @author zhouwenqi
  */
 @RestController
-public class DictionaryDataController {
+public class DictionaryDataController extends BaseController {
     @Autowired
     private SysDictionaryDataService sysDictionaryDataService;
     @Autowired
@@ -99,7 +99,7 @@ public class DictionaryDataController {
         resultModel.addData("dictionaryData", SysDictionaryDataMapstruct.Instance.sysDictionaryDataDtoToSysDictionaryDataVO(newDataDTO));
 
         // 写入日志
-        logService.syncPcBackWrite("追加字典数据:"+newDataDTO.getDictId()+" -> [" +newDataDTO.getDataKey()+","+newDataDTO.getDataValue()+","+newDataDTO.getDataAlias()+"]", ActionTypeEnum.CREATE, ModuleTypeEnum.DICTIONARY_DATA,newDataDTO.getId());
+        writeLog("追加字典数据:"+newDataDTO.getDictId()+" -> [" +newDataDTO.getDataKey()+","+newDataDTO.getDataValue()+","+newDataDTO.getDataAlias()+"]", ActionTypeEnum.CREATE, ModuleTypeEnum.DICTIONARY_DATA,newDataDTO.getId());
         return resultModel;
     }
 
@@ -114,7 +114,7 @@ public class DictionaryDataController {
         SysDictionaryDataDTO sysDictionaryDataDTO = SysDictionaryDataMapstruct.Instance.sysDictionaryDataUpdateRequestToSysDictionaryDataDTO(dataRequest);
         sysDictionaryDataService.update(sysDictionaryDataDTO);
         // 写入日志
-        logService.syncPcBackWrite("修改字典数据:"+sysDictionaryDataDTO.getDictId()+" -> [" +sysDictionaryDataDTO.getDataKey()+","+sysDictionaryDataDTO.getDataValue()+","+sysDictionaryDataDTO.getDataAlias()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.DICTIONARY_DATA,sysDictionaryDataDTO.getId());
+        writeLog("修改字典数据:"+sysDictionaryDataDTO.getDictId()+" -> [" +sysDictionaryDataDTO.getDataKey()+","+sysDictionaryDataDTO.getDataValue()+","+sysDictionaryDataDTO.getDataAlias()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.DICTIONARY_DATA,sysDictionaryDataDTO.getId());
         return ResultModel.success();
     }
 
@@ -130,7 +130,7 @@ public class DictionaryDataController {
             sysDictionaryDataService.delete(id);
 
             // 写入日志
-            logService.syncPcBackWrite("删除字典数据:"+"[" + Arrays.toString(id) +"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.DICTIONARY_DATA,id);
+            writeLog("删除字典数据:"+"[" + Arrays.toString(id) +"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.DICTIONARY_DATA,id);
         }
         return ResultModel.success();
     }

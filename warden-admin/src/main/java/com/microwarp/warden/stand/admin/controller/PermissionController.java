@@ -34,13 +34,11 @@ import java.util.List;
  * @author zhouwenqi
  */
 @RestController
-public class PermissionController {
+public class PermissionController extends BaseController {
     @Autowired
     private SysPermissionService sysPermissionService;
     @Autowired
     private ExcelExportService excelExportService;
-    @Autowired
-    private LogService logService;
 
     /**
      * 获取权限信息
@@ -145,6 +143,6 @@ public class PermissionController {
         excelExportService.sysPermissionPageData(fileName,"权限列表", response, searchPageable);
 
         // 写入日志
-        logService.syncPcBackWrite("导出权限数据:"+fileName, ActionTypeEnum.EXPORT, ModuleTypeEnum.SYS_PERMISSION,null);
+        writeLog("导出权限数据:"+fileName, ActionTypeEnum.EXPORT, ModuleTypeEnum.SYS_PERMISSION,null);
     }
 }

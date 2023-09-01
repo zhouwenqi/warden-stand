@@ -26,11 +26,9 @@ import java.util.Arrays;
  * @author zhouwenqi
  */
 @RestController
-public class PostController {
+public class PostController extends BaseController {
     @Autowired
     private SysPostService sysPostService;
-    @Autowired
-    private LogService logService;
 
     /**
      * 获取岗位信息
@@ -66,7 +64,7 @@ public class PostController {
         resultModel.addData("post",newPostDTO);
 
         // 写入日志
-        logService.syncPcBackWrite("创建岗位信息:"+newPostDTO.getName()+"["+newPostDTO.getCode()+"]", ActionTypeEnum.CREATE, ModuleTypeEnum.SYS_POST,newPostDTO.getId());
+        writeLog("创建岗位信息:"+newPostDTO.getName()+"["+newPostDTO.getCode()+"]", ActionTypeEnum.CREATE, ModuleTypeEnum.SYS_POST,newPostDTO.getId());
         return resultModel;
     }
 
@@ -82,7 +80,7 @@ public class PostController {
         sysPostService.update(sysPostDTO);
 
         // 写入日志
-        logService.syncPcBackWrite("修改岗位信息:"+sysPostDTO.getName()+"["+sysPostDTO.getCode()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_POST,sysPostDTO.getId());
+        writeLog("修改岗位信息:"+sysPostDTO.getName()+"["+sysPostDTO.getCode()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_POST,sysPostDTO.getId());
         return ResultModel.success();
     }
 
@@ -96,7 +94,7 @@ public class PostController {
     public ResultModel deleteInfo(@PathVariable Long[] id){
         if(null != id && id.length>0){
             sysPostService.delete(id);
-            logService.syncPcBackWrite("删除岗位信息:["+ Arrays.toString(id)+"]", ActionTypeEnum.DELETE, ModuleTypeEnum.SYS_POST,id);
+            writeLog("删除岗位信息:["+ Arrays.toString(id)+"]", ActionTypeEnum.DELETE, ModuleTypeEnum.SYS_POST,id);
 
         }
         return ResultModel.success();

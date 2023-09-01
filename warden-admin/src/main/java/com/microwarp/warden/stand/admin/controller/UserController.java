@@ -44,8 +44,6 @@ public class UserController extends BaseController {
     private SysRoleService sysRoleService;
     @Autowired
     private ExcelExportService excelExportService;
-    @Autowired
-    private LogService logService;
 
     /**
      * 查看用户信息
@@ -89,7 +87,7 @@ public class UserController extends BaseController {
         resultModel.addData("user",SysUserMapstruct.Instance.sysUserDtoToSysUserVo(userDTO));
 
         // 写入日志
-        logService.syncPcBackWrite("创建系统用户:"+userDTO.getUid()+"["+userDTO.getId()+"]", ActionTypeEnum.CREATE, ModuleTypeEnum.SYS_USER,userDTO.getId());
+        writeLog("创建系统用户:"+userDTO.getUid()+"["+userDTO.getId()+"]", ActionTypeEnum.CREATE, ModuleTypeEnum.SYS_USER,userDTO.getId());
         return resultModel;
     }
 
@@ -126,7 +124,7 @@ public class UserController extends BaseController {
         }
 
         // 写入日志
-        logService.syncPcBackWrite("修改系统用户:"+sysUserDTO.getUid()+"["+sysUserDTO.getId()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_USER,sysUserDTO.getId());
+        writeLog("修改系统用户:"+sysUserDTO.getUid()+"["+sysUserDTO.getId()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_USER,sysUserDTO.getId());
         return resultModel;
     }
 
@@ -152,7 +150,7 @@ public class UserController extends BaseController {
         sysUserService.updatePassowrd(sysUserPasswordDTO);
 
         // 写入日志
-        logService.syncPcBackWrite("修改系统用户密码:"+sysUserDetailsDTO.getUid()+"["+sysUserDetailsDTO.getId()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_USER,sysUserDetailsDTO.getId());
+        writeLog("修改系统用户密码:"+sysUserDetailsDTO.getUid()+"["+sysUserDetailsDTO.getId()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_USER,sysUserDetailsDTO.getId());
         return ResultModel.success();
     }
 
@@ -180,7 +178,7 @@ public class UserController extends BaseController {
         }
         sysUserService.delete(sysUserDetailsDTO.getId());
         // 写入日志
-        logService.syncPcBackWrite("删除系统用户:"+sysUserDetailsDTO.getUid()+"["+sysUserDetailsDTO.getId()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_USER,sysUserDetailsDTO.getId());
+        writeLog("删除系统用户:"+sysUserDetailsDTO.getUid()+"["+sysUserDetailsDTO.getId()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_USER,sysUserDetailsDTO.getId());
         return  ResultModel.success();
     }
 
@@ -212,6 +210,6 @@ public class UserController extends BaseController {
         excelExportService.sysUserPageData(fileName,"用户列表", response, searchPageable);
 
         // 写入日志
-        logService.syncPcBackWrite("导出系统用户信息:"+fileName, ActionTypeEnum.EXPORT, ModuleTypeEnum.SYS_USER,null);
+        writeLog("导出系统用户信息:"+fileName, ActionTypeEnum.EXPORT, ModuleTypeEnum.SYS_USER,null);
     }
 }

@@ -15,6 +15,7 @@ import com.microwarp.warden.stand.data.entity.SysRole;
 import com.microwarp.warden.stand.facade.sysrole.dto.SysRoleDTO;
 import com.microwarp.warden.stand.facade.sysrole.dto.SysRoleDetailsDTO;
 import com.microwarp.warden.stand.facade.sysrole.service.SysRoleService;
+import com.microwarp.warden.stand.facade.sysuser.service.SysUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * service - 系统角色 - impl
@@ -34,6 +34,8 @@ public class SysRoleServiceImpl implements SysRoleService {
     private SysRoleDao sysRoleDao;
     @Resource
     private  SysPermissionDao sysPermissionDao;
+    @Resource
+    private SysUserService sysUserService;
 
     /**
      * 查询所有角色
@@ -86,6 +88,8 @@ public class SysRoleServiceImpl implements SysRoleService {
          sysPermissionDao.deletePermissionByRoleIds(id);
          // 先删除角色与用户关系信息，和角色信息
          sysRoleDao.deleteByIds(id);
+        // 清除用户缓存
+        sysUserService.clearAll();
     }
 
     /**
@@ -122,6 +126,8 @@ public class SysRoleServiceImpl implements SysRoleService {
         }
         SysRole sysRole = SysRoleConvert.Instance.sysRoleDtoToSysSysRole(sysRoleDTO);
         sysRoleDao.updateById(sysRole);
+        // 清除用户缓存
+        sysUserService.clearAll();
     }
 
 
@@ -134,6 +140,8 @@ public class SysRoleServiceImpl implements SysRoleService {
     @Transactional
     public void saveUserRoles(Long userId, Long... roleIds) {
         sysRoleDao.saveUserRoles(userId, roleIds);
+        // 清除用户缓存
+        sysUserService.clearCache(userId);
     }
 
     /**

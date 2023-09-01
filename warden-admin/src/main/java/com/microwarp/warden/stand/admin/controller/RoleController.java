@@ -39,8 +39,6 @@ public class RoleController extends BaseController {
     private SysRoleService sysRoleService;
     @Autowired
     private SysPermissionService sysPermissionService;
-    @Autowired
-    private LogService logService;
 
     /**
      * 获取角色信息
@@ -76,7 +74,7 @@ public class RoleController extends BaseController {
         resultModel.addData("role",SysRoleMapstruct.Instance.sysRoleDtoToSysRoleVO(sysRoleDTO));
 
         // 写入日志
-        logService.syncPcBackWrite("创建角色信息:"+sysRoleDTO.getName()+"["+sysRoleDTO.getValue()+"]", ActionTypeEnum.CREATE, ModuleTypeEnum.SYS_ROLE,sysRoleDTO.getId());
+        writeLog("创建角色信息:"+sysRoleDTO.getName()+"["+sysRoleDTO.getValue()+"]", ActionTypeEnum.CREATE, ModuleTypeEnum.SYS_ROLE,sysRoleDTO.getId());
         return resultModel;
     }
 
@@ -98,7 +96,7 @@ public class RoleController extends BaseController {
         SysRoleDTO sysRolRequesteDTO = SysRoleMapstruct.Instance.sysRoleUpdateRequestTosysRoleDTO(updateRequest);
         sysRoleService.update(sysRolRequesteDTO);
         // 写入日志
-        logService.syncPcBackWrite("修改角色信息:"+sysRolRequesteDTO.getName()+"["+sysRolRequesteDTO.getValue()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_ROLE,sysRolRequesteDTO.getId());
+        writeLog("修改角色信息:"+sysRolRequesteDTO.getName()+"["+sysRolRequesteDTO.getValue()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_ROLE,sysRolRequesteDTO.getId());
         return ResultModel.success();
     }
 
@@ -119,7 +117,7 @@ public class RoleController extends BaseController {
         }
         sysPermissionService.saveRolePermission(roleRequest.getRoleId(), roleRequest.getPermissionIds());
         // 写入日志
-        logService.syncPcBackWrite("修改角色权限:"+sysRoleDTO.getName()+"["+sysRoleDTO.getValue()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_ROLE,sysRoleDTO.getId());
+        writeLog("修改角色权限:"+sysRoleDTO.getName()+"["+sysRoleDTO.getValue()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_ROLE,sysRoleDTO.getId());
         return ResultModel.success();
     }
 
@@ -143,7 +141,7 @@ public class RoleController extends BaseController {
         }
         sysRoleService.delete(id);
         // 写入日志
-        logService.syncPcBackWrite("删除角色ID:"+sysRoleDTO.getName()+"["+sysRoleDTO.getValue()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_ROLE,sysRoleDTO.getId());
+        writeLog("删除角色ID:"+sysRoleDTO.getName()+"["+sysRoleDTO.getValue()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_ROLE,sysRoleDTO.getId());
         return ResultModel.success();
     }
 

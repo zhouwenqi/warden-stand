@@ -205,7 +205,7 @@ public class JwtUtil {
      * @throws Exception
      */
     public static Claims parse(String jwt) throws Exception{
-        String key = AesUitl.DEFAULT_KEY;
+        String key = AesUtil.DEFAULT_KEY;
         if(DEFAULT_SIGN_ALGORITHM.toString().startsWith("RS")){
             X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(Base64.decodeBase64(RsaUtil.DEFAULT_PUBLIC_KEY));
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
@@ -241,7 +241,7 @@ public class JwtUtil {
      * @return
      */
     public static Boolean signed(String jwt){
-        String key = AesUitl.DEFAULT_KEY;
+        String key = AesUtil.DEFAULT_KEY;
         if(DEFAULT_SIGN_ALGORITHM.toString().startsWith("RS")){
             try {
                 X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(Base64.decodeBase64(RsaUtil.DEFAULT_PUBLIC_KEY));
@@ -266,6 +266,6 @@ public class JwtUtil {
         if(DEFAULT_SIGN_ALGORITHM.toString().startsWith("RS")){
             return signType.equals(SignType.DECRYPT) ? RsaUtil.DEFAULT_PUBLIC_KEY : RsaUtil.DEFAULT_PRIVATE_KEY;
         }
-        return AesUitl.DEFAULT_KEY;
+        return AesUtil.DEFAULT_KEY;
     }
 }

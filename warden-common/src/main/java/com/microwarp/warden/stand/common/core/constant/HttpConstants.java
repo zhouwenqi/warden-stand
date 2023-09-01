@@ -12,4 +12,6 @@ public class HttpConstants {
     public static final String RESULT_VAILD_KEY = "vaildFields";
     /** 强制包装非warden返回结构字段 */
     public static final String RESULT_ADVICE_KEY = "adviceResult";
+    /** 默认分页大小 */
+    public static final int DEFAULT_PAGE_SIZE = 10;
 }

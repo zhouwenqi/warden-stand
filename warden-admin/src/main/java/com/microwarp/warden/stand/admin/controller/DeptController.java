@@ -35,8 +35,6 @@ import java.util.Arrays;
 public class DeptController extends BaseController {
     @Autowired
     private SysDeptService sysDeptService;
-    @Autowired
-    private LogService logService;
     /**
      * 获取部门信息
      * @param id 部门id
@@ -70,7 +68,7 @@ public class DeptController extends BaseController {
         resultModel.addData("dept",newDeptDTO);
 
         // 写入日志
-        logService.syncPcBackWrite("创建部门信息:"+newDeptDTO.getName()+"["+newDeptDTO.getCode()+"]", ActionTypeEnum.CREATE, ModuleTypeEnum.SYS_DEPT,newDeptDTO.getId());
+        writeLog("创建部门信息:"+newDeptDTO.getName()+"["+newDeptDTO.getCode()+"]", ActionTypeEnum.CREATE, ModuleTypeEnum.SYS_DEPT,newDeptDTO.getId());
         return resultModel;
     }
 
@@ -85,7 +83,7 @@ public class DeptController extends BaseController {
         SysDeptDTO sysDeptDTO = SysDeptMapstruct.Instance.sysDeptUpdateRequestToSysDeptDTO(sysDeptRequest);
         sysDeptService.update(sysDeptDTO);
         // 写入日志
-        logService.syncPcBackWrite("修改部门信息:"+sysDeptDTO.getName()+"["+sysDeptDTO.getCode()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_DEPT,sysDeptDTO.getId());
+        writeLog("修改部门信息:"+sysDeptDTO.getName()+"["+sysDeptDTO.getCode()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_DEPT,sysDeptDTO.getId());
         return ResultModel.success();
     }
 
@@ -100,7 +98,7 @@ public class DeptController extends BaseController {
         if(null != id && id.length>0){
             sysDeptService.delete(id);
             // 写入日志
-            logService.syncPcBackWrite("删除部门信息:"+"["+ Arrays.toString(id)+"]", ActionTypeEnum.DELETE, ModuleTypeEnum.SYS_DEPT,id);
+            writeLog("删除部门信息:"+"["+ Arrays.toString(id)+"]", ActionTypeEnum.DELETE, ModuleTypeEnum.SYS_DEPT,id);
         }
         return ResultModel.success();
     }

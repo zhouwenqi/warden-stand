@@ -246,4 +246,26 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
         sysUserDao.removeById(userId);
         sysRoleDao.deleteRoleByUserId(userId);
     }
+
+    /**
+     * 清除用户详情缓存
+     * @param userId 用户ID
+     */
+    public void clearCache(Long userId){
+        if(null == userId){
+            iCacheService.batchRemove("sysUserDetailsUid", null);
+            iCacheService.batchRemove("sysUserDetailsId", null);
+        }else{
+            SysUser sysUser = sysUserDao.getById(userId);
+            iCacheService.batchRemove("sysUserDetailsUid", sysUser.getUid());
+            iCacheService.batchRemove("sysUserDetailsId", userId.toString());
+        }
+    }
+
+    /**
+     * 清除所有用户详情缓存
+     */
+    public void clearAll(){
+        clearCache(null);
+    }
 }

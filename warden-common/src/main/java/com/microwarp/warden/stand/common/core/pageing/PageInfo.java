@@ -1,5 +1,7 @@
 package com.microwarp.warden.stand.common.core.pageing;
 
+import com.microwarp.warden.stand.common.core.constant.HttpConstants;
+
 /**
  * pageable - 分页信息
  */
@@ -9,7 +11,7 @@ public class PageInfo implements IPageInfo {
     /** 总页数 */
     private long pageCount = 0;
     /** 分页行数 */
-    private long pageSize = 10;
+    private long pageSize = HttpConstants.DEFAULT_PAGE_SIZE;
     /** 数据集总数 */
     private long total = 0;
 

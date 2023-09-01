@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author zhouwenqi
  * @version 1.0.0
  */
-public class AesUitl {
+public class AesUtil {
     // 默认密钥
     public static String DEFAULT_KEY = null;
     // 默认向量

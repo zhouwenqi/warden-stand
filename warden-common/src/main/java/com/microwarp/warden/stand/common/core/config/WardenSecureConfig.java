@@ -1,6 +1,6 @@
 package com.microwarp.warden.stand.common.core.config;
 
-import com.microwarp.warden.stand.common.utils.AesUitl;
+import com.microwarp.warden.stand.common.utils.AesUtil;
 import com.microwarp.warden.stand.common.utils.DesUitl;
 import com.microwarp.warden.stand.common.utils.RsaUtil;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -49,7 +49,7 @@ public class WardenSecureConfig {
 
     public void setAesKey(String aesKey) {
         this.aesKey = aesKey;
-        AesUitl.DEFAULT_KEY = aesKey;
+        AesUtil.DEFAULT_KEY = aesKey;
     }
 
     public String getDesKey() {

@@ -70,7 +70,7 @@ public class LoginLogController extends BaseController {
         if(null != id && id.length > 0){
             sysLoginLogService.delete(id);
             // 写入日志
-            logService.syncPcBackWrite("删除登录日志:["+ Arrays.toString(id)+"]", ActionTypeEnum.EXPORT, ModuleTypeEnum.LOGIN_LOG,id);
+            writeLog("删除登录日志:["+ Arrays.toString(id)+"]", ActionTypeEnum.EXPORT, ModuleTypeEnum.LOGIN_LOG,id);
         }
         return ResultModel.success();
     }
@@ -102,6 +102,6 @@ public class LoginLogController extends BaseController {
         excelExportService.sysLoginLogPageData(fileName, "日志列表", response, searchPageable);
 
         // 写入日志
-        logService.syncPcBackWrite("导出登录日志数据:"+fileName, ActionTypeEnum.EXPORT, ModuleTypeEnum.LOGIN_LOG,null);
+        writeLog("导出登录日志数据:"+fileName, ActionTypeEnum.EXPORT, ModuleTypeEnum.LOGIN_LOG,null);
     }
 }

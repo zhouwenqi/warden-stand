@@ -42,6 +42,7 @@ public class SysUserLockServiceImpl implements SysUserLockService {
         queryWrapper.ge("unlock_time", simpleDateFormat.format(new Date()));
         return sysUserLockDao.count(queryWrapper);
     }
+
     /**
      * 添加一条锁记录
      * @param userId 用户id

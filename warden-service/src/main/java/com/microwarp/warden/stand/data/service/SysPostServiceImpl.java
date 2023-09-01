@@ -15,6 +15,7 @@ import com.microwarp.warden.stand.data.dao.SysUserDao;
 import com.microwarp.warden.stand.data.entity.SysPost;
 import com.microwarp.warden.stand.facade.syspost.dto.SysPostDTO;
 import com.microwarp.warden.stand.facade.syspost.service.SysPostService;
+import com.microwarp.warden.stand.facade.sysuser.service.SysUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,8 @@ public class SysPostServiceImpl implements SysPostService {
     private SysPostDao sysPostDao;
     @Resource
     private SysUserDao sysUserDao;
+    @Resource
+    private SysUserService sysUserService;
 
     /**
      * 查询岗位信息
@@ -85,6 +88,8 @@ public class SysPostServiceImpl implements SysPostService {
         }
         SysPost sysPost = SysPostConvert.Instance.sysPostDtoToSysPost(sysPostDTO);
         sysPostDao.updateById(sysPost);
+        // 清除用户缓存
+        sysUserService.clearAll();
     }
 
     /**
@@ -98,6 +103,8 @@ public class SysPostServiceImpl implements SysPostService {
         }
         sysPostDao.removeBatchByIds(Arrays.asList(id));
         sysUserDao.clearPostId(id);
+        // 清除用户缓存
+        sysUserService.clearAll();
     }
 
     /**

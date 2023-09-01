@@ -26,11 +26,9 @@ import java.util.Arrays;
  * @author zhouwenqi
  */
 @RestController
-public class DictionaryController {
+public class DictionaryController extends BaseController {
     @Autowired
     private SysDictionaryService sysDictionaryService;
-    @Autowired
-    private LogService logService;
 
     /**
      * 获取字典信息
@@ -66,7 +64,7 @@ public class DictionaryController {
         resultModel.addData("dictionary", SysDictionaryMapstruct.Instance.sysDictionaryDtoToSysDictionaryVO(newDictionaryDTO));
 
         // 写入日志
-        logService.syncPcBackWrite("创建字典信息:"+newDictionaryDTO.getName()+"["+newDictionaryDTO.getCode()+"]", ActionTypeEnum.CREATE, ModuleTypeEnum.SYS_DICTIONARY,newDictionaryDTO.getId());
+        writeLog("创建字典信息:"+newDictionaryDTO.getName()+"["+newDictionaryDTO.getCode()+"]", ActionTypeEnum.CREATE, ModuleTypeEnum.SYS_DICTIONARY,newDictionaryDTO.getId());
         return resultModel;
     }
 
@@ -81,7 +79,7 @@ public class DictionaryController {
         SysDictionaryDTO sysDictionaryDTO = SysDictionaryMapstruct.Instance.sysDictionaryUpdateRequestToSysDictionaryDTO(sysDictionaryRequest);
         sysDictionaryService.update(sysDictionaryDTO);
         // 写入日志
-        logService.syncPcBackWrite("修改字典信息:"+sysDictionaryDTO.getName()+"["+sysDictionaryDTO.getCode()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_DICTIONARY,sysDictionaryDTO.getId());
+        writeLog("修改字典信息:"+sysDictionaryDTO.getName()+"["+sysDictionaryDTO.getCode()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_DICTIONARY,sysDictionaryDTO.getId());
         return ResultModel.success();
     }
 
@@ -96,7 +94,7 @@ public class DictionaryController {
         if(null != id && id.length > 0){
             sysDictionaryService.delete(id);
             // 写入日志
-            logService.syncPcBackWrite("删除字典信息:"+"["+ Arrays.toString(id)+"]", ActionTypeEnum.DELETE, ModuleTypeEnum.SYS_DICTIONARY,id);
+            writeLog("删除字典信息:"+"["+ Arrays.toString(id)+"]", ActionTypeEnum.DELETE, ModuleTypeEnum.SYS_DICTIONARY,id);
         }
         return ResultModel.success();
     }

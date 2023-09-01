@@ -29,8 +29,6 @@ public class ProfileController extends BaseController {
     private SysUserService sysUserService;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    @Autowired
-    private LogService logService;
     /**
      * 获取当前用户信息
      * @return
@@ -55,7 +53,7 @@ public class ProfileController extends BaseController {
         sysUserDTO.setId(getSecruityUser().getSysUser().getId());
         sysUserService.update(sysUserDTO);
         // 写入日志
-        logService.syncPcBackWrite("修改个人资料:"+sysUserDTO.getUid()+"["+sysUserDTO.getId()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_USER,sysUserDTO.getId());
+        writeLog("修改个人资料:"+sysUserDTO.getUid()+"["+sysUserDTO.getId()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_USER,sysUserDTO.getId());
         return resultModel;
     }
 
@@ -76,7 +74,7 @@ public class ProfileController extends BaseController {
         sysUserService.updatePassowrd(sysUserPasswordDTO);
 
         // 写入日志
-        logService.syncPcBackWrite("修改登录密码:"+sysUserDetailsDTO.getUid()+"["+sysUserPasswordDTO.getUserId()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_USER,sysUserPasswordDTO.getUserId());
+        writeLog("修改登录密码:"+sysUserDetailsDTO.getUid()+"["+sysUserPasswordDTO.getUserId()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_USER,sysUserPasswordDTO.getUserId());
         return ResultModel.success();
     }
 }

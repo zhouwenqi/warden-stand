@@ -73,4 +73,14 @@ public interface SysUserService {
      * @param userId 用户id
      */
     void delete(Long userId);
+
+    /**
+     * 清除用户详情缓存
+     * @param userId 用户ID
+     */
+    void clearCache(Long userId);
+    /**
+     * 清除所有用户详情缓存
+     */
+    void clearAll();
 }

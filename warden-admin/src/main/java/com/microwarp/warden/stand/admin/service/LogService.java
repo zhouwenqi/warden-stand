@@ -84,21 +84,20 @@ public class LogService {
 
     /**
      * 后台异步写入操作日志
+     * @param ip IP地址
      * @param logContent 日志内容
      * @param actionType 操作类型
      * @param moduleType 模块类型
      * @param mateId 模块关联ID
      */
     @Async("taskExecutor")
-    public void syncPcBackWrite(String logContent, ActionTypeEnum actionType, ModuleTypeEnum moduleType, Long... mateId){
-        String ip = WebUtil.getIpAddr();
+    public void syncBackstageWrite(SysUserDetailsDTO user,String logContent,String ip, ActionTypeEnum actionType, ModuleTypeEnum moduleType, Long... mateId){
         if(null != mateId && mateId.length>0){
             for(Long id:mateId){
                 if(null== id){
                     continue;
                 }
-                SysUserDetailsDTO sysUserDetailsDTO = SecurityUtil.getCurrentSysUser();
-                write(sysUserDetailsDTO,logContent,ip,actionType,AppTerminalEnum.PC_WEB,PlatformTypeEnum.BACKSTAGE,moduleType,id);
+                write(user,logContent,ip,actionType,AppTerminalEnum.PC_WEB,PlatformTypeEnum.BACKSTAGE,moduleType,id);
             }
         }
     }

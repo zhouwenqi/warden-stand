@@ -32,7 +32,7 @@ import java.util.*;
  * @author zhouwenqi
  */
 @RestController
-public class LoginController {
+public class LoginController extends BaseController {
     @Autowired
     private WardenGlobalConfig wardenGlobalConfig;
     @Autowired
