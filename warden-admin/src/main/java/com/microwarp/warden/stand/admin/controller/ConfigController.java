@@ -4,6 +4,9 @@ import com.microwarp.warden.stand.admin.domain.vo.GlobalConfigVO;
 import com.microwarp.warden.stand.common.core.config.WardenGlobalConfig;
 import com.microwarp.warden.stand.common.core.constant.HttpConstants;
 import com.microwarp.warden.stand.common.model.ResultModel;
+import com.microwarp.warden.stand.common.utils.StringUtil;
+import com.microwarp.warden.stand.common.utils.WebUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +30,14 @@ public class ConfigController {
         globalConfigVO.setResponseForeverOk(wardenGlobalConfig.getResponseForeverOk());
         globalConfigVO.setTokenEffectiveHour(wardenGlobalConfig.getTokenEffectiveHour());
         globalConfigVO.setDefaultPageSize(HttpConstants.DEFAULT_PAGE_SIZE);
+        globalConfigVO.setCaptchaType(wardenGlobalConfig.getCaptchaType());
+        globalConfigVO.setEnableCaptcha(wardenGlobalConfig.getEnableCaptcha());
+        String guestId = WebUtil.getGuestId();
+        if(StringUtils.isBlank(guestId)){
+            guestId = StringUtil.generateGuestId();
+        }
+        globalConfigVO.setGuestId(guestId);
+        resultModel.addData("config",globalConfigVO);
         return resultModel;
     }
 }

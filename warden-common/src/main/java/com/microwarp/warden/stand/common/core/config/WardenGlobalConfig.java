@@ -1,5 +1,6 @@
 package com.microwarp.warden.stand.common.core.config;
 
+import com.microwarp.warden.stand.common.core.enums.CaptchaTypeEnum;
 import com.microwarp.warden.stand.common.utils.ResultUtil;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -25,10 +26,14 @@ public class WardenGlobalConfig {
      */
     private Boolean resultModelPackage = true;
 
-    /**
-     * 开启注册功能
-     */
+    /** 开启注册功能 */
     private Boolean enableRegister = false;
+
+    /** 启用验证码 */
+    private Boolean enableCaptcha = false;
+
+    /** 验证码类型 */
+    private CaptchaTypeEnum captchaType = CaptchaTypeEnum.KAPTCHA_IMAGE;
 
     public Boolean getResponseForeverOk() {
         return responseForeverOk;
@@ -69,5 +74,21 @@ public class WardenGlobalConfig {
 
     public void setEnableRegister(Boolean enableRegister) {
         this.enableRegister = enableRegister;
+    }
+
+    public Boolean getEnableCaptcha() {
+        return enableCaptcha;
+    }
+
+    public void setEnableCaptcha(Boolean enableCaptcha) {
+        this.enableCaptcha = enableCaptcha;
+    }
+
+    public CaptchaTypeEnum getCaptchaType() {
+        return captchaType;
+    }
+
+    public void setCaptchaType(CaptchaTypeEnum captchaType) {
+        this.captchaType = captchaType;
     }
 }

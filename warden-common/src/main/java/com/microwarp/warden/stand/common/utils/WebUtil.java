@@ -67,7 +67,6 @@ public class WebUtil {
         }
         return ip;
     }
-
     public static HttpServletRequest getRequest(){
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         return ((ServletRequestAttributes) requestAttributes).getRequest();
@@ -78,6 +77,10 @@ public class WebUtil {
         return ((ServletRequestAttributes) requestAttributes).getResponse();
     }
 
+    /**
+     * 获取当前请求应用类型
+     * @return
+     */
     public static AppTerminalEnum getAppTerminalType(){
         AppTerminalEnum appTerminalEnum = AppTerminalEnum.UNKNOWN;
         Object header = getRequest().getHeader(HttpConstants.HEADER_APP_TERMINAL);
@@ -90,5 +93,15 @@ public class WebUtil {
             }
         }
         return appTerminalEnum;
+    }
+
+    /**
+     * 获取当前guestId
+     * @return
+     */
+    public static String getGuestId(){
+        HttpServletRequest request = getRequest();
+        Object guestObject = request.getAttribute(HttpConstants.HEADER_GUEST_KEY);
+        return null == guestObject ? null : guestObject.toString();
     }
 }

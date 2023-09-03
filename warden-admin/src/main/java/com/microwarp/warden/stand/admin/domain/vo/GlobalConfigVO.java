@@ -1,6 +1,7 @@
 package com.microwarp.warden.stand.admin.domain.vo;
 
 import com.microwarp.warden.stand.common.core.constant.HttpConstants;
+import com.microwarp.warden.stand.common.core.enums.CaptchaTypeEnum;
 
 /**
  * vo - 全局配置信息 - response
@@ -17,6 +18,12 @@ public class GlobalConfigVO {
     private Boolean enableRegister = false;
     /** 默认分页大小 */
     private int defaultPageSize = HttpConstants.DEFAULT_PAGE_SIZE;
+    /** 来宾帐号I */
+    private String guestId;
+    /** 启用验证码 */
+    private Boolean enableCaptcha;
+    /** 验证码类型 */
+    private CaptchaTypeEnum captchaType;
 
     public boolean isResponseForeverOk() {
         return responseForeverOk;
@@ -48,5 +55,29 @@ public class GlobalConfigVO {
 
     public void setDefaultPageSize(int defaultPageSize) {
         this.defaultPageSize = defaultPageSize;
+    }
+
+    public String getGuestId() {
+        return guestId;
+    }
+
+    public void setGuestId(String guestId) {
+        this.guestId = guestId;
+    }
+
+    public Boolean getEnableCaptcha() {
+        return enableCaptcha;
+    }
+
+    public void setEnableCaptcha(Boolean enableCaptcha) {
+        this.enableCaptcha = enableCaptcha;
+    }
+
+    public CaptchaTypeEnum getCaptchaType() {
+        return captchaType;
+    }
+
+    public void setCaptchaType(CaptchaTypeEnum captchaType) {
+        this.captchaType = captchaType;
     }
 }

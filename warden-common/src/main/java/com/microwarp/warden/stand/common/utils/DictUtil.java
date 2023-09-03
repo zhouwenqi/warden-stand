@@ -12,7 +12,6 @@ import java.util.List;
 public class DictUtil {
     static {
         addEnum(GenderEnum.class,GenderEnum.values(),"性别");
-        addEnum(SystemTerminalEnum.class,SystemTerminalEnum.values(),"系统终端");
         addEnum(AppTerminalEnum.class,AppTerminalEnum.values(),"应用终端");
         addEnum(TerminalEnum.class,TerminalEnum.values(),"设备终端");
         addEnum(ModuleTypeEnum.class,ModuleTypeEnum.values(),"模块类型");

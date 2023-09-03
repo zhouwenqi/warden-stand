@@ -40,3 +40,4 @@ warden:
     result-model-package: true
     response-forever-ok: false
     enable-register: true
+    enable-captcha: true

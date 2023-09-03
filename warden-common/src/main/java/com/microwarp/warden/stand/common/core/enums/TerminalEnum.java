@@ -1,12 +1,13 @@
 package com.microwarp.warden.stand.common.core.enums;
 
 /**
- * enum - 硬件终端
+ * enum - 设备终端
  */
 public enum TerminalEnum implements BaseEnum {
     PC(0,"PC"),
-    MAX(1,"MAC"),
+    MAC(1,"MAC"),
     MOBILE(2,"MOBILE"),
+    TABLET(3,"平板设备"),
     UNKNOWN(3,"未知");
     int code;
     String tag;

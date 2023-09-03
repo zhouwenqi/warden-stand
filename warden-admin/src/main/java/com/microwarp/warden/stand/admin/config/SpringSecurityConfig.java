@@ -78,6 +78,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login")
                 .antMatchers("/register")
                 .antMatchers("/error")
+                .antMatchers("/captcha/**")
                 .antMatchers("/config/**")
                 .antMatchers("/test/**")
                 .antMatchers("/*.ico");

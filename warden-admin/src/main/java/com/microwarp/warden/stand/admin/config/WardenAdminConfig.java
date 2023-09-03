@@ -1,7 +1,7 @@
 package com.microwarp.warden.stand.admin.config;
 
 import com.microwarp.warden.stand.common.security.RSAKeyPair;
-import com.microwarp.warden.stand.common.utils.AesUitl;
+import com.microwarp.warden.stand.common.utils.AesUtil;
 import com.microwarp.warden.stand.common.utils.RsaUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -28,8 +28,8 @@ public class WardenAdminConfig {
 
     public void setAutoGenerateKeyAes(Boolean autoGenerateKeyAes) {
         this.autoGenerateKeyAes = autoGenerateKeyAes;
-        if(autoGenerateKeyAes && StringUtils.isBlank(AesUitl.DEFAULT_KEY)){
-            AesUitl.DEFAULT_KEY = AesUitl.generateKey();
+        if(autoGenerateKeyAes && StringUtils.isBlank(AesUtil.DEFAULT_KEY)){
+            AesUtil.DEFAULT_KEY = AesUtil.generateKey();
         }
     }
 

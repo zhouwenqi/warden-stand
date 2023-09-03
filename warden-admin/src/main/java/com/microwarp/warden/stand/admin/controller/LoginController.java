@@ -1,6 +1,7 @@
 package com.microwarp.warden.stand.admin.controller;
 
 import com.microwarp.warden.stand.admin.domain.vo.SysUserLoginRequest;
+import com.microwarp.warden.stand.admin.service.CaptchaService;
 import com.microwarp.warden.stand.admin.service.LoginService;
 import com.microwarp.warden.stand.admin.utils.TokenUtil;
 import com.microwarp.warden.stand.common.core.config.WardenGlobalConfig;
@@ -16,6 +17,7 @@ import com.microwarp.warden.stand.facade.sysuser.dto.SysUserDTO;
 import com.microwarp.warden.stand.facade.sysuser.dto.SysUserDetailsDTO;
 import com.microwarp.warden.stand.facade.sysuser.service.SysUserLockService;
 import com.microwarp.warden.stand.facade.sysuser.service.SysUserService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -43,6 +45,8 @@ public class LoginController extends BaseController {
     private SysUserLockService sysUserLockService;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private CaptchaService captchaService;
 
     /**
      * 登录
@@ -57,6 +61,22 @@ public class LoginController extends BaseController {
         if(sysUserLockService.totalByIp(ip) > SecurityConstants.IP_LOCK_LIMIT){
             throw new WardenParamterErrorException("当前IP暂时禁止登录");
         }
+
+        // 图形验证码校验
+        if(wardenGlobalConfig.getEnableCaptcha()){
+            if(StringUtils.isBlank(loginRequest.getCaptchaCode())){
+                throw new WardenParamterErrorException("请输入验证码");
+            }
+            // 验证码类型检查
+            switch (wardenGlobalConfig.getCaptchaType()){
+                case KAPTCHA_IMAGE:
+                    if(!captchaService.verify(loginRequest.getCaptchaCode())){
+                        throw new WardenParamterErrorException("验证码错误");
+                    }
+                    break;
+            }
+        }
+
         // 查询用户信息
         SysUserDetailsDTO sysUserDetailsDTO = sysUserService.findDetailsByUid(loginRequest.getUid());
         if(null == sysUserDetailsDTO){

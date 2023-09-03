@@ -9,4 +9,6 @@ public class CacheConstants {
     public static final String CACHE_USER_ID = "sysUserDetailsId";
     /** 字典数据列表缓存名 */
     public static final String CACHE_DICT_DATAS = "dictionaryDatas";
+    /** 验证码缓存名 */
+    public static final String CACHE_CAPTCHA = "captcha";
 }

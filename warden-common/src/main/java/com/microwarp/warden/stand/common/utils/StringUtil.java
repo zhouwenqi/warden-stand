@@ -6,6 +6,8 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
 
+import java.util.UUID;
+
 /**
  * String - util
  */
@@ -37,5 +39,19 @@ public class StringUtil {
             e.printStackTrace();
         }
         return new String[]{qp.toString(),jp.toString()};
+    }
+
+    /**
+     * 获取UUID字符串
+     * @return
+     */
+    public static String generateGuestId(){
+        String uuid = UUID.randomUUID().toString();
+        try {
+            return AesUtil.hexEncrypt(uuid);
+        }
+        catch (Exception e){
+            return null;
+        }
     }
 }

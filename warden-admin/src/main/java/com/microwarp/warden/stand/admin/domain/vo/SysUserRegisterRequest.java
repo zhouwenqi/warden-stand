@@ -22,6 +22,8 @@ public class SysUserRegisterRequest {
     @Email(message = "E-mail格式不正确，可以为空")
     @Length(min = 5, max=80,message = "E-mail只能是5-80个字符")
     private String email;
+    /** 图形验证码 */
+    private String captchaCode;
 
     public String getUid() {
         return uid;
@@ -47,4 +49,11 @@ public class SysUserRegisterRequest {
         this.email = email;
     }
 
+    public String getCaptchaCode() {
+        return captchaCode;
+    }
+
+    public void setCaptchaCode(String captchaCode) {
+        this.captchaCode = captchaCode;
+    }
 }

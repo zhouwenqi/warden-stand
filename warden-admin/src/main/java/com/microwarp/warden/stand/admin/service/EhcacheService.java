@@ -14,6 +14,7 @@ import javax.cache.CacheManager;
 @Service
 public class EhcacheService implements ICacheService {
     private static CacheManager cacheManager;
+
     private Cache getCache(String name){
         if(null == cacheManager) {
              cacheManager = SpringUtil.getBean(CacheManager.class);
@@ -78,5 +79,12 @@ public class EhcacheService implements ICacheService {
                 e.printStackTrace();
             }
         }
+    }
+    public Object get(String cacheName,String key){
+        Cache cache = getCache(cacheName);
+        if(null == cache){
+            return null;
+        }
+        return cache.get(key);
     }
 }
