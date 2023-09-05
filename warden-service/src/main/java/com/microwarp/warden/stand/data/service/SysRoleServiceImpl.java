@@ -29,7 +29,7 @@ import java.util.List;
  * @author zhouwenqi
  */
 @Service
-public class SysRoleServiceImpl implements SysRoleService {
+public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysRoleService {
     @Resource
     private SysRoleDao sysRoleDao;
     @Resource
@@ -170,14 +170,7 @@ public class SysRoleServiceImpl implements SysRoleService {
             );
         }
         if(null != iSearchPageable.getFilters()){
-            BasicSearchDTO searchDTO = iSearchPageable.getFilters();
-            if(null != searchDTO.getCreateDate() && searchDTO.getCreateDate().length > 0){
-                if(searchDTO.getCreateDate().length < 2){
-                    queryWrapper.and(true, wrapper -> wrapper.ge("create_date",searchDTO.getCreateDate()[0]));
-                }else{
-                    queryWrapper.and(true, wrapper -> wrapper.between("create_date",searchDTO.getCreateDate()[0],searchDTO.getCreateDate()[1]));
-                }
-            }
+            useBaseFilter(queryWrapper,iSearchPageable.getFilters());
         }
         PageInfo pageInfo = iSearchPageable.getPageInfo();
         Page<SysRole> page = new Page<>(pageInfo.getCurrent(),pageInfo.getPageSize());

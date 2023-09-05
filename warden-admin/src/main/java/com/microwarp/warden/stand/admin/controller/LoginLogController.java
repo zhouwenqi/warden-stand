@@ -82,7 +82,7 @@ public class LoginLogController extends BaseController {
      */
     @PostMapping("/loginLogs/search")
     @PreAuthorize("hasAuthority('login:log:view')")
-    public ResultModel search(SearchPageable<SysLoginLogSearchDTO> searchPageable){
+    public ResultModel search(@RequestBody SearchPageable<SysLoginLogSearchDTO> searchPageable){
         ResultModel resultModel = ResultModel.success();
         ResultPage<SysLoginLogDTO> page = sysLoginLogService.findPage(searchPageable);
         resultModel.addData("list", SysLoginLogMapstruct.Instance.sysLoginLogsDtoToSysLoginLogsVO(page.getList()));

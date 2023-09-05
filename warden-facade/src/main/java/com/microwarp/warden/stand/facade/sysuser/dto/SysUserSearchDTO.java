@@ -3,7 +3,8 @@ package com.microwarp.warden.stand.facade.sysuser.dto;
 import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
 
 /**
- * Created by Administrator on 2023/7/25.
+ * dto - 系统用户过滤
+ * @author zhouwenqi
  */
 public class SysUserSearchDTO extends BasicSearchDTO {
     private Long deptId;

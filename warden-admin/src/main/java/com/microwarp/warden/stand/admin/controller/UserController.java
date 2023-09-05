@@ -51,16 +51,17 @@ public class UserController extends BaseController {
      * @return
      */
     @GetMapping("/user/{id}")
+    @PreAuthorize("hasAuthority('system:user:view')")
     public ResultModel info(@PathVariable("id") Long id){
         if(null == id){
             throw new WardenParamterErrorException("参数错误");
         }
-        SysUserDTO sysUserDTO = sysUserService.findById(id);
+        SysUserDetailsDTO sysUserDTO = sysUserService.findDetailsById(id);
         if(null == sysUserDTO){
             throw new WardenRequireParamterException("用户不存在");
         }
         ResultModel resultModel = ResultModel.success();
-        resultModel.addData("user",SysUserMapstruct.Instance.sysUserDtoToSysUserVo(sysUserDTO));
+        resultModel.addData("user",SysUserMapstruct.Instance.sysUserDetailsDtoToSysUserDetailsVo(sysUserDTO));
         return resultModel;
     }
 
@@ -70,7 +71,7 @@ public class UserController extends BaseController {
      * @return
      */
     @PostMapping("/user")
-    @PreAuthorize("hasAuthority('system:user:admin')")
+    @PreAuthorize("hasAuthority('system:user:create')")
     public ResultModel postInfo(@RequestBody @Validated SysUserCreateRequest createRequest){
         SysUserRequestDTO requestDTO = SysUserMapstruct.Instance.sysUserCreateRequestToSysUserRequestDTO(createRequest);
         requestDTO.setPwd(bCryptPasswordEncoder.encode(createRequest.getPwd()));
@@ -97,7 +98,7 @@ public class UserController extends BaseController {
      * @return
      */
     @PatchMapping("/user")
-    @PreAuthorize("hasAuthority('system:user:admin')")
+    @PreAuthorize("hasAuthority('system:user:modify')")
     public ResultModel putInfo(@RequestBody @Validated SysUserUpdateRequest updateRequest){
         SysUserDTO sysUserDTO = SysUserMapstruct.Instance.sysUserUpdateRequestToSysUserDTO(updateRequest);
         SysUserDetailsDTO sysUserDetailsDTO = sysUserService.findDetailsById(sysUserDTO.getId());
@@ -134,7 +135,7 @@ public class UserController extends BaseController {
      * @return
      */
     @PutMapping("/user/password")
-    @PreAuthorize("hasAuthority('system:user:admin')")
+    @PreAuthorize("hasAuthority('system:user:modify')")
     public ResultModel putPassword(@RequestBody @Validated SysUserPasswordRequest passwordRequest){
         SysUserDetailsDTO sysUserDetailsDTO = sysUserService.findDetailsById(passwordRequest.getUserId());
         if(null == sysUserDetailsDTO){
@@ -160,7 +161,7 @@ public class UserController extends BaseController {
      * @return
      */
     @DeleteMapping("/user/{id}")
-    @PreAuthorize("hasAuthority('system:user:admin')")
+    @PreAuthorize("hasAuthority('system:user:delete')")
     public ResultModel deleteProfile(@PathVariable("id") Long id){
         if(null == id){
             throw new WardenParamterErrorException("参数错误");
@@ -168,6 +169,9 @@ public class UserController extends BaseController {
         SysUserDetailsDTO sysUserDetailsDTO = sysUserService.findDetailsById(id);
         if(null == sysUserDetailsDTO){
             throw new WardenParamterErrorException("用户不存在");
+        }
+        if(sysUserDetailsDTO.getId().equals(SecurityUtil.getCurrentSysUser().getId())){
+            throw new WardenParamterErrorException("不能删除自己");
         }
         if(sysUserDetailsDTO.getUid().equals(SecurityConstants.RESERVE_ROOT_USER_NAME)){
             throw new WardenParamterErrorException("保留帐号不可删除");
@@ -188,7 +192,7 @@ public class UserController extends BaseController {
      * @return
      */
     @PostMapping("/users/search")
-    @PreAuthorize("hasAuthority('system:user:admin')")
+    @PreAuthorize("hasAuthority('system:user:view')")
     public ResultModel postSearch(@RequestBody SearchPageable<SysUserSearchDTO> searchPageable){
         ResultModel resultModel = ResultModel.success();
         ResultPage<SysUserDTO> resultPage = sysUserService.findPage(searchPageable);

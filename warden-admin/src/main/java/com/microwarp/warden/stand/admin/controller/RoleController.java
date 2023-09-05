@@ -46,7 +46,7 @@ public class RoleController extends BaseController {
      * @return
      */
     @GetMapping("/role/{id}")
-    @PreAuthorize("hasAuthority('role:admin')")
+    @PreAuthorize("hasAuthority('role:view')")
     public ResultModel info(@PathVariable("id") Long id){
         if(null == id){
             throw new WardenParamterErrorException("参数错误");
@@ -66,7 +66,7 @@ public class RoleController extends BaseController {
      * @return
      */
     @PostMapping("/role")
-    @PreAuthorize("hasAuthority('role:admin')")
+    @PreAuthorize("hasAuthority('role:create')")
     public ResultModel postRole(@Validated @RequestBody SysRoleCreateRequest createRequest){
         SysRoleDTO sysRoleDTO = SysRoleMapstruct.Instance.sysRoleCreateRequestTosysRoleDTO(createRequest);
         sysRoleDTO = sysRoleService.create(sysRoleDTO);
@@ -84,7 +84,7 @@ public class RoleController extends BaseController {
      * @return
      */
     @PatchMapping("/role")
-    @PreAuthorize("hasAuthority('role:admin')")
+    @PreAuthorize("hasAuthority('role:modify')")
     public ResultModel putRole(@Validated @RequestBody SysRoleUpdateRequest updateRequest){
         SysRoleDTO sysRoleDTO = sysRoleService.findById(updateRequest.getId());
         if(null == sysRoleDTO){
@@ -106,7 +106,7 @@ public class RoleController extends BaseController {
      * @return
      */
     @PutMapping("/role/permissions")
-    @PreAuthorize("hasAuthority('role:admin')")
+    @PreAuthorize("hasAuthority('role:modify')")
     public ResultModel putRolePermissions(@Validated @RequestBody SysRolePermissionRequest roleRequest){
         SysRoleDTO sysRoleDTO = sysRoleService.findById(roleRequest.getRoleId());
         if(null == sysRoleDTO){
@@ -127,7 +127,7 @@ public class RoleController extends BaseController {
      * @return
      */
     @DeleteMapping("/role/{id}")
-    @PreAuthorize("hasAuthority('role:admin')")
+    @PreAuthorize("hasAuthority('role:delete')")
     public ResultModel deleteRoles(@PathVariable("id") Long id){
         if(null == id){
             throw new WardenParamterErrorException("角色id不能为空");
@@ -151,7 +151,7 @@ public class RoleController extends BaseController {
      * @return
      */
     @PostMapping("/roles/search")
-    @PreAuthorize("hasAuthority('role:admin')")
+    @PreAuthorize("hasAuthority('role:view')")
     public ResultModel postSearch(@RequestBody SearchPageable<BasicSearchDTO> searchPageable){
         ResultModel resultModel = ResultModel.success();
         ResultPage<SysRoleDTO> resultPage = sysRoleService.findPage(searchPageable);

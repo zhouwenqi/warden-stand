@@ -3,8 +3,10 @@ package com.microwarp.warden.stand.data.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.base.CaseFormat;
 import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
+import com.microwarp.warden.stand.common.utils.EnumUtil;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -21,11 +23,11 @@ public class BaseServiceImpl<T> {
         if(null == searchDTO){
             return;
         }
-        if(null != searchDTO.getAppTerminalType()) {
-            queryWrapper.and(true, wrapper -> wrapper.eq("app_terminal_type", searchDTO.getAppTerminalType()));
+        if(null != searchDTO.getAppTerminalType() && searchDTO.getAppTerminalType().length > 0) {
+            queryWrapper.and(true, wrapper -> wrapper.in("app_terminal_type", Arrays.asList(searchDTO.getAppTerminalType())));
         }
-        if(null != searchDTO.getPlatformType()) {
-            queryWrapper.and(true, wrapper -> wrapper.eq("platform_type", searchDTO.getPlatformType()));
+        if(null != searchDTO.getPlatformType() && searchDTO.getPlatformType().length > 0) {
+            queryWrapper.and(true, wrapper -> wrapper.in("platform_type", Arrays.asList(searchDTO.getPlatformType())));
         }
         if(null != searchDTO.getCreateDate() && searchDTO.getCreateDate().length > 0){
             if(searchDTO.getCreateDate().length < 2){

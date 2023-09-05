@@ -36,6 +36,7 @@ public class PostController extends BaseController {
      * @return
      */
     @GetMapping("/post/{id}")
+    @PreAuthorize("hasAuthority('post:view')")
     public ResultModel getInfo(@PathVariable("id") Long id){
         if(null == id){
             throw new WardenRequireParamterException("岗位id不能为空");
@@ -56,7 +57,7 @@ public class PostController extends BaseController {
      * @return
      */
     @PostMapping("/post")
-    @PreAuthorize("hasAuthority('post:admin')")
+    @PreAuthorize("hasAuthority('post:create')")
     public ResultModel postInfo(@Validated @RequestBody SysPostCreateRequest sysPostRequest){
         SysPostDTO sysPostDTO = SysPostMapstruct.Instance.sysPostCreateRequestToSysPostDTO(sysPostRequest);
         ResultModel resultModel = ResultModel.success();
@@ -74,7 +75,7 @@ public class PostController extends BaseController {
      * @return
      */
     @PatchMapping("/post")
-    @PreAuthorize("hasAuthority('post:admin')")
+    @PreAuthorize("hasAuthority('post:modify')")
     public ResultModel putInfo(@Validated @RequestBody SysPostUpdateRequest sysPostRequest){
         SysPostDTO sysPostDTO = SysPostMapstruct.Instance.sysPostUpdateRequestToSysPostDTO(sysPostRequest);
         sysPostService.update(sysPostDTO);
@@ -90,7 +91,7 @@ public class PostController extends BaseController {
      * @return
      */
     @DeleteMapping("/post/{id}")
-    @PreAuthorize("hasAuthority('post:admin')")
+    @PreAuthorize("hasAuthority('post:delete')")
     public ResultModel deleteInfo(@PathVariable Long[] id){
         if(null != id && id.length>0){
             sysPostService.delete(id);
@@ -106,6 +107,7 @@ public class PostController extends BaseController {
      * @return
      */
     @PostMapping("/posts/search")
+    @PreAuthorize("hasAuthority('post:view')")
     public ResultModel search(@RequestBody SearchPageable<BasicSearchDTO> searchPageable){
         ResultModel resultModel = ResultModel.success();
         ResultPage<SysPostDTO> resultPage = sysPostService.findPage(searchPageable);

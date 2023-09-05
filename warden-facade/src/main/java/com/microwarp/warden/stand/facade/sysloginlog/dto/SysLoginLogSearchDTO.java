@@ -12,7 +12,7 @@ public class SysLoginLogSearchDTO extends BasicSearchDTO {
     /** 用户id */
     private Long userId;
     /** 状态 */
-    private ActionStatusEnum status;
+    private ActionStatusEnum[] status;
 
     public Long getUserId() {
         return userId;
@@ -22,11 +22,11 @@ public class SysLoginLogSearchDTO extends BasicSearchDTO {
         this.userId = userId;
     }
 
-    public ActionStatusEnum getStatus() {
+    public ActionStatusEnum[] getStatus() {
         return status;
     }
 
-    public void setStatus(ActionStatusEnum status) {
+    public void setStatus(ActionStatusEnum[] status) {
         this.status = status;
     }
 }

@@ -36,6 +36,7 @@ public class DictionaryController extends BaseController {
      * @return
      */
     @GetMapping("/dictionary/{id}")
+    @PreAuthorize("hasAuthority('dictionary:view')")
     public ResultModel getDictionary(@PathVariable("id") Long id){
         if(null == id){
             throw new WardenRequireParamterException("字典id不能为空");
@@ -56,7 +57,7 @@ public class DictionaryController extends BaseController {
      * @return
      */
     @PostMapping("/dictionary")
-    @PreAuthorize("hasAuthority('dictionary:admin')")
+    @PreAuthorize("hasAuthority('dictionary:create')")
     public ResultModel postDictionary(@Validated @RequestBody SysDictionaryCreateRequest sysDictionaryRequest){
         SysDictionaryDTO sysDictionaryDTO = SysDictionaryMapstruct.Instance.sysDictionaryCreateRequestToSysDictionaryDTO(sysDictionaryRequest);
         SysDictionaryDTO newDictionaryDTO = sysDictionaryService.create(sysDictionaryDTO);
@@ -74,7 +75,7 @@ public class DictionaryController extends BaseController {
      * @return
      */
     @PatchMapping("/dictionary")
-    @PreAuthorize("hasAuthority('dictionary:admin')")
+    @PreAuthorize("hasAuthority('dictionary:modify')")
     public ResultModel putDictionary(@Validated @RequestBody SysDictionaryUpdateRequest sysDictionaryRequest){
         SysDictionaryDTO sysDictionaryDTO = SysDictionaryMapstruct.Instance.sysDictionaryUpdateRequestToSysDictionaryDTO(sysDictionaryRequest);
         sysDictionaryService.update(sysDictionaryDTO);
@@ -89,7 +90,7 @@ public class DictionaryController extends BaseController {
      * @return
      */
     @DeleteMapping("/dictionary/{id}")
-    @PreAuthorize("hasAuthority('dictionary:admin')")
+    @PreAuthorize("hasAuthority('dictionary:delete')")
     public ResultModel deleteDictionary(@PathVariable Long... id){
         if(null != id && id.length > 0){
             sysDictionaryService.delete(id);
@@ -105,6 +106,7 @@ public class DictionaryController extends BaseController {
      * @return
      */
     @PostMapping("dictionarys/search")
+    @PreAuthorize("hasAuthority('dictionary:view')")
     public ResultModel search(@RequestBody SearchPageable<BasicSearchDTO> searchPageable){
         ResultPage<SysDictionaryDTO> resultPage = sysDictionaryService.findPage(searchPageable);
         ResultModel resultModel = ResultModel.success();

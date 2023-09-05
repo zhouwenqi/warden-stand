@@ -1,5 +1,7 @@
 package com.microwarp.warden.stand.common.core.pageing;
 
+import com.google.common.base.CaseFormat;
+
 /**
  * pageable - 排序字段
  */
@@ -14,7 +16,8 @@ public class SortField {
     }
 
     public void setSortKey(String sortKey) {
-        this.sortKey = sortKey;
+        // 鸵峰转下划线
+        this.sortKey = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE,sortKey);
     }
 
     public SortDirection getDirection() {

@@ -7,6 +7,7 @@ import com.microwarp.warden.stand.common.core.cache.ICacheService;
 import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
 import com.microwarp.warden.stand.common.core.pageing.PageInfo;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
+import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
 import com.microwarp.warden.stand.common.exception.WardenRequireParamterException;
 import com.microwarp.warden.stand.common.utils.StringUtil;
 import com.microwarp.warden.stand.data.convert.PageConvert;
@@ -102,7 +103,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     @Transactional
     public Long insert(SysUserDTO sysUserDTO){
         if(null != findByUid(sysUserDTO.getUid())){
-            throw new WardenRequireParamterException("用户已存在");
+            throw new WardenParamterErrorException("用户已存在");
         }
         // 真实姓名拼音处理
         if(StringUtils.isNotBlank(sysUserDTO.getRealName())){

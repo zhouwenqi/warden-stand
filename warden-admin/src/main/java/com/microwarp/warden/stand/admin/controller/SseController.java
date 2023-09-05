@@ -48,7 +48,7 @@ public class SseController {
         sseEmitterMap.put(userDetailsDTO.getId().toString(),sseEmitter);
         return sseEmitter;
     }
-    @RequestMapping("send")
+    @GetMapping("send")
     @ResponseBody
     public ResultModel send(String msg) throws Exception{
         SysUserDetailsDTO userDetailsDTO = SecurityUtil.getCurrentSysUser();

@@ -14,9 +14,9 @@ public class BasicSearchDTO {
     /** 修改时间区间 */
     private Date[]  updateDate;
     /** 应用终端类型 */
-    private AppTerminalEnum appTerminalType;
+    private AppTerminalEnum[] appTerminalType;
     /** 平台类型 */
-    private PlatformTypeEnum platformType;
+    private PlatformTypeEnum[] platformType;
 
     public Date[] getCreateDate() {
         return createDate;
@@ -34,19 +34,19 @@ public class BasicSearchDTO {
         this.updateDate = updateDate;
     }
 
-    public AppTerminalEnum getAppTerminalType() {
+    public AppTerminalEnum[] getAppTerminalType() {
         return appTerminalType;
     }
 
-    public void setAppTerminalType(AppTerminalEnum appTerminalType) {
+    public void setAppTerminalType(AppTerminalEnum[] appTerminalType) {
         this.appTerminalType = appTerminalType;
     }
 
-    public PlatformTypeEnum getPlatformType() {
+    public PlatformTypeEnum[] getPlatformType() {
         return platformType;
     }
 
-    public void setPlatformType(PlatformTypeEnum platformType) {
+    public void setPlatformType(PlatformTypeEnum[] platformType) {
         this.platformType = platformType;
     }
 }

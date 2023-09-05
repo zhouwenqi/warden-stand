@@ -9,13 +9,13 @@ import com.microwarp.warden.stand.admin.domain.excel.SysUserExcel;
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysLoginLogMapstruct;
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysPermissionMapstruct;
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysUserMapstruct;
+import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.common.core.pageing.SearchPageable;
 import com.microwarp.warden.stand.facade.sysloginlog.dto.SysLoginLogDTO;
 import com.microwarp.warden.stand.facade.sysloginlog.dto.SysLoginLogSearchDTO;
 import com.microwarp.warden.stand.facade.sysloginlog.service.SysLoginLogService;
 import com.microwarp.warden.stand.facade.syspermission.dto.SysPermissionDTO;
-import com.microwarp.warden.stand.facade.syspermission.dto.SysPermissionSearchDTO;
 import com.microwarp.warden.stand.facade.syspermission.service.SysPermissionService;
 import com.microwarp.warden.stand.facade.sysuser.dto.SysUserDTO;
 import com.microwarp.warden.stand.facade.sysuser.dto.SysUserSearchDTO;
@@ -89,7 +89,7 @@ public class ExcelExportService {
      * @param searchPageable 查询条件
      * @throws IOException
      */
-    public void sysPermissionPageData(String fileName, String sheetName, HttpServletResponse response, SearchPageable<SysPermissionSearchDTO> searchPageable) throws IOException{
+    public void sysPermissionPageData(String fileName, String sheetName, HttpServletResponse response, SearchPageable<BasicSearchDTO> searchPageable) throws IOException{
         useResponse(fileName, response);
         ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream(), SysPermissionExcel.class).autoCloseStream(false).build();
         WriteSheet writeSheet = EasyExcel.writerSheet(sheetName).build();

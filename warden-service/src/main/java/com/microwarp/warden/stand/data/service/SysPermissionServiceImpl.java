@@ -2,6 +2,7 @@ package com.microwarp.warden.stand.data.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
 import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
 import com.microwarp.warden.stand.common.core.pageing.PageInfo;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
@@ -11,7 +12,6 @@ import com.microwarp.warden.stand.data.convert.SysPermissionConvert;
 import com.microwarp.warden.stand.data.dao.SysPermissionDao;
 import com.microwarp.warden.stand.data.entity.SysPermission;
 import com.microwarp.warden.stand.facade.syspermission.dto.SysPermissionDTO;
-import com.microwarp.warden.stand.facade.syspermission.dto.SysPermissionSearchDTO;
 import com.microwarp.warden.stand.facade.syspermission.service.SysPermissionService;
 import com.microwarp.warden.stand.facade.sysuser.service.SysUserService;
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +27,7 @@ import java.util.List;
  * @author zhouwenqi
  */
 @Service
-public class SysPermissionServiceImpl implements SysPermissionService {
+public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> implements SysPermissionService {
     @Resource
     private SysPermissionDao sysPermissionDao;
     @Resource
@@ -131,7 +131,7 @@ public class SysPermissionServiceImpl implements SysPermissionService {
      * @param iSearchPageable 查询条件
      * @return
      */
-    public ResultPage<SysPermissionDTO> findPage(ISearchPageable<SysPermissionSearchDTO> iSearchPageable){
+    public ResultPage<SysPermissionDTO> findPage(ISearchPageable<BasicSearchDTO> iSearchPageable){
         QueryWrapper<SysPermission> queryWrapper = new QueryWrapper<>();
         if(StringUtils.isNotBlank(iSearchPageable.getSearchValue())) {
             queryWrapper.and(wrapper -> wrapper
@@ -142,14 +142,7 @@ public class SysPermissionServiceImpl implements SysPermissionService {
         }
 
         if(null != iSearchPageable.getFilters()){
-            SysPermissionSearchDTO searchDTO = iSearchPageable.getFilters();
-            if(null != searchDTO.getCreateDate() && searchDTO.getCreateDate().length > 0){
-                if(searchDTO.getCreateDate().length < 2){
-                    queryWrapper.and(true, wrapper -> wrapper.ge("create_date",searchDTO.getCreateDate()[0]));
-                }else{
-                    queryWrapper.and(true, wrapper -> wrapper.between("create_date",searchDTO.getCreateDate()[0],searchDTO.getCreateDate()[1]));
-                }
-            }
+            useBaseFilter(queryWrapper,iSearchPageable.getFilters());
 
         }
         PageInfo pageInfo = iSearchPageable.getPageInfo();

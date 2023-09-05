@@ -4,21 +4,15 @@ import com.microwarp.warden.stand.admin.domain.mapstruct.SysPermissionMapstruct;
 import com.microwarp.warden.stand.admin.domain.vo.SysPermissionCreateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysPermissionUpdateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysPermissionVO;
-import com.microwarp.warden.stand.admin.domain.vo.SysUserDetailsVO;
 import com.microwarp.warden.stand.admin.service.ExcelExportService;
-import com.microwarp.warden.stand.admin.service.LogService;
-import com.microwarp.warden.stand.admin.utils.SecurityUtil;
 import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
-import com.microwarp.warden.stand.common.core.enums.AppTerminalEnum;
 import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
-import com.microwarp.warden.stand.common.core.enums.PlatformTypeEnum;
+import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.common.core.pageing.SearchPageable;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
 import com.microwarp.warden.stand.common.model.ResultModel;
-import com.microwarp.warden.stand.common.utils.WebUtil;
 import com.microwarp.warden.stand.facade.syspermission.dto.SysPermissionDTO;
-import com.microwarp.warden.stand.facade.syspermission.dto.SysPermissionSearchDTO;
 import com.microwarp.warden.stand.facade.syspermission.service.SysPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -46,6 +40,7 @@ public class PermissionController extends BaseController {
      * @return
      */
     @GetMapping("/permission/{id}")
+    @PreAuthorize("hasAuthority('permission:view')")
     public ResultModel getPermission(@PathVariable("id") Long id){
         if(null == id){
             throw new WardenParamterErrorException("权限id不能为空");
@@ -66,7 +61,7 @@ public class PermissionController extends BaseController {
      * @return
      */
     @DeleteMapping("/permission/{id}")
-    @PreAuthorize("hasAuthority('permission:admin')")
+    @PreAuthorize("hasAuthority('permission:delete')")
     public ResultModel deletePermission(@PathVariable("id") Long id){
         if(null == id){
             throw new WardenParamterErrorException("权限id不能为空");
@@ -81,7 +76,7 @@ public class PermissionController extends BaseController {
      * @return
      */
     @PostMapping("/permission")
-    @PreAuthorize("hasAuthority('permission:admin')")
+    @PreAuthorize("hasAuthority('permission:create')")
     public ResultModel postPermission(@Validated @RequestBody SysPermissionCreateRequest permissionRequest){
         SysPermissionDTO sysPermissionDTO = SysPermissionMapstruct.Instance.sysPermissionCreateRequestToSysPermissionDTO(permissionRequest);
         ResultModel resultModel = ResultModel.success();
@@ -96,7 +91,7 @@ public class PermissionController extends BaseController {
      * @return
      */
     @PatchMapping("/permission")
-    @PreAuthorize("hasAuthority('permission:admin')")
+    @PreAuthorize("hasAuthority('permission:modify')")
     public ResultModel putPermission(@Validated @RequestBody SysPermissionUpdateRequest permissionRequest){
         SysPermissionDTO sysPermissionDTO = SysPermissionMapstruct.Instance.sysPermissionUpdateRequestToSysPermissionDTO(permissionRequest);
         sysPermissionService.update(sysPermissionDTO);
@@ -108,7 +103,7 @@ public class PermissionController extends BaseController {
      * @return
      */
     @GetMapping("/permissions")
-    @PreAuthorize("hasAuthority('permission:admin')")
+    @PreAuthorize("hasAuthority('permission:view')")
     public ResultModel all(){
         ResultModel resultModel = ResultModel.success();
         List<SysPermissionDTO> sysPermissionDTOS = sysPermissionService.findAll();
@@ -122,8 +117,8 @@ public class PermissionController extends BaseController {
      * @return
      */
     @PostMapping("/permissions/search")
-    @PreAuthorize("hasAuthority('permission:admin')")
-    public ResultModel search(@RequestBody SearchPageable<SysPermissionSearchDTO> searchPageable){
+    @PreAuthorize("hasAuthority('permission:view')")
+    public ResultModel search(@RequestBody SearchPageable<BasicSearchDTO> searchPageable){
         ResultPage<SysPermissionDTO> resultPage = sysPermissionService.findPage(searchPageable);
         ResultModel resultModel = ResultModel.success();
         resultModel.addData("list",SysPermissionMapstruct.Instance.sysPermissionsDtoToSysPermissionsVO(resultPage.getList()));
@@ -138,7 +133,8 @@ public class PermissionController extends BaseController {
      * @throws IOException
      */
     @PostMapping("/permissions/export")
-    public void export(@RequestBody SearchPageable<SysPermissionSearchDTO> searchPageable, HttpServletResponse response) throws IOException{
+    @PreAuthorize("hasAuthority('data:export')")
+    public void export(@RequestBody SearchPageable<BasicSearchDTO> searchPageable, HttpServletResponse response) throws IOException{
         String fileName = "系统权限"+System.currentTimeMillis();
         excelExportService.sysPermissionPageData(fileName,"权限列表", response, searchPageable);
 

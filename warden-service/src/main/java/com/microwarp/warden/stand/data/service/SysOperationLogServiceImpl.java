@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 
 /**
  * service - 操作日志 - impl
@@ -86,13 +87,13 @@ public class SysOperationLogServiceImpl extends BaseServiceImpl<SysOperationLog>
                 queryWrapper.and(true, wrapper -> wrapper.eq("user_id", searchDTO.getUserId()));
             }
             if(null != searchDTO.getMateId()) {
-                queryWrapper.and(true, wrapper -> wrapper.eq("user_id", searchDTO.getMateId()));
+                queryWrapper.and(true, wrapper -> wrapper.eq("mate_id", searchDTO.getMateId()));
             }
-            if(null != searchDTO.getActionType()) {
-                queryWrapper.and(true, wrapper -> wrapper.eq("action_type", searchDTO.getActionType()));
+            if(null != searchDTO.getActionType() && searchDTO.getActionType().length > 0) {
+                queryWrapper.and(true, wrapper -> wrapper.in("action_type", Arrays.asList(searchDTO.getActionType())));
             }
-            if(null != searchDTO.getModuleType()) {
-                queryWrapper.and(true, wrapper -> wrapper.eq("module_type", searchDTO.getModuleType()));
+            if(null != searchDTO.getModuleType() && searchDTO.getModuleType().length > 0) {
+                queryWrapper.and(true, wrapper -> wrapper.eq("module_type", Arrays.asList(searchDTO.getModuleType())));
             }
             useBaseFilter(queryWrapper,searchDTO);
         }

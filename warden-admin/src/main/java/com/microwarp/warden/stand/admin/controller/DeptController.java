@@ -41,6 +41,7 @@ public class DeptController extends BaseController {
      * @return
      */
     @GetMapping("/dept/{id}")
+    @PreAuthorize("hasAuthority('dept:view')")
     public ResultModel getInfo(@PathVariable("id") Long id){
         if(null == id){
             throw new WardenRequireParamterException("部门id不能为空");
@@ -60,7 +61,7 @@ public class DeptController extends BaseController {
      * @return
      */
     @PostMapping("/dept")
-    @PreAuthorize("hasAuthority('dept:admin')")
+    @PreAuthorize("hasAuthority('dept:create')")
     public ResultModel postInfo(@Validated @RequestBody SysDeptCreateRequest sysDeptRequest){
         SysDeptDTO sysDeptDTO = SysDeptMapstruct.Instance.sysDeptCreateRequestToSysDeptDTO(sysDeptRequest);
         ResultModel resultModel = ResultModel.success();
@@ -78,7 +79,7 @@ public class DeptController extends BaseController {
      * @return
      */
     @PatchMapping("/dept")
-    @PreAuthorize("hasAuthority('dept:admin')")
+    @PreAuthorize("hasAuthority('dept:modify')")
     public ResultModel putInfo(@Validated @RequestBody SysDeptUpdateRequest sysDeptRequest){
         SysDeptDTO sysDeptDTO = SysDeptMapstruct.Instance.sysDeptUpdateRequestToSysDeptDTO(sysDeptRequest);
         sysDeptService.update(sysDeptDTO);
@@ -93,7 +94,7 @@ public class DeptController extends BaseController {
      * @return
      */
     @DeleteMapping("/dept/{id}")
-    @PreAuthorize("hasAuthority('dept:admin')")
+    @PreAuthorize("hasAuthority('dept:modify')")
     public ResultModel deleteInfo(@PathVariable Long[] id){
         if(null != id && id.length>0){
             sysDeptService.delete(id);
@@ -109,6 +110,7 @@ public class DeptController extends BaseController {
      * @return
      */
     @PostMapping("/depts/search")
+    @PreAuthorize("hasAuthority('dept:view')")
     public ResultModel search(@RequestBody SearchPageable<SysDeptSearchDTO> searchPageable){
         ResultModel resultModel = ResultModel.success();
         ResultPage<SysDeptDTO> resultPage = sysDeptService.findPage(searchPageable);

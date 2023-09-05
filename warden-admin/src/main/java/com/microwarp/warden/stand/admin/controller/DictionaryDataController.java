@@ -26,8 +26,6 @@ import java.util.*;
 public class DictionaryDataController extends BaseController {
     @Autowired
     private SysDictionaryDataService sysDictionaryDataService;
-    @Autowired
-    private LogService logService;
 
     /**
      * 获取一条字典数据
@@ -35,6 +33,7 @@ public class DictionaryDataController extends BaseController {
      * @return
      */
     @GetMapping("/dictionaryData/{id}")
+    @PreAuthorize("hasAuthority('dictionary:view')")
     public ResultModel getDictionaryData(@PathVariable("id") Long id){
         if(null == id){
             throw new WardenRequireParamterException("字典数据id不能为空");
@@ -55,6 +54,7 @@ public class DictionaryDataController extends BaseController {
      * @return
      */
     @GetMapping("/dictionaryDatas/{dictId}")
+    @PreAuthorize("hasAuthority('dictionary:view')")
     public ResultModel getDictionaryDatas(@PathVariable("dictId") Long dictId){
         if(null == dictId){
             throw new WardenRequireParamterException("字典id不能为空");
@@ -91,7 +91,7 @@ public class DictionaryDataController extends BaseController {
      * @return
      */
     @PostMapping("/dictionaryData")
-    @PreAuthorize("hasAuthority('dictionary:admin')")
+    @PreAuthorize("hasAuthority('dictionary:create')")
     public ResultModel postDictionaryData(@Validated @RequestBody SysDictionaryDataCreateRequest dataRequest){
         SysDictionaryDataDTO sysDictionaryDataDTO = SysDictionaryDataMapstruct.Instance.sysDictionaryDataCreateRequestToSysDictionaryDataDTO(dataRequest);
         SysDictionaryDataDTO newDataDTO =  sysDictionaryDataService.create(sysDictionaryDataDTO);
@@ -109,7 +109,7 @@ public class DictionaryDataController extends BaseController {
      * @return
      */
     @PatchMapping("/dictionaryData")
-    @PreAuthorize("hasAuthority('dictionary:admin')")
+    @PreAuthorize("hasAuthority('dictionary:modify')")
     public ResultModel putDictionaryData(@Validated @RequestBody SysDictionaryDataUpdateRequest dataRequest){
         SysDictionaryDataDTO sysDictionaryDataDTO = SysDictionaryDataMapstruct.Instance.sysDictionaryDataUpdateRequestToSysDictionaryDataDTO(dataRequest);
         sysDictionaryDataService.update(sysDictionaryDataDTO);
@@ -124,7 +124,7 @@ public class DictionaryDataController extends BaseController {
      * @return
      */
     @DeleteMapping("/dictionaryData/{id}")
-    @PreAuthorize("hasAuthority('dictionary:admin')")
+    @PreAuthorize("hasAuthority('dictionary:delete')")
     public ResultModel deleteDictionaryData(@PathVariable Long... id){
         if(null != id && id.length > 0){
             sysDictionaryDataService.delete(id);

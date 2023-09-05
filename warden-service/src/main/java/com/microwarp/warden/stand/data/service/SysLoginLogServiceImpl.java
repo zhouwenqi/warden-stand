@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 
 /**
  * service - 登录日志 - impl
@@ -87,7 +88,7 @@ public class SysLoginLogServiceImpl extends BaseServiceImpl<SysLoginLog> impleme
             }
 
             if(null != searchDTO.getStatus()) {
-                queryWrapper.and(true, wrapper -> wrapper.eq("status", searchDTO.getStatus().getCode()));
+                queryWrapper.and(true, wrapper -> wrapper.in("status", Arrays.asList(searchDTO.getStatus())));
             }
             useBaseFilter(queryWrapper,searchDTO);
         }

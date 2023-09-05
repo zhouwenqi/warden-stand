@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -64,6 +65,20 @@ public class AdminExceptionController {
     public void excelWriteDataConvertException(ExcelWriteDataConvertException exception, HttpServletRequest request, HttpServletResponse response){
         logger.error("excel导出失败 {}",exception.getMessage());
         ResultModel resultModel = new ResultModel(ResultCode.ERROR_PARAMETER,"Excel导出失败");
+        boolean foreverOk = ResultUtil.isForeverOk(request.getHeader(HttpConstants.HEADER_PACKAGE_TYPE));
+        ResponseResult.print(resultModel,response,foreverOk);
+    }
+
+    /**
+     * excel 帐号异常
+     * @param exception
+     * @param request
+     * @param response
+     */
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public void usernameNotFoundException(UsernameNotFoundException exception, HttpServletRequest request, HttpServletResponse response){
+        logger.error("token解析成功，但： {}",exception.getMessage());
+        ResultModel resultModel = new ResultModel(ResultCode.ERROR_TOKEN,exception.getMessage());
         boolean foreverOk = ResultUtil.isForeverOk(request.getHeader(HttpConstants.HEADER_PACKAGE_TYPE));
         ResponseResult.print(resultModel,response,foreverOk);
     }

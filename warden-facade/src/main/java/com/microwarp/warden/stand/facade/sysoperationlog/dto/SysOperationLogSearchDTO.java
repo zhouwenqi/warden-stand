@@ -13,9 +13,9 @@ public class SysOperationLogSearchDTO extends BasicSearchDTO {
     /** 对应模块id */
     private Long mateId;
     /** 动作类型 */
-    private ActionTypeEnum actionType;
+    private ActionTypeEnum[] actionType;
     /** 模块类型 */
-    private ModuleTypeEnum moduleType;
+    private ModuleTypeEnum[] moduleType;
 
     public Long getUserId() {
         return userId;
@@ -33,19 +33,19 @@ public class SysOperationLogSearchDTO extends BasicSearchDTO {
         this.mateId = mateId;
     }
 
-    public ActionTypeEnum getActionType() {
+    public ActionTypeEnum[] getActionType() {
         return actionType;
     }
 
-    public void setActionType(ActionTypeEnum actionType) {
+    public void setActionType(ActionTypeEnum[] actionType) {
         this.actionType = actionType;
     }
 
-    public ModuleTypeEnum getModuleType() {
+    public ModuleTypeEnum[] getModuleType() {
         return moduleType;
     }
 
-    public void setModuleType(ModuleTypeEnum moduleType) {
+    public void setModuleType(ModuleTypeEnum[] moduleType) {
         this.moduleType = moduleType;
     }
 }

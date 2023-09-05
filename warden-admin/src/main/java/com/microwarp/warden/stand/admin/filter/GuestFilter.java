@@ -27,6 +27,10 @@ public class GuestFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,FilterChain filterChain) throws IOException,ServletException {
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         HttpServletResponse response = (HttpServletResponse)servletResponse;
+        if (request.getMethod().equals("OPTIONS")) {
+            filterChain.doFilter(request, response);
+        }
+
         String guestId = null;
         Object guestObject = request.getHeader(HttpConstants.HEADER_GUEST_KEY);
         if(null != guestObject){
@@ -35,18 +39,19 @@ public class GuestFilter implements Filter {
             logger.warn("前端没有传递Guest-Id");
         }
         if(StringUtils.isBlank(guestId)){
-//            guestId = StringUtil.generateUUID();
-//            logger.info("生成Guest-Id:{}",guestId);
+            guestId = StringUtil.generateGuestId();
+            logger.info("生成Guest-Id:{}",guestId);
         }
         try {
             // 校验一下GuestId
             AesUtil.hexDecrypt(guestId);
-            request.setAttribute(HttpConstants.HEADER_GUEST_KEY, guestId);
-            response.setHeader(HttpConstants.HEADER_GUEST_KEY, guestId);
         }
         catch (Exception e){
-            logger.warn("无效的Guest-Id");
+            logger.warn("无效的Guest-Id,重新生成一个");
+            guestId = StringUtil.generateGuestId();
         }
+        request.setAttribute(HttpConstants.HEADER_GUEST_KEY, guestId);
+        response.setHeader(HttpConstants.HEADER_GUEST_KEY, guestId);
         filterChain.doFilter(request,response);
     }
     @Override

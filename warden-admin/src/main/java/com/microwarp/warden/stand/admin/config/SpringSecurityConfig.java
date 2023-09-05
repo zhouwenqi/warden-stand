@@ -17,8 +17,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+
+import javax.annotation.Resource;
+import java.util.Collections;
 
 /**
  * Configuration - Security 装配
@@ -27,6 +33,8 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Resource
+    private WardenAdminConfig wardenAdminConfig;
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
@@ -46,6 +54,18 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public WardenAuthenticationUserFilter wardenAuthenticationUserFilter() throws Exception{
         return new WardenAuthenticationUserFilter();
+    }
+
+    private CorsConfigurationSource corsConfigurationSource(){
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedMethods(Collections.singletonList("*"));
+        config.setAllowedHeaders(Collections.singletonList("*"));
+        config.setAllowedOriginPatterns(Collections.singletonList("*"));
+        config.setMaxAge(3600L);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**",config);
+        return source;
     }
 
     @Override
@@ -73,6 +93,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     public void configure(WebSecurity web) throws Exception {
+        String faceUri = wardenAdminConfig.getFaceUri();
+        if(!faceUri.endsWith("/")){
+            faceUri+="/";
+        }
         web.ignoring()
                 .antMatchers(HttpMethod.OPTIONS)
                 .antMatchers("/login")
@@ -81,6 +105,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/captcha/**")
                 .antMatchers("/config/**")
                 .antMatchers("/test/**")
+                .mvcMatchers(faceUri+"**")
                 .antMatchers("/*.ico");
     }
 }

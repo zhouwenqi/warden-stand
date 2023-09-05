@@ -28,7 +28,7 @@ import java.util.Arrays;
  * @author zhouwenqi
  */
 @Service
-public class SysPostServiceImpl implements SysPostService {
+public class SysPostServiceImpl extends BaseServiceImpl<SysPost> implements SysPostService {
     @Resource
     private SysPostDao sysPostDao;
     @Resource
@@ -128,14 +128,7 @@ public class SysPostServiceImpl implements SysPostService {
             );
         }
         if(null != iSearchPageable.getFilters()){
-            BasicSearchDTO searchDTO = iSearchPageable.getFilters();
-            if(null != searchDTO.getCreateDate() && searchDTO.getCreateDate().length > 0){
-                if(searchDTO.getCreateDate().length < 2){
-                    queryWrapper.and(true, wrapper -> wrapper.ge("create_date",searchDTO.getCreateDate()[0]));
-                }else{
-                    queryWrapper.and(true, wrapper -> wrapper.between("create_date",searchDTO.getCreateDate()[0],searchDTO.getCreateDate()[1]));
-                }
-            }
+            useBaseFilter(queryWrapper,iSearchPageable.getFilters());
         }
         PageInfo pageInfo = iSearchPageable.getPageInfo();
         Page<SysPost> page = new Page<>(pageInfo.getCurrent(),pageInfo.getPageSize());

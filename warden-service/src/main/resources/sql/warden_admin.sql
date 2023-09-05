@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 192.168.1.138
-Source Server Version : 50736
-Source Host           : 192.168.1.138:3306
+Source Server         : 39.108.108.100
+Source Server Version : 50728
+Source Host           : 39.108.108.100:3306
 Source Database       : warden_admin
 
 Target Server Type    : MYSQL
-Target Server Version : 50736
+Target Server Version : 50728
 File Encoding         : 65001
 
-Date: 2023-08-23 19:25:20
+Date: 2023-09-05 15:38:57
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -130,7 +130,7 @@ CREATE TABLE `wd_sys_login_log` (
   `create_date` datetime NOT NULL COMMENT '创建时间',
   `update_date` datetime NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=147 DEFAULT CHARSET=utf8mb4 COMMENT='登录日志';
+) ENGINE=InnoDB AUTO_INCREMENT=148 DEFAULT CHARSET=utf8mb4 COMMENT='登录日志';
 
 -- ----------------------------
 -- Records of wd_sys_login_log
@@ -281,6 +281,7 @@ INSERT INTO `wd_sys_login_log` VALUES ('143', '37', 'facebook3', '1', '5', '0', 
 INSERT INTO `wd_sys_login_log` VALUES ('144', '37', 'facebook3', '1', '5', '0', '登录成功', '0:0:0:0:0:0:0:1', '福建省-厦门市', '\0', '2023-08-23 19:17:01', '2023-08-23 19:17:01');
 INSERT INTO `wd_sys_login_log` VALUES ('145', '37', 'facebook3', '1', '5', '0', '登录成功', '0:0:0:0:0:0:0:1', '福建省-厦门市', '\0', '2023-08-23 19:19:01', '2023-08-23 19:19:01');
 INSERT INTO `wd_sys_login_log` VALUES ('146', '37', 'facebook3', '1', '5', '0', '登录成功', '0:0:0:0:0:0:0:1', '福建省-厦门市', '\0', '2023-08-23 19:19:05', '2023-08-23 19:19:05');
+INSERT INTO `wd_sys_login_log` VALUES ('147', '2', 'zhouwenqi', '1', '5', '0', '登录成功', '0:0:0:0:0:0:0:1', '广东省-东莞市', '\0', '2023-09-05 11:41:16', '2023-09-05 11:41:16');
 
 -- ----------------------------
 -- Table structure for wd_sys_operation_log
@@ -321,23 +322,41 @@ CREATE TABLE `wd_sys_permission` (
   `update_date` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `value` (`value`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COMMENT='权限值';
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COMMENT='权限值';
 
 -- ----------------------------
 -- Records of wd_sys_permission
 -- ----------------------------
 INSERT INTO `wd_sys_permission` VALUES ('1', '配置管理', 'config:admin', '0', '2023-07-05 16:02:45', '2023-07-05 16:02:48');
-INSERT INTO `wd_sys_permission` VALUES ('2', '系统用户管理', 'system:user:admin', '0', '2023-07-05 16:03:15', '2023-07-05 16:03:17');
-INSERT INTO `wd_sys_permission` VALUES ('3', '角色管理', 'role:admin', '1', '2023-07-05 16:04:18', '2023-07-05 16:04:21');
-INSERT INTO `wd_sys_permission` VALUES ('4', '权限管理', 'permission:admin', '2', '2023-07-05 16:04:47', '2023-07-05 16:04:51');
-INSERT INTO `wd_sys_permission` VALUES ('5', '字典管理', 'dictionary:admin', '3', '2023-07-05 16:05:05', '2023-07-05 16:05:08');
-INSERT INTO `wd_sys_permission` VALUES ('6', '导出数据', 'data:export', '0', '2023-07-05 16:07:24', '2023-07-05 16:07:26');
-INSERT INTO `wd_sys_permission` VALUES ('7', '部门管理', 'dept:admin', '0', '2023-08-08 15:22:55', '2023-08-08 15:22:58');
-INSERT INTO `wd_sys_permission` VALUES ('8', '岗位管理', 'post:admin', '0', '2023-08-08 15:23:18', '2023-08-08 15:23:21');
-INSERT INTO `wd_sys_permission` VALUES ('9', '查看登录日志', 'login:log:view', '0', '2023-08-18 11:43:46', '2023-08-18 11:43:50');
-INSERT INTO `wd_sys_permission` VALUES ('10', '查看操作日志', 'operatoin:log:view', '0', '2023-08-18 11:44:12', '2023-08-18 11:44:15');
-INSERT INTO `wd_sys_permission` VALUES ('11', '删除登录日志', 'login:log:delete', '0', '2023-08-18 11:45:26', '2023-08-18 11:45:29');
-INSERT INTO `wd_sys_permission` VALUES ('12', '删除操作日志', 'operation:log:delete', '0', '2023-08-18 11:46:13', '2023-08-18 11:46:15');
+INSERT INTO `wd_sys_permission` VALUES ('2', '查看系统用户', 'system:user:view', '1', '2023-07-05 16:03:15', '2023-07-05 16:03:17');
+INSERT INTO `wd_sys_permission` VALUES ('3', '查看角色', 'role:view', '5', '2023-07-05 16:04:18', '2023-07-05 16:04:21');
+INSERT INTO `wd_sys_permission` VALUES ('4', '查看权限', 'permission:view', '9', '2023-07-05 16:04:47', '2023-07-05 16:04:51');
+INSERT INTO `wd_sys_permission` VALUES ('5', '查看字典', 'dictionary:view', '13', '2023-07-05 16:05:05', '2023-07-05 16:05:08');
+INSERT INTO `wd_sys_permission` VALUES ('6', '导出数据', 'data:export', '17', '2023-07-05 16:07:24', '2023-07-05 16:07:26');
+INSERT INTO `wd_sys_permission` VALUES ('7', '查看部门', 'dept:view', '18', '2023-08-08 15:22:55', '2023-08-08 15:22:58');
+INSERT INTO `wd_sys_permission` VALUES ('8', '查看岗位', 'post:view', '22', '2023-08-08 15:23:18', '2023-08-08 15:23:21');
+INSERT INTO `wd_sys_permission` VALUES ('9', '查看登录日志', 'login:log:view', '26', '2023-08-18 11:43:46', '2023-08-18 11:43:50');
+INSERT INTO `wd_sys_permission` VALUES ('10', '查看操作日志', 'operatoin:log:view', '28', '2023-08-18 11:44:12', '2023-08-18 11:44:15');
+INSERT INTO `wd_sys_permission` VALUES ('11', '删除登录日志', 'login:log:delete', '27', '2023-08-18 11:45:26', '2023-08-18 11:45:29');
+INSERT INTO `wd_sys_permission` VALUES ('12', '删除操作日志', 'operation:log:delete', '29', '2023-08-18 11:46:13', '2023-08-18 11:46:15');
+INSERT INTO `wd_sys_permission` VALUES ('13', '删除系统用户', 'system:user:delete', '4', '2023-09-05 12:38:58', '2023-09-05 12:39:01');
+INSERT INTO `wd_sys_permission` VALUES ('14', '删除角色', 'role:delete', '8', '2023-09-05 12:41:40', '2023-09-05 12:41:42');
+INSERT INTO `wd_sys_permission` VALUES ('15', '删除权限', 'permission:delete', '12', '2023-09-05 12:44:22', '2023-09-05 12:44:25');
+INSERT INTO `wd_sys_permission` VALUES ('16', '删除字典', 'dictionary:delete', '16', '2023-09-05 12:48:34', '2023-09-05 12:48:38');
+INSERT INTO `wd_sys_permission` VALUES ('17', '删除部门', 'dept:delete', '21', '2023-09-05 12:49:12', '2023-09-05 12:49:15');
+INSERT INTO `wd_sys_permission` VALUES ('18', '删除岗位', 'post:delete', '25', '2023-09-05 12:49:29', '2023-09-05 12:49:32');
+INSERT INTO `wd_sys_permission` VALUES ('19', '创建系统用户', 'system:user:create', '2', '2023-09-05 13:23:18', '2023-09-05 13:23:21');
+INSERT INTO `wd_sys_permission` VALUES ('20', '修改系统用户', 'system:user:modify', '3', '2023-09-05 13:24:09', '2023-09-05 13:24:11');
+INSERT INTO `wd_sys_permission` VALUES ('21', '创建角色', 'role:create', '6', '2023-09-05 13:25:54', '2023-09-05 13:25:57');
+INSERT INTO `wd_sys_permission` VALUES ('22', '修改角色', 'role:modify', '7', '2023-09-05 13:26:35', '2023-09-05 13:26:38');
+INSERT INTO `wd_sys_permission` VALUES ('24', '创建权限', 'permission:create', '10', '2023-09-05 14:55:22', '2023-09-05 14:55:26');
+INSERT INTO `wd_sys_permission` VALUES ('25', '修改权限', 'permission:modify', '11', '2023-09-05 14:55:49', '2023-09-05 14:55:52');
+INSERT INTO `wd_sys_permission` VALUES ('26', '创建字典', 'dictionary:create', '14', '2023-09-05 14:56:31', '2023-09-05 14:56:34');
+INSERT INTO `wd_sys_permission` VALUES ('27', '修改字典', 'dictionary:modify', '15', '2023-09-05 14:57:27', '2023-09-05 14:57:29');
+INSERT INTO `wd_sys_permission` VALUES ('28', '创建部门', 'dept:create', '19', '2023-09-05 14:57:58', '2023-09-05 14:58:02');
+INSERT INTO `wd_sys_permission` VALUES ('29', '修改部门', 'dept:modify', '20', '2023-09-05 14:58:22', '2023-09-05 14:58:24');
+INSERT INTO `wd_sys_permission` VALUES ('30', '创建岗位', 'post:create', '23', '2023-09-05 14:58:40', '2023-09-05 14:58:42');
+INSERT INTO `wd_sys_permission` VALUES ('31', '修改岗位', 'post:modify', '24', '2023-09-05 14:58:54', '2023-09-05 14:58:57');
 
 -- ----------------------------
 -- Table structure for wd_sys_post
@@ -381,7 +400,7 @@ CREATE TABLE `wd_sys_role` (
   `update_date` datetime NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `value` (`value`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='角色';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COMMENT='角色';
 
 -- ----------------------------
 -- Records of wd_sys_role
@@ -389,7 +408,8 @@ CREATE TABLE `wd_sys_role` (
 INSERT INTO `wd_sys_role` VALUES ('1', '超级管理员', 'role:super', '超级管理员', '0', '2023-07-05 16:14:56', '2023-07-05 16:14:59');
 INSERT INTO `wd_sys_role` VALUES ('2', '管理员', 'role:admin', '管理员', '1', '2023-07-05 16:16:06', '2023-07-05 16:16:08');
 INSERT INTO `wd_sys_role` VALUES ('3', '开发人员', 'role:developer', '开发人员', '2', '2023-07-05 16:17:11', '2023-07-05 16:17:14');
-INSERT INTO `wd_sys_role` VALUES ('4', '操作人员', 'role:operation', '操作人员', '3', '2023-07-05 16:17:47', '2023-07-05 16:17:49');
+INSERT INTO `wd_sys_role` VALUES ('4', '操作人员', 'role:operation', '可以查看、添加、修改，不可删除', '3', '2023-07-05 16:17:47', '2023-07-05 16:17:49');
+INSERT INTO `wd_sys_role` VALUES ('6', '查询人员', 'role:query', '只可查看', '4', '2023-09-05 11:28:39', '2023-09-05 11:28:41');
 
 -- ----------------------------
 -- Table structure for wd_sys_role_permission
@@ -424,8 +444,102 @@ CREATE TABLE `wd_sys_role_user` (
 -- Records of wd_sys_role_user
 -- ----------------------------
 INSERT INTO `wd_sys_role_user` VALUES ('1', '1');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '2');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '3');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '4');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '5');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '6');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '7');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '8');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '9');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '10');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '11');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '12');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '13');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '14');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '15');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '16');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '17');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '18');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '19');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '20');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '21');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '22');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '24');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '25');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '26');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '27');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '28');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '29');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '30');
+INSERT INTO `wd_sys_role_user` VALUES ('1', '31');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '1');
 INSERT INTO `wd_sys_role_user` VALUES ('2', '2');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '3');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '4');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '5');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '6');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '7');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '8');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '9');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '10');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '11');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '12');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '13');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '16');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '17');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '18');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '19');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '20');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '26');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '27');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '28');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '29');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '30');
+INSERT INTO `wd_sys_role_user` VALUES ('2', '31');
+INSERT INTO `wd_sys_role_user` VALUES ('3', '1');
+INSERT INTO `wd_sys_role_user` VALUES ('3', '2');
 INSERT INTO `wd_sys_role_user` VALUES ('3', '3');
+INSERT INTO `wd_sys_role_user` VALUES ('3', '4');
+INSERT INTO `wd_sys_role_user` VALUES ('3', '5');
+INSERT INTO `wd_sys_role_user` VALUES ('3', '6');
+INSERT INTO `wd_sys_role_user` VALUES ('3', '7');
+INSERT INTO `wd_sys_role_user` VALUES ('3', '8');
+INSERT INTO `wd_sys_role_user` VALUES ('3', '9');
+INSERT INTO `wd_sys_role_user` VALUES ('3', '10');
+INSERT INTO `wd_sys_role_user` VALUES ('3', '13');
+INSERT INTO `wd_sys_role_user` VALUES ('3', '14');
+INSERT INTO `wd_sys_role_user` VALUES ('3', '15');
+INSERT INTO `wd_sys_role_user` VALUES ('3', '16');
+INSERT INTO `wd_sys_role_user` VALUES ('3', '20');
+INSERT INTO `wd_sys_role_user` VALUES ('3', '21');
+INSERT INTO `wd_sys_role_user` VALUES ('3', '22');
+INSERT INTO `wd_sys_role_user` VALUES ('3', '24');
+INSERT INTO `wd_sys_role_user` VALUES ('3', '25');
+INSERT INTO `wd_sys_role_user` VALUES ('3', '26');
+INSERT INTO `wd_sys_role_user` VALUES ('3', '27');
+INSERT INTO `wd_sys_role_user` VALUES ('4', '2');
+INSERT INTO `wd_sys_role_user` VALUES ('4', '3');
+INSERT INTO `wd_sys_role_user` VALUES ('4', '4');
+INSERT INTO `wd_sys_role_user` VALUES ('4', '5');
+INSERT INTO `wd_sys_role_user` VALUES ('4', '6');
+INSERT INTO `wd_sys_role_user` VALUES ('4', '7');
+INSERT INTO `wd_sys_role_user` VALUES ('4', '8');
+INSERT INTO `wd_sys_role_user` VALUES ('4', '9');
+INSERT INTO `wd_sys_role_user` VALUES ('4', '10');
+INSERT INTO `wd_sys_role_user` VALUES ('4', '28');
+INSERT INTO `wd_sys_role_user` VALUES ('4', '29');
+INSERT INTO `wd_sys_role_user` VALUES ('4', '30');
+INSERT INTO `wd_sys_role_user` VALUES ('4', '31');
+INSERT INTO `wd_sys_role_user` VALUES ('6', '2');
+INSERT INTO `wd_sys_role_user` VALUES ('6', '3');
+INSERT INTO `wd_sys_role_user` VALUES ('6', '4');
+INSERT INTO `wd_sys_role_user` VALUES ('6', '5');
+INSERT INTO `wd_sys_role_user` VALUES ('6', '6');
+INSERT INTO `wd_sys_role_user` VALUES ('6', '7');
+INSERT INTO `wd_sys_role_user` VALUES ('6', '8');
+INSERT INTO `wd_sys_role_user` VALUES ('6', '9');
+INSERT INTO `wd_sys_role_user` VALUES ('6', '10');
 
 -- ----------------------------
 -- Table structure for wd_sys_user
@@ -455,8 +569,8 @@ CREATE TABLE `wd_sys_user` (
 -- ----------------------------
 -- Records of wd_sys_user
 -- ----------------------------
-INSERT INTO `wd_sys_user` VALUES ('1', 'zhouwenqi', '$2a$10$YrLdiL24WJ6xmVkzqmppy.gqusqocT56kRlXv5Y1Ij5J6IpF/ka9i', '444444', null, '', '1', null, null, null, '1', '1', '\0', '\0', '2023-07-03 16:20:24', '2023-07-03 16:20:26');
-INSERT INTO `wd_sys_user` VALUES ('2', 'apple', '$2a$10$YrLdiL24WJ6xmVkzqmppy.gqusqocT56kRlXv5Y1Ij5J6IpF/ka9i', '苹国中国', null, null, '0', '13875928333', 'x2342xx@163.com', null, '1', '1', '\0', '\0', '2023-07-04 15:19:27', '2023-07-24 14:36:23');
+INSERT INTO `wd_sys_user` VALUES ('1', 'superman', '$2a$10$YrLdiL24WJ6xmVkzqmppy.gqusqocT56kRlXv5Y1Ij5J6IpF/ka9i', '超级管理员', 'superman', 'sm', '1', '13875928333', 'superman@gmail.com', null, '1', '1', '\0', '\0', '2023-07-03 16:20:24', '2023-07-03 16:20:26');
+INSERT INTO `wd_sys_user` VALUES ('2', 'zhouwenqi', '$2a$10$YrLdiL24WJ6xmVkzqmppy.gqusqocT56kRlXv5Y1Ij5J6IpF/ka9i', '周文奇', 'zhouwenqi', 'zwq', '0', '13875928333', 'x2342xx@163.com', null, '1', '1', '\0', '\0', '2023-07-04 15:19:27', '2023-07-24 14:36:23');
 INSERT INTO `wd_sys_user` VALUES ('3', 'microsoft', '$2a$10$YrLdiL24WJ6xmVkzqmppy.gqusqocT56kRlXv5Y1Ij5J6IpF/ka9i', '我在也阳光里', 'wozaiyeyangguangli', 'wzyygl', '2', null, null, null, '2', '1', '\0', '\0', '2023-07-03 16:21:01', '2023-07-27 14:08:17');
 INSERT INTO `wd_sys_user` VALUES ('35', 'facebook2', '$2a$10$Wg7IwKGNqCQ2U95dpTTgceR3DoMgVI5Ram9zQXaq3MR.IGYGnxzy6', 'yyy', null, null, null, null, 'xxxx@163.com', null, '3', null, '\0', '\0', '2023-07-21 14:16:25', '2023-07-21 14:16:25');
 INSERT INTO `wd_sys_user` VALUES ('36', 'facebook1', '$2a$10$nxI.uWOIEiuhO7DMXTtH5.xOCFMnykoLPjickYxP0udOPRlLtrTEC', 'xxx', null, null, null, null, 'xxxx@163.com', null, '1', null, '\0', '\0', '2023-07-21 14:18:07', '2023-07-21 14:18:07');

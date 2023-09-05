@@ -1,9 +1,9 @@
 package com.microwarp.warden.stand.facade.syspermission.service;
 
+import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
 import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.facade.syspermission.dto.SysPermissionDTO;
-import com.microwarp.warden.stand.facade.syspermission.dto.SysPermissionSearchDTO;
 
 import java.util.List;
 
@@ -61,5 +61,5 @@ public interface SysPermissionService {
      * @param iSearchPageable 查询条件
      * @return
      */
-    ResultPage<SysPermissionDTO> findPage(ISearchPageable<SysPermissionSearchDTO> iSearchPageable);
+    ResultPage<SysPermissionDTO> findPage(ISearchPageable<BasicSearchDTO> iSearchPageable);
 }
