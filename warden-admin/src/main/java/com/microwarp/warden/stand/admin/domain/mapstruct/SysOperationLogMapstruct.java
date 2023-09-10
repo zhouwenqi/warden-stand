@@ -17,5 +17,5 @@ import java.util.List;
 public interface SysOperationLogMapstruct {
     SysOperationLogMapstruct Instance = Mappers.getMapper(SysOperationLogMapstruct.class);
     SysOperationLogVO sysOperationLogDtoToSysOperationLogVO(SysOperationLogDTO sysOperationLogDTO);
-    List<SysOperationLogVO> sysOperationLogsDtoToSysOperationLogsVO(List<SysOperationLogDTO> sysOperationLogsDTO);
+    List<SysOperationLogVO> sysOperationLogDtosToSysOperationLogVOs(List<SysOperationLogDTO> sysOperationLogDTOs);
 }

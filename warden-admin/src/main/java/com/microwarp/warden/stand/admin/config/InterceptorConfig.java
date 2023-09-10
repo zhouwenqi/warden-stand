@@ -1,14 +1,8 @@
 package com.microwarp.warden.stand.admin.config;
 
-import com.microwarp.warden.stand.common.core.interceptor.WardenBodyInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import com.microwarp.warden.stand.common.core.interceptor.RepeatedRequestInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -24,8 +18,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
     @Resource
     private WardenAdminConfig wardenAdminConfig;
     @Bean
-    public WardenBodyInterceptor wardenBodyInterceptor(){
-        return new WardenBodyInterceptor();
+    public RepeatedRequestInterceptor repeatedRequestInterceptor(){
+        return new RepeatedRequestInterceptor();
     }
 
     @Override
@@ -38,7 +32,6 @@ public class InterceptorConfig implements WebMvcConfigurer {
         if(!uri.endsWith("/")){
             uri+="/";
         }
-
         resourceHandlerRegistry.addResourceHandler(uri+"**").addResourceLocations("file:"+path);
     }
 
@@ -46,7 +39,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(wardenBodyInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(repeatedRequestInterceptor()).addPathPatterns("/profile**");
     }
 //
 //    @Override

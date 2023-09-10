@@ -19,7 +19,7 @@ import java.util.List;
 public interface SysDictionaryMapstruct {
     SysDictionaryMapstruct Instance = Mappers.getMapper(SysDictionaryMapstruct.class);
     SysDictionaryVO sysDictionaryDtoToSysDictionaryVO(SysDictionaryDTO sysDictionaryDTO);
-    List<SysDictionaryVO> sysDictionarysDtoToSysDictionarysVO(List<SysDictionaryDTO> sysDictionarysDTO);
+    List<SysDictionaryVO> sysDictionaryDtosToSysDictionaryVOs(List<SysDictionaryDTO> sysDictionaryDTOs);
     SysDictionaryDTO sysDictionaryCreateRequestToSysDictionaryDTO(SysDictionaryCreateRequest sysDictionaryCreateRequest);
     SysDictionaryDTO sysDictionaryUpdateRequestToSysDictionaryDTO(SysDictionaryUpdateRequest sysDictionaryUpdateRequest);
 }

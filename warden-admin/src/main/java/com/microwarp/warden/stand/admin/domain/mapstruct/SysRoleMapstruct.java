@@ -26,8 +26,9 @@ public interface SysRoleMapstruct {
     SysRoleVO sysRoleDtoToSysRoleVO(SysRoleDTO sysRoleDTO);
     SysRoleDTO sysRoleUpdateRequestTosysRoleDTO(SysRoleUpdateRequest sysRoleUpdateRequest);
     SysRoleDTO sysRoleCreateRequestTosysRoleDTO(SysRoleCreateRequest sysRoleCreateRequest);
+    List<SysRoleDTO> sysRoleDtosToSysRoleVOs(List<SysRoleDTO> sysRoleDTOs);
     SysRoleDetailsVO sysRoleDetailsDtoToSysRoleDetailsVO(SysRoleDetailsDTO sysRoleDetailsDTO);
     @Mapping(target = "authority", source = "value")
     SecurityAuthority toSecurityAuthority(SysRoleDTO sysRoleDTO);
-    List<SecurityAuthority> toSecurityAuthoritys(Set<SysRoleDTO> sysRolesDTO);
+    List<SecurityAuthority> toSecurityAuthoritys(Set<SysRoleDTO> sysRoleDTOs);
 }

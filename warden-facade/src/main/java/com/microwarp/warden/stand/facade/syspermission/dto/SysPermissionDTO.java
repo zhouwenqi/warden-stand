@@ -14,7 +14,7 @@ public class SysPermissionDTO implements Serializable {
     /** 权限值 */
     private String value;
     /** 排序值 */
-    private Integer orders;
+    private Long orders;
     /** 创建时间 */
     private Date createDate;
     /** 修改时间 */
@@ -44,11 +44,11 @@ public class SysPermissionDTO implements Serializable {
         this.value = value;
     }
 
-    public Integer getOrders() {
+    public Long getOrders() {
         return orders;
     }
 
-    public void setOrders(Integer orders) {
+    public void setOrders(Long orders) {
         this.orders = orders;
     }
 

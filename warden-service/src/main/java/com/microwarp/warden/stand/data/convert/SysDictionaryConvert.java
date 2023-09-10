@@ -17,5 +17,5 @@ public interface SysDictionaryConvert {
     SysDictionaryConvert Instance = Mappers.getMapper(SysDictionaryConvert.class);
     SysDictionary sysDictionaryDtoToSysDictionary(SysDictionaryDTO sysDictionaryDTO);
     SysDictionaryDTO sysDictionaryToSysDictionaryDTO(SysDictionary sysDictionary);
-    List<SysDictionaryDTO> sysDictionarysToSysDictionarysDTO(List<SysDictionary> sysDictionaries);
+    List<SysDictionaryDTO> sysDictionarysToSysDictionaryDTOs(List<SysDictionary> sysDictionaries);
 }

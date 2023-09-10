@@ -4,6 +4,7 @@ import com.microwarp.warden.stand.admin.domain.mapstruct.SysDictionaryMapstruct;
 import com.microwarp.warden.stand.admin.domain.vo.SysDictionaryCreateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysDictionaryUpdateRequest;
 import com.microwarp.warden.stand.admin.service.LogService;
+import com.microwarp.warden.stand.common.core.annotation.RepeatRequestCheck;
 import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
 import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
 import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
@@ -57,6 +58,7 @@ public class DictionaryController extends BaseController {
      * @return
      */
     @PostMapping("/dictionary")
+    @RepeatRequestCheck
     @PreAuthorize("hasAuthority('dictionary:create')")
     public ResultModel postDictionary(@Validated @RequestBody SysDictionaryCreateRequest sysDictionaryRequest){
         SysDictionaryDTO sysDictionaryDTO = SysDictionaryMapstruct.Instance.sysDictionaryCreateRequestToSysDictionaryDTO(sysDictionaryRequest);
@@ -75,6 +77,7 @@ public class DictionaryController extends BaseController {
      * @return
      */
     @PatchMapping("/dictionary")
+    @RepeatRequestCheck
     @PreAuthorize("hasAuthority('dictionary:modify')")
     public ResultModel putDictionary(@Validated @RequestBody SysDictionaryUpdateRequest sysDictionaryRequest){
         SysDictionaryDTO sysDictionaryDTO = SysDictionaryMapstruct.Instance.sysDictionaryUpdateRequestToSysDictionaryDTO(sysDictionaryRequest);
@@ -110,7 +113,7 @@ public class DictionaryController extends BaseController {
     public ResultModel search(@RequestBody SearchPageable<BasicSearchDTO> searchPageable){
         ResultPage<SysDictionaryDTO> resultPage = sysDictionaryService.findPage(searchPageable);
         ResultModel resultModel = ResultModel.success();
-        resultModel.addData("list",SysDictionaryMapstruct.Instance.sysDictionarysDtoToSysDictionarysVO(resultPage.getList()));
+        resultModel.addData("list",SysDictionaryMapstruct.Instance.sysDictionaryDtosToSysDictionaryVOs(resultPage.getList()));
         resultModel.addData("pageInfo",resultPage.getPageInfo());
         return resultModel;
     }

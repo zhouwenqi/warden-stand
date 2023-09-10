@@ -16,9 +16,9 @@ public interface ICacheService {
      * 保存缓存内容
      * @param cacheName 缓存名
      * @param key 键名
-     * @param object 缓存内容
+     * @param t 缓存内容
      */
-    void save(String cacheName, String key, Object object);
+    <T> void save(String cacheName, String key, T t);
 
     /**
      * 获取指定的缓存内容
@@ -26,5 +26,5 @@ public interface ICacheService {
      * @param key 键名
      * @return 缓存内容
      */
-    Object get(String cacheName,String key);
+    <T> T get(String cacheName,String key);
 }

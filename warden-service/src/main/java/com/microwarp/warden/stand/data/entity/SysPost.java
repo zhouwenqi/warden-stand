@@ -20,7 +20,7 @@ public class SysPost extends LogicEntity {
     /** 描述 */
     private String description;
     /** 排序值 */
-    private Integer orders;
+    private Long orders;
 
     public String getName() {
         return name;
@@ -62,11 +62,11 @@ public class SysPost extends LogicEntity {
         this.description = description;
     }
 
-    public Integer getOrders() {
+    public Long getOrders() {
         return orders;
     }
 
-    public void setOrders(Integer orders) {
+    public void setOrders(Long orders) {
         this.orders = orders;
     }
 

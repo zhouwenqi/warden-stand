@@ -18,5 +18,5 @@ public interface SysOperationLogConvert {
     SysOperationLogConvert Instance = Mappers.getMapper(SysOperationLogConvert.class);
     SysOperationLog sysOperationLogDtoToSysOperationLog(SysOperationLogDTO sysOperationLogDTO);
     SysOperationLogDTO sysOperationLogToSysOperationLogDTO(SysOperationLog sysOperationLog);
-    List<SysOperationLogDTO> sysOperationLogsToSysOperationLogsDTO(List<SysOperationLog> sysOperationLogs);
+    List<SysOperationLogDTO> sysOperationLogsToSysOperationLogDTOs(List<SysOperationLog> sysOperationLogs);
 }

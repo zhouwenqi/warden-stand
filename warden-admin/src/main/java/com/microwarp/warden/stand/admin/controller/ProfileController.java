@@ -7,6 +7,10 @@ import com.microwarp.warden.stand.admin.domain.vo.SysUserDetailsVO;
 import com.microwarp.warden.stand.admin.domain.vo.SysUserProfileRequest;
 import com.microwarp.warden.stand.admin.utils.ImageUtil;
 import com.microwarp.warden.stand.admin.utils.SecurityUtil;
+import com.microwarp.warden.stand.common.core.annotation.RepeatRequestCheck;
+import com.microwarp.warden.stand.common.core.cache.ICacheService;
+import com.microwarp.warden.stand.common.core.cache.RepeatData;
+import com.microwarp.warden.stand.common.core.constant.CacheConstants;
 import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
 import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
@@ -51,7 +55,6 @@ public class ProfileController extends BaseController {
      */
     @GetMapping("/profile")
     public ResultModel getProfile(){
-
         ResultModel resultModel = ResultModel.success();
         SysUserDetailsVO sysUserResponseVO = SysUserMapstruct.Instance.sysUserDetailsDtoToSysUserDetailsVo(getSecruityUser().getSysUser());
         sysUserResponseVO.setAuthorities(SecurityUtil.getAuthorityArray());
@@ -64,6 +67,7 @@ public class ProfileController extends BaseController {
      * @return
      */
     @PatchMapping("/profile")
+    @RepeatRequestCheck
     public ResultModel putProfile(@RequestBody @Validated SysUserProfileRequest profileRequest){
         ResultModel resultModel = ResultModel.success();
         SysUserDTO sysUserDTO = SysUserMapstruct.Instance.sysUserProfileRequestToSysUserDTO(profileRequest);
@@ -110,6 +114,7 @@ public class ProfileController extends BaseController {
         if(!baseDir.endsWith("/")){
             baseDir+="/";
         }
+        String facePath = "";
         SysUserDetailsDTO userDetailsDTO = SecurityUtil.getCurrentSysUser();
         String extendName = ImageUtil.getExtendName(face.getContentType());
         if(StringUtils.isBlank(extendName)){
@@ -117,6 +122,7 @@ public class ProfileController extends BaseController {
         }
         try {
             String faceName = AesUtil.hexEncrypt(userDetailsDTO.getId().toString()) + "." + extendName;
+            facePath = baseUri+faceName;
             File file = new File(baseDir + faceName);
             if(!file.exists()){
                 file.mkdirs();
@@ -124,13 +130,15 @@ public class ProfileController extends BaseController {
             face.transferTo(file);
             SysUserDTO sysUserDTO = new SysUserDTO();
             sysUserDTO.setId(userDetailsDTO.getId());
-            sysUserDTO.setFace(baseUri+faceName);
+            sysUserDTO.setFace(facePath);
             sysUserService.update(sysUserDTO);
         }
         catch (Exception e){
             logger.error("上传头像失败:{}",e.getMessage());
             throw new WardenParamterErrorException("上传头像失败");
         }
-        return ResultModel.success();
+        ResultModel resultModel = ResultModel.success();
+        resultModel.addData("face",facePath);
+        return resultModel;
     }
 }

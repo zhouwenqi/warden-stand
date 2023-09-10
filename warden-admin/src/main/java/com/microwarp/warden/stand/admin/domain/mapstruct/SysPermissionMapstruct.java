@@ -24,11 +24,11 @@ public interface SysPermissionMapstruct {
     SysPermissionMapstruct Instance = Mappers.getMapper(SysPermissionMapstruct.class);
     @Mapping(target = "authority", source = "value")
     SecurityAuthority toSecurityAuthority(SysPermissionDTO sysPermissionDTO);
-    List<SecurityAuthority> toSecurityAuthoritys(Set<SysPermissionDTO> sysPermissionsDTO);
+    List<SecurityAuthority> toSecurityAuthoritys(Set<SysPermissionDTO> sysPermissionDTOs);
     SysPermissionVO sysPermissionDtoToSysPermissionVO(SysPermissionDTO sysPermissionDTO);
-    List<SysPermissionVO> sysPermissionsDtoToSysPermissionsVO(List<SysPermissionDTO> sysPermissionsDTO);
+    List<SysPermissionVO> sysPermissionDtosToSysPermissionVOs(List<SysPermissionDTO> sysPermissionDTOs);
     SysPermissionDTO sysPermissionCreateRequestToSysPermissionDTO(SysPermissionCreateRequest sysPermissionRequest);
     SysPermissionDTO sysPermissionUpdateRequestToSysPermissionDTO(SysPermissionUpdateRequest sysPermissionRequest);
     SysPermissionExcel sysPermissionDtoToSysPermissionExcel(SysPermissionDTO sysPermissionDTO);
-    List<SysPermissionExcel> sysPermissionsDtoToSysPermissionsExcel(List<SysPermissionDTO> sysPermissionsDTO);
+    List<SysPermissionExcel> sysPermissionDtosToSysPermissionExcels(List<SysPermissionDTO> sysPermissionDTOs);
 }

@@ -29,7 +29,7 @@ public class SysPermissionDaoImpl extends ServiceImpl<SysPermissionMapper,SysPer
         if(null == list || list.size() < 0){
             return new ArrayList<>();
         }
-        return SysPermissionConvert.Instance.sysPermissionsToSysPermissionsDTO(list);
+        return SysPermissionConvert.Instance.sysPermissionsToSysPermissionDTOs(list);
     }
 
     /**
@@ -46,7 +46,7 @@ public class SysPermissionDaoImpl extends ServiceImpl<SysPermissionMapper,SysPer
         if(null == list || list.size() < 0){
             return new ArrayList<>();
         }
-        return SysPermissionConvert.Instance.sysPermissionsToSysPermissionsDTO(list);
+        return SysPermissionConvert.Instance.sysPermissionsToSysPermissionDTOs(list);
     }
 
     /**
@@ -59,7 +59,7 @@ public class SysPermissionDaoImpl extends ServiceImpl<SysPermissionMapper,SysPer
         if(null == list || list.size() < 0){
             return new ArrayList<>();
         }
-        return SysPermissionConvert.Instance.sysPermissionsToSysPermissionsDTO(list);
+        return SysPermissionConvert.Instance.sysPermissionsToSysPermissionDTOs(list);
     }
 
     /**

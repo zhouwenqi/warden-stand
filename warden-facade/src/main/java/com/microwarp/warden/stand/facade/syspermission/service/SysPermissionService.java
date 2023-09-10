@@ -1,5 +1,6 @@
 package com.microwarp.warden.stand.facade.syspermission.service;
 
+import com.microwarp.warden.stand.common.core.pageing.BaseSortDTO;
 import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
 import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
@@ -49,6 +50,12 @@ public interface SysPermissionService {
      * @param sysPermissionDTO 权限信息
      */
     void update(SysPermissionDTO sysPermissionDTO);
+
+    /**
+     * 权限拖拽排序
+     * @param baseSortDTO 排序参数
+     */
+    void dragAndSort(BaseSortDTO baseSortDTO);
 
     /**
      * 删除权限信息

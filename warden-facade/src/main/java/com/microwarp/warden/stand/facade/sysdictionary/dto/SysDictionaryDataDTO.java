@@ -22,7 +22,7 @@ public class SysDictionaryDataDTO implements Serializable {
     /** 默认项 */
     private Boolean dataDefault;
     /** 排序 */
-    private Integer orders;
+    private Long orders;
     /** 是否禁用 */
     private Boolean disabled;
     /** 创建时间 */
@@ -86,11 +86,11 @@ public class SysDictionaryDataDTO implements Serializable {
         this.dataDefault = dataDefault;
     }
 
-    public Integer getOrders() {
+    public Long getOrders() {
         return orders;
     }
 
-    public void setOrders(Integer orders) {
+    public void setOrders(Long orders) {
         this.orders = orders;
     }
 

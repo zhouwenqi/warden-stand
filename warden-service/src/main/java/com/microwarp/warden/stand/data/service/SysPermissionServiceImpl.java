@@ -1,11 +1,9 @@
 package com.microwarp.warden.stand.data.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
-import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
-import com.microwarp.warden.stand.common.core.pageing.PageInfo;
-import com.microwarp.warden.stand.common.core.pageing.ResultPage;
+import com.microwarp.warden.stand.common.core.pageing.*;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
 import com.microwarp.warden.stand.data.convert.PageConvert;
 import com.microwarp.warden.stand.data.convert.SysPermissionConvert;
@@ -37,6 +35,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
      * 查询所有权限
      * @return
      */
+    @Override
     public List<SysPermissionDTO> findAll(){
         QueryWrapper<SysPermission> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByAsc("orders");
@@ -45,7 +44,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
         {
             return new ArrayList<>();
         }
-        return SysPermissionConvert.Instance.sysPermissionsToSysPermissionsDTO(list);
+        return SysPermissionConvert.Instance.sysPermissionsToSysPermissionDTOs(list);
     }
 
     /**
@@ -53,6 +52,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
      * @param id 权限id
      * @return 权限信息
      */
+    @Override
     public SysPermissionDTO findById(Long id){
         SysPermission sysPermission = sysPermissionDao.getById(id);
         return null == sysPermission ? null : SysPermissionConvert.Instance.sysPermissionToSysPermissionDTO(sysPermission);
@@ -63,6 +63,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
      * @param sysPermissionDTO 权限内容
      * @return 权限信息
      */
+    @Override
     @Transactional
     public SysPermissionDTO create(SysPermissionDTO sysPermissionDTO){
         QueryWrapper<SysPermission> queryWrapper = new QueryWrapper<>();
@@ -79,6 +80,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
      * 更新权限信息
      * @param sysPermissionDTO 权限信息
      */
+    @Override
     @Transactional
     public void update(SysPermissionDTO sysPermissionDTO){
         QueryWrapper<SysPermission> queryWrapper = new QueryWrapper<>();
@@ -98,6 +100,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
      * 删除权限信息
      * @param id 权限id
      */
+    @Override
     @Transactional
     public void delete(Long... id){
         sysPermissionDao.delete(id);
@@ -110,6 +113,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
      * @param roleId 角色id
      * @param permissionIds 权限id
      */
+    @Override
     @Transactional
     public void saveRolePermission(Long roleId,Long... permissionIds){
         sysPermissionDao.saveRolePermission(roleId, permissionIds);
@@ -118,10 +122,30 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
     }
 
     /**
+     * 权限拖拽排序
+     * @param baseSortDTO 排序参数
+     */
+    @Override
+    @Transactional
+    public void dragAndSort(BaseSortDTO baseSortDTO){
+        if(null != baseSortDTO.getIds() && baseSortDTO.getIds().length > 0){
+            int i = 0;
+            for(Long id:baseSortDTO.getIds()){
+                UpdateWrapper<SysPermission> updateWrapper = new UpdateWrapper<>();
+                updateWrapper.set("orders",i);
+                updateWrapper.eq("id",id);
+                sysPermissionDao.update(updateWrapper);
+                i ++;
+            }
+        }
+    }
+
+    /**
      * 根据权限id查询权限列表
      * @param ids 权限值
      * @return
      */
+    @Override
     public List<SysPermissionDTO> findByIds(Long... ids){
         return sysPermissionDao.findByIds(ids);
     }
@@ -131,6 +155,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
      * @param iSearchPageable 查询条件
      * @return
      */
+    @Override
     public ResultPage<SysPermissionDTO> findPage(ISearchPageable<BasicSearchDTO> iSearchPageable){
         QueryWrapper<SysPermission> queryWrapper = new QueryWrapper<>();
         if(StringUtils.isNotBlank(iSearchPageable.getSearchValue())) {
@@ -150,7 +175,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
         page.setOrders(PageConvert.Instance.sortFieldsToOrderItems(iSearchPageable.getSorts()));
         sysPermissionDao.page(page,queryWrapper);
         ResultPage<SysPermissionDTO> resultPage = new ResultPage<>();
-        resultPage.setList(SysPermissionConvert.Instance.sysPermissionsToSysPermissionsDTO(page.getRecords()));
+        resultPage.setList(SysPermissionConvert.Instance.sysPermissionsToSysPermissionDTOs(page.getRecords()));
         pageInfo = PageConvert.Instance.pageToPageInfo(page);
         resultPage.setPageInfo(pageInfo);
         return resultPage;

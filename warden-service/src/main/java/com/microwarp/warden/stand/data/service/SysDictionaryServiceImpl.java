@@ -152,7 +152,7 @@ public class SysDictionaryServiceImpl implements SysDictionaryService {
         page.setOrders(PageConvert.Instance.sortFieldsToOrderItems(iSearchPageable.getSorts()));
         sysDictionaryDao.page(page,queryWrapper);
         ResultPage<SysDictionaryDTO> resultPage = new ResultPage<>();
-        resultPage.setList(SysDictionaryConvert.Instance.sysDictionarysToSysDictionarysDTO(page.getRecords()));
+        resultPage.setList(SysDictionaryConvert.Instance.sysDictionarysToSysDictionaryDTOs(page.getRecords()));
         pageInfo = PageConvert.Instance.pageToPageInfo(page);
         resultPage.setPageInfo(pageInfo);
 

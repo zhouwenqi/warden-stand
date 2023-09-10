@@ -1,5 +1,7 @@
 package com.microwarp.warden.stand.admin.domain.vo;
 
+import com.microwarp.warden.stand.facade.sysdept.dto.SysDeptDTO;
+
 import java.util.Date;
 
 /**
@@ -13,12 +15,16 @@ public class SysDeptVO {
     private String phone;
     /** 部门编号 */
     private String code;
+    /** 上级部门ID */
+    private Long parentId;
     /** 负责人id */
     private Long leaderId;
+    /** 上级部门 */
+    private SysDeptDTO parentDept;
     /** r描述 */
     private String description;
     /** 排序值 */
-    private Integer orders;
+    private Long orders;
     /** 禁用 */
     private Boolean disabled;
     /** 创建时间 */
@@ -58,6 +64,22 @@ public class SysDeptVO {
         this.code = code;
     }
 
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public SysDeptDTO getParentDept() {
+        return parentDept;
+    }
+
+    public void setParentDept(SysDeptDTO parentDept) {
+        this.parentDept = parentDept;
+    }
+
     public Long getLeaderId() {
         return leaderId;
     }
@@ -74,11 +96,11 @@ public class SysDeptVO {
         this.description = description;
     }
 
-    public Integer getOrders() {
+    public Long getOrders() {
         return orders;
     }
 
-    public void setOrders(Integer orders) {
+    public void setOrders(Long orders) {
         this.orders = orders;
     }
 

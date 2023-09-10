@@ -24,7 +24,7 @@ public interface PageConvert {
     @Mapping(target = "column", source = "sortKey")
     @Mapping(target = "asc", source = "direction", qualifiedByName = "getAsc")
     OrderItem sortFieldToOrderItem(SortField sortField);
-    List<OrderItem> sortFieldsToOrderItems(Set<SortField> sortFieldSet);
+    List<OrderItem> sortFieldsToOrderItems(List<SortField> sortFieldSet);
     @Named("getAsc")
     default Boolean getAsc(SortDirection direction){
         return direction.equals(SortDirection.ASC);

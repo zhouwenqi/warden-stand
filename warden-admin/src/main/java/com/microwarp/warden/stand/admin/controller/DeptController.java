@@ -1,10 +1,12 @@
 package com.microwarp.warden.stand.admin.controller;
 
+import com.microwarp.warden.stand.admin.domain.SortRequest;
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysDeptMapstruct;
 import com.microwarp.warden.stand.admin.domain.vo.SysDeptCreateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysDeptUpdateRequest;
 import com.microwarp.warden.stand.admin.service.LogService;
 import com.microwarp.warden.stand.admin.utils.SecurityUtil;
+import com.microwarp.warden.stand.common.core.annotation.RepeatRequestCheck;
 import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
 import com.microwarp.warden.stand.common.core.enums.AppTerminalEnum;
 import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
@@ -17,6 +19,7 @@ import com.microwarp.warden.stand.common.model.ResultModel;
 import com.microwarp.warden.stand.common.utils.WebUtil;
 import com.microwarp.warden.stand.facade.sysdept.dto.SysDeptDTO;
 import com.microwarp.warden.stand.facade.sysdept.dto.SysDeptSearchDTO;
+import com.microwarp.warden.stand.facade.sysdept.dto.SysDeptTreeDTO;
 import com.microwarp.warden.stand.facade.sysdept.service.SysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * controller - 部门
@@ -61,6 +65,7 @@ public class DeptController extends BaseController {
      * @return
      */
     @PostMapping("/dept")
+    @RepeatRequestCheck
     @PreAuthorize("hasAuthority('dept:create')")
     public ResultModel postInfo(@Validated @RequestBody SysDeptCreateRequest sysDeptRequest){
         SysDeptDTO sysDeptDTO = SysDeptMapstruct.Instance.sysDeptCreateRequestToSysDeptDTO(sysDeptRequest);
@@ -79,6 +84,7 @@ public class DeptController extends BaseController {
      * @return
      */
     @PatchMapping("/dept")
+    @RepeatRequestCheck
     @PreAuthorize("hasAuthority('dept:modify')")
     public ResultModel putInfo(@Validated @RequestBody SysDeptUpdateRequest sysDeptRequest){
         SysDeptDTO sysDeptDTO = SysDeptMapstruct.Instance.sysDeptUpdateRequestToSysDeptDTO(sysDeptRequest);
@@ -105,6 +111,30 @@ public class DeptController extends BaseController {
     }
 
     /**
+     * 部门拖拽排序
+     * @param sortRequest 排序参数
+     * @return
+     */
+    @PutMapping("/depts/sort")
+    @PreAuthorize("hasAuthority('dept:modify')")
+    public ResultModel sort(@Validated @RequestBody SortRequest sortRequest){
+        sysDeptService.dragAndSort(sortRequest);
+        return ResultModel.success();
+    }
+
+    /**
+     * 获取所有部门树型数据结构
+     * @return
+     */
+    @GetMapping("/depts/tree")
+    public ResultModel tree(){
+        ResultModel resultModel = ResultModel.success();
+        List<SysDeptTreeDTO> list = sysDeptService.findTrees();
+        resultModel.addData("list",SysDeptMapstruct.Instance.sysDeptTreeDtosToSysDeptTreesVOs(list));
+        return resultModel;
+    }
+
+    /**
      * 分页查询部门信息
      * @param searchPageable 查询条件
      * @return
@@ -114,7 +144,7 @@ public class DeptController extends BaseController {
     public ResultModel search(@RequestBody SearchPageable<SysDeptSearchDTO> searchPageable){
         ResultModel resultModel = ResultModel.success();
         ResultPage<SysDeptDTO> resultPage = sysDeptService.findPage(searchPageable);
-        resultModel.addData("list",SysDeptMapstruct.Instance.sysDeptsDtoToSysDeptsVO(resultPage.getList()));
+        resultModel.addData("list",SysDeptMapstruct.Instance.sysDeptDtosToSysDeptsVOs(resultPage.getList()));
         resultModel.addData("pageInfo",resultPage.getPageInfo());
         return resultModel;
     }

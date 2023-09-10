@@ -1,13 +1,11 @@
 package com.microwarp.warden.stand.data.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.microwarp.warden.stand.common.core.cache.ICacheService;
 import com.microwarp.warden.stand.common.core.constant.CacheConstants;
-import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
-import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
-import com.microwarp.warden.stand.common.core.pageing.PageInfo;
-import com.microwarp.warden.stand.common.core.pageing.ResultPage;
+import com.microwarp.warden.stand.common.core.pageing.*;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
 import com.microwarp.warden.stand.data.convert.PageConvert;
 import com.microwarp.warden.stand.data.convert.SysDictionaryConvert;
@@ -23,6 +21,7 @@ import com.microwarp.warden.stand.facade.sysdictionary.service.SysDictionaryServ
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -98,6 +97,25 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
         String[] dictCodes = sysDictionaryDao.findCodeByDataIds(sysDictionaryData.getId());
         if(dictCodes.length> 0){
             iCacheService.batchRemove(CacheConstants.CACHE_DICT_DATAS, dictCodes);
+        }
+    }
+
+    /**
+     * 字典项数据拖拽排序
+     * @param baseSortDTO 排序参数
+     */
+    @Override
+    @Transactional
+    public void dragAndSort(BaseSortDTO baseSortDTO){
+        if(null != baseSortDTO.getIds() && baseSortDTO.getIds().length > 0){
+            int i = 0;
+            for(Long id:baseSortDTO.getIds()){
+                UpdateWrapper<SysDictionaryData> updateWrapper = new UpdateWrapper<>();
+                updateWrapper.set("orders",i);
+                updateWrapper.eq("id",id);
+                sysDictionaryDataDao.update(updateWrapper);
+                i ++;
+            }
         }
     }
 

@@ -1,11 +1,9 @@
 package com.microwarp.warden.stand.data.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
-import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
-import com.microwarp.warden.stand.common.core.pageing.PageInfo;
-import com.microwarp.warden.stand.common.core.pageing.ResultPage;
+import com.microwarp.warden.stand.common.core.pageing.*;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
 import com.microwarp.warden.stand.data.convert.PageConvert;
 import com.microwarp.warden.stand.data.convert.SysRoleConvert;
@@ -41,6 +39,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
      * 查询所有角色
      * @return
      */
+    @Override
     public List<SysRoleDTO> findAll(){
         return sysRoleDao.findAll();
     }
@@ -49,6 +48,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
      * @param id 角色id
      * @return
      */
+    @Override
     public SysRoleDTO findById(Long id){
         SysRole sysRole = sysRoleDao.getById(id);
         return null != sysRole ? SysRoleConvert.Instance.sysRoleToSysRoleDTO(sysRole) : null;
@@ -59,6 +59,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
      * @param ids 角色id
      * @return
      */
+    @Override
     public List<SysRoleDTO> findByIds(Long...ids){
         return sysRoleDao.findByIds(ids);
     }
@@ -68,6 +69,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
      * @param id 角色id
      * @return 角色详情
      */
+    @Override
     public SysRoleDetailsDTO findDetailsById(Long id){
         SysRoleDTO sysRoleDTO = findById(id);
         if(null == sysRoleDTO){
@@ -83,6 +85,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
      * @param id
      */
     @Transactional
+    @Override
     public void delete(Long... id){
          // 先删除角色与权限关系信息
          sysPermissionDao.deletePermissionByRoleIds(id);
@@ -98,6 +101,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
      * @return 角色信息
      */
     @Transactional
+    @Override
     public SysRoleDTO create(SysRoleDTO sysRoleDTO) {
         QueryWrapper<SysRole> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("value",sysRoleDTO.getValue());
@@ -114,6 +118,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
      * @param sysRoleDTO 角色信息
      */
     @Transactional
+    @Override
     public void update(SysRoleDTO sysRoleDTO){
         if(null == sysRoleDTO.getId()){
             return;
@@ -128,6 +133,25 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
         sysRoleDao.updateById(sysRole);
         // 清除用户缓存
         sysUserService.clearAll();
+    }
+
+    /**
+     * 角色拖拽排序
+     * @param baseSortDTO 排序参数
+     */
+    @Transactional
+    @Override
+    public void dragAndSort(BaseSortDTO baseSortDTO){
+        if(null != baseSortDTO.getIds() && baseSortDTO.getIds().length > 0){
+            int i = 0;
+            for(Long id:baseSortDTO.getIds()){
+                UpdateWrapper<SysRole> updateWrapper = new UpdateWrapper<>();
+                updateWrapper.set("orders",i);
+                updateWrapper.eq("id",id);
+                sysRoleDao.update(updateWrapper);
+                i ++;
+            }
+        }
     }
 
 
@@ -149,6 +173,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
      * @param values 角色值
      * @return
      */
+    @Override
     public List<SysRoleDTO> findByValues(String...values){
         return sysRoleDao.findByValues(values);
     }
@@ -158,6 +183,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
      * @param iSearchPageable 查询条件
      * @return
      */
+    @Override
     public ResultPage<SysRoleDTO> findPage(ISearchPageable<BasicSearchDTO> iSearchPageable){
         QueryWrapper<SysRole> queryWrapper = new QueryWrapper<>();
         if(StringUtils.isNotBlank(iSearchPageable.getSearchValue())) {
@@ -177,7 +203,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
         page.setOrders(PageConvert.Instance.sortFieldsToOrderItems(iSearchPageable.getSorts()));
         sysRoleDao.page(page,queryWrapper);
         ResultPage<SysRoleDTO> resultPage = new ResultPage<>();
-        resultPage.setList(SysRoleConvert.Instance.sysRolesToSysRolesDTO(page.getRecords()));
+        resultPage.setList(SysRoleConvert.Instance.sysRolesToSysRoleDTOs(page.getRecords()));
         pageInfo = PageConvert.Instance.pageToPageInfo(page);
         resultPage.setPageInfo(pageInfo);
         return resultPage;

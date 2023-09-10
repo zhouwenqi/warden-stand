@@ -18,14 +18,18 @@ public class SysDeptUpdateRequest {
     /** 部门编号 */
     @Pattern(regexp = "^[a-zA-Z0-9]{6,20}",message = "部门编号只能是6-20位字母和数字字符")
     private String code;
+    /** 上级部门ID */
+    @Min(value = 0,message = "上级部门ID错误")
+    @Max(value = Long.MAX_VALUE,message = "上级部门ID错误")
+    private Long parentId;
     /** 负责人id */
     private Long leaderId;
     /** 描述 */
     private String description;
     /** 排序值 */
-    @Max(value = 99999, message = "排序值只能在0-100000之间")
-    @Min(value = 0, message = "排序值只能在0-100000之间")
-    private Integer orders;
+    @Max(value = Long.MAX_VALUE, message = "排序值过大")
+    @Min(value = 0, message = "排序值最小是0")
+    private Long orders;
     /** 禁用 */
     private Boolean disabled;
 
@@ -61,6 +65,14 @@ public class SysDeptUpdateRequest {
         this.code = code;
     }
 
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
     public Long getLeaderId() {
         return leaderId;
     }
@@ -77,11 +89,11 @@ public class SysDeptUpdateRequest {
         this.description = description;
     }
 
-    public Integer getOrders() {
+    public Long getOrders() {
         return orders;
     }
 
-    public void setOrders(Integer orders) {
+    public void setOrders(Long orders) {
         this.orders = orders;
     }
 

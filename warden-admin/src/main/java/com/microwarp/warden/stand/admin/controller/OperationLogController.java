@@ -66,7 +66,7 @@ public class OperationLogController extends BaseController {
     public ResultModel search(SearchPageable<SysOperationLogSearchDTO> searchPageable){
         ResultModel resultModel = ResultModel.success();
         ResultPage<SysOperationLogDTO> page = sysOperationLogService.findPage(searchPageable);
-        resultModel.addData("list", SysOperationLogMapstruct.Instance.sysOperationLogsDtoToSysOperationLogsVO(page.getList()));
+        resultModel.addData("list", SysOperationLogMapstruct.Instance.sysOperationLogDtosToSysOperationLogVOs(page.getList()));
         resultModel.addData("pageInfo", page.getPageInfo());
         return resultModel;
     }

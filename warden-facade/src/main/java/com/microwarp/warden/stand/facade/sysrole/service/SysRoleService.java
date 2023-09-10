@@ -1,5 +1,6 @@
 package com.microwarp.warden.stand.facade.sysrole.service;
 
+import com.microwarp.warden.stand.common.core.pageing.BaseSortDTO;
 import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
 import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
@@ -50,6 +51,11 @@ public interface SysRoleService {
      * @param sysRoleDTO 角色信息
      */
     void update(SysRoleDTO sysRoleDTO);
+    /**
+     * 角色拖拽排序
+     * @param baseSortDTO 排序参数
+     */
+    void dragAndSort(BaseSortDTO baseSortDTO);
 
     /**
      * 删除角色信息

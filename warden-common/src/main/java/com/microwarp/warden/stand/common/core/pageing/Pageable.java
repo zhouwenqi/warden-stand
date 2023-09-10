@@ -1,6 +1,8 @@
 package com.microwarp.warden.stand.common.core.pageing;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -9,15 +11,16 @@ import java.util.Set;
  */
 public class Pageable implements IPageable {
     /** 排序参数 */
-    private Set<SortField> sorts = new HashSet<>();
+    private List<SortField> sorts = new ArrayList<SortField>();
 
     private PageInfo pageInfo = new PageInfo();
 
-    public Set<SortField> getSorts() {
+    @Override
+    public List<SortField> getSorts() {
         return sorts;
     }
 
-    public void setSorts(Set<SortField> sorts) {
+    public void setSorts(List<SortField> sorts) {
         this.sorts = sorts;
     }
 

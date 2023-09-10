@@ -1,10 +1,12 @@
 package com.microwarp.warden.stand.admin.controller;
 
+import com.microwarp.warden.stand.admin.domain.SortRequest;
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysPermissionMapstruct;
 import com.microwarp.warden.stand.admin.domain.vo.SysPermissionCreateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysPermissionUpdateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysPermissionVO;
 import com.microwarp.warden.stand.admin.service.ExcelExportService;
+import com.microwarp.warden.stand.common.core.annotation.RepeatRequestCheck;
 import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
 import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
 import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
@@ -76,6 +78,7 @@ public class PermissionController extends BaseController {
      * @return
      */
     @PostMapping("/permission")
+    @RepeatRequestCheck
     @PreAuthorize("hasAuthority('permission:create')")
     public ResultModel postPermission(@Validated @RequestBody SysPermissionCreateRequest permissionRequest){
         SysPermissionDTO sysPermissionDTO = SysPermissionMapstruct.Instance.sysPermissionCreateRequestToSysPermissionDTO(permissionRequest);
@@ -91,6 +94,7 @@ public class PermissionController extends BaseController {
      * @return
      */
     @PatchMapping("/permission")
+    @RepeatRequestCheck
     @PreAuthorize("hasAuthority('permission:modify')")
     public ResultModel putPermission(@Validated @RequestBody SysPermissionUpdateRequest permissionRequest){
         SysPermissionDTO sysPermissionDTO = SysPermissionMapstruct.Instance.sysPermissionUpdateRequestToSysPermissionDTO(permissionRequest);
@@ -107,8 +111,20 @@ public class PermissionController extends BaseController {
     public ResultModel all(){
         ResultModel resultModel = ResultModel.success();
         List<SysPermissionDTO> sysPermissionDTOS = sysPermissionService.findAll();
-        resultModel.addData("list",SysPermissionMapstruct.Instance.sysPermissionsDtoToSysPermissionsVO(sysPermissionDTOS));
+        resultModel.addData("list",SysPermissionMapstruct.Instance.sysPermissionDtosToSysPermissionVOs(sysPermissionDTOS));
         return resultModel;
+    }
+
+    /**
+     * 权限项拖拽排序
+     * @param sortRequest 排序参数
+     * @return
+     */
+    @PutMapping("/permissions/sort")
+    @PreAuthorize("hasAuthority('permission:modify')")
+    public ResultModel sort(@Validated @RequestBody SortRequest sortRequest){
+        sysPermissionService.dragAndSort(sortRequest);
+        return ResultModel.success();
     }
 
     /**
@@ -121,7 +137,7 @@ public class PermissionController extends BaseController {
     public ResultModel search(@RequestBody SearchPageable<BasicSearchDTO> searchPageable){
         ResultPage<SysPermissionDTO> resultPage = sysPermissionService.findPage(searchPageable);
         ResultModel resultModel = ResultModel.success();
-        resultModel.addData("list",SysPermissionMapstruct.Instance.sysPermissionsDtoToSysPermissionsVO(resultPage.getList()));
+        resultModel.addData("list",SysPermissionMapstruct.Instance.sysPermissionDtosToSysPermissionVOs(resultPage.getList()));
         resultModel.addData("pageInfo",resultPage.getPageInfo());
         return resultModel;
     }
@@ -133,6 +149,7 @@ public class PermissionController extends BaseController {
      * @throws IOException
      */
     @PostMapping("/permissions/export")
+    @RepeatRequestCheck
     @PreAuthorize("hasAuthority('data:export')")
     public void export(@RequestBody SearchPageable<BasicSearchDTO> searchPageable, HttpServletResponse response) throws IOException{
         String fileName = "系统权限"+System.currentTimeMillis();

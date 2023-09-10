@@ -21,9 +21,9 @@ public class SysRoleUpdateRequest {
     /** 描述 */
     private String description;
     /** 排序值 */
-    @Max(value = 99999, message = "排序值只能在0-100000之间")
-    @Min(value = 0, message = "排序值只能在0-100000之间")
-    private Integer orders = 0;
+    @Max(value = Long.MAX_VALUE, message = "排序值过大")
+    @Min(value = 0, message = "排序值最小是0")
+    private Long orders;
 
     public Long getId() {
         return id;
@@ -57,11 +57,11 @@ public class SysRoleUpdateRequest {
         this.description = description;
     }
 
-    public Integer getOrders() {
+    public Long getOrders() {
         return orders;
     }
 
-    public void setOrders(Integer orders) {
+    public void setOrders(Long orders) {
         this.orders = orders;
     }
 }

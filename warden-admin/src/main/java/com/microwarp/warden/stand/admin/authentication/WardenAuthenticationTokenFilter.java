@@ -55,6 +55,7 @@ public class WardenAuthenticationTokenFilter extends OncePerRequestFilter {
                 return;
             }
             request.setAttribute(AttrConstants.SECURITY_USER_KEY, securityUser);
+            request.setAttribute(AttrConstants.JWT_USER_KEY, tokenUser);
         }
         chain.doFilter(request,response);
     }

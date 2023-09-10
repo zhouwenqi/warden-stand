@@ -17,5 +17,5 @@ public interface SysPermissionConvert {
     SysPermissionConvert Instance = Mappers.getMapper(SysPermissionConvert.class);
     SysPermissionDTO sysPermissionToSysPermissionDTO(SysPermission sysPermission);
     SysPermission sysPermissionDtoToSysPermission(SysPermissionDTO sysPermissionDTO);
-    List<SysPermissionDTO> sysPermissionsToSysPermissionsDTO(List<SysPermission> sysPermissions);
+    List<SysPermissionDTO> sysPermissionsToSysPermissionDTOs(List<SysPermission> sysPermissions);
 }

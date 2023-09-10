@@ -18,6 +18,6 @@ public interface SysUserConvert {
     SysUserConvert Instance = Mappers.getMapper(SysUserConvert.class);
     SysUserDTO sysUserToSysUserDTO(SysUser sysUser);
     SysUser sysUserDtoToSysUser(SysUserDTO sysUserDTO);
-    List<SysUserDTO> sysUsersToSysUsersDTO(List<SysUser> sysUsers);
+    List<SysUserDTO> sysUsersToSysUserDTOs(List<SysUser> sysUsers);
     SysUserDetailsDTO sysUserDtoToUserDetailsDTO(SysUserDTO sysUserDTO);
 }

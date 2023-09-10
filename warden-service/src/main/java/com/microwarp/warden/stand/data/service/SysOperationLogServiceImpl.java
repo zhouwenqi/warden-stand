@@ -102,7 +102,7 @@ public class SysOperationLogServiceImpl extends BaseServiceImpl<SysOperationLog>
         page.setOrders(PageConvert.Instance.sortFieldsToOrderItems(iSearchPageable.getSorts()));
         sysOperationLogDao.page(page,queryWrapper);
         ResultPage<SysOperationLogDTO> resultPage = new ResultPage<>();
-        resultPage.setList(SysOperationLogConvert.Instance.sysOperationLogsToSysOperationLogsDTO(page.getRecords()));
+        resultPage.setList(SysOperationLogConvert.Instance.sysOperationLogsToSysOperationLogDTOs(page.getRecords()));
         pageInfo = PageConvert.Instance.pageToPageInfo(page);
         resultPage.setPageInfo(pageInfo);
         return resultPage;

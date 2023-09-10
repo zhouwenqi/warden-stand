@@ -4,6 +4,7 @@ import com.microwarp.warden.stand.admin.domain.mapstruct.SysLoginLogMapstruct;
 import com.microwarp.warden.stand.admin.service.ExcelExportService;
 import com.microwarp.warden.stand.admin.service.LogService;
 import com.microwarp.warden.stand.admin.utils.SecurityUtil;
+import com.microwarp.warden.stand.common.core.annotation.RepeatRequestCheck;
 import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
 import com.microwarp.warden.stand.common.core.enums.AppTerminalEnum;
 import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
@@ -85,7 +86,7 @@ public class LoginLogController extends BaseController {
     public ResultModel search(@RequestBody SearchPageable<SysLoginLogSearchDTO> searchPageable){
         ResultModel resultModel = ResultModel.success();
         ResultPage<SysLoginLogDTO> page = sysLoginLogService.findPage(searchPageable);
-        resultModel.addData("list", SysLoginLogMapstruct.Instance.sysLoginLogsDtoToSysLoginLogsVO(page.getList()));
+        resultModel.addData("list", SysLoginLogMapstruct.Instance.sysLoginLogDtosToSysLoginLogVOs(page.getList()));
         resultModel.addData("pageInfo", page.getPageInfo());
         return resultModel;
     }
@@ -96,6 +97,7 @@ public class LoginLogController extends BaseController {
      * @throws IOException
      */
     @PostMapping("/loginLogs/export")
+    @RepeatRequestCheck
     @PreAuthorize("hasAuthority('data:export')")
     public void export(@RequestBody SearchPageable<SysLoginLogSearchDTO> searchPageable,HttpServletResponse response) throws IOException{
         String fileName = "登录日志"+System.currentTimeMillis();

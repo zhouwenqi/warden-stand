@@ -52,7 +52,8 @@ public class ExcelExportService {
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setCharacterEncoding("utf-8");
         String excelName = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
-        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + excelName + ".xlsx");
+        response.setHeader("Content-disposition", "attachment;filename=" + excelName + ".xlsx");
+        response.setHeader("Access-Control-Expose-Headers","Content-disposition");
         return excelName;
     }
 
@@ -99,7 +100,7 @@ public class ExcelExportService {
                 searchPageable.getPageInfo().setCurrent(i);
                 page = sysPermissionService.findPage(searchPageable);
             }
-            List<SysPermissionExcel> list = SysPermissionMapstruct.Instance.sysPermissionsDtoToSysPermissionsExcel(page.getList());
+            List<SysPermissionExcel> list = SysPermissionMapstruct.Instance.sysPermissionDtosToSysPermissionExcels(page.getList());
             excelWriter.write(list,writeSheet);
         }
         excelWriter.finish();
@@ -124,7 +125,7 @@ public class ExcelExportService {
                 searchPageable.getPageInfo().setCurrent(i);
                 page = sysLoginLogService.findPage(searchPageable);
             }
-            List<SysLoginLogExcel> list = SysLoginLogMapstruct.Instance.sysLoginLogsDtoToSysLoginLogsExcel(page.getList());
+            List<SysLoginLogExcel> list = SysLoginLogMapstruct.Instance.sysLoginLogDtosToSysLoginLogExcels(page.getList());
             excelWriter.write(list,writeSheet);
         }
         excelWriter.finish();

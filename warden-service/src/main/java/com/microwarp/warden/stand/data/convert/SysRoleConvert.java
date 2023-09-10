@@ -19,5 +19,5 @@ public interface SysRoleConvert {
     SysRoleDTO sysRoleToSysRoleDTO(SysRole sysRole);
     SysRoleDetailsDTO sysRoleDtoToSysRoleDetailsDTO(SysRoleDTO sysRoleDTO);
     SysRole sysRoleDtoToSysSysRole(SysRoleDTO sysRoleDTO);
-    List<SysRoleDTO> sysRolesToSysRolesDTO(List<SysRole> sysRoles);
+    List<SysRoleDTO> sysRolesToSysRoleDTOs(List<SysRole> sysRoles);
 }

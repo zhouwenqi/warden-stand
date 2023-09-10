@@ -6,7 +6,8 @@ import com.microwarp.warden.stand.common.core.enums.PlatformTypeEnum;
 import java.util.Date;
 
 /**
- * 基本查询参数
+ * 基本查询过滤参数
+ * @author zhouwenqi
  */
 public class BasicSearchDTO {
     /** 创建时间区间 */

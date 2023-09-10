@@ -5,6 +5,7 @@ import com.microwarp.warden.stand.admin.domain.vo.*;
 import com.microwarp.warden.stand.admin.service.ExcelExportService;
 import com.microwarp.warden.stand.admin.service.LogService;
 import com.microwarp.warden.stand.admin.utils.SecurityUtil;
+import com.microwarp.warden.stand.common.core.annotation.RepeatRequestCheck;
 import com.microwarp.warden.stand.common.core.config.WardenGlobalConfig;
 import com.microwarp.warden.stand.common.core.constant.SecurityConstants;
 import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
@@ -71,6 +72,7 @@ public class UserController extends BaseController {
      * @return
      */
     @PostMapping("/user")
+    @RepeatRequestCheck
     @PreAuthorize("hasAuthority('system:user:create')")
     public ResultModel postInfo(@RequestBody @Validated SysUserCreateRequest createRequest){
         SysUserRequestDTO requestDTO = SysUserMapstruct.Instance.sysUserCreateRequestToSysUserRequestDTO(createRequest);
@@ -98,6 +100,7 @@ public class UserController extends BaseController {
      * @return
      */
     @PatchMapping("/user")
+    @RepeatRequestCheck
     @PreAuthorize("hasAuthority('system:user:modify')")
     public ResultModel putInfo(@RequestBody @Validated SysUserUpdateRequest updateRequest){
         SysUserDTO sysUserDTO = SysUserMapstruct.Instance.sysUserUpdateRequestToSysUserDTO(updateRequest);
@@ -135,6 +138,7 @@ public class UserController extends BaseController {
      * @return
      */
     @PutMapping("/user/password")
+    @RepeatRequestCheck
     @PreAuthorize("hasAuthority('system:user:modify')")
     public ResultModel putPassword(@RequestBody @Validated SysUserPasswordRequest passwordRequest){
         SysUserDetailsDTO sysUserDetailsDTO = sysUserService.findDetailsById(passwordRequest.getUserId());
@@ -208,6 +212,7 @@ public class UserController extends BaseController {
      * @throws IOException
      */
     @PostMapping("/users/export")
+    @RepeatRequestCheck
     @PreAuthorize("hasAuthority('data:export')")
     public void export(@RequestBody SearchPageable<SysUserSearchDTO> searchPageable, HttpServletResponse response) throws IOException{
         String fileName = "系统用户"+System.currentTimeMillis();

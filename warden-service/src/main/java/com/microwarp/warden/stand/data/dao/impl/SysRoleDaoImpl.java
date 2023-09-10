@@ -27,7 +27,7 @@ public class SysRoleDaoImpl extends ServiceImpl<SysRoleMapper,SysRole> implement
     @Override
     public List<SysRoleDTO> findByUserId(Long userId){
         List<SysRole> list = this.baseMapper.findByUserId(userId);
-        return null == list ? new ArrayList<>() : SysRoleConvert.Instance.sysRolesToSysRolesDTO(list);
+        return null == list ? new ArrayList<>() : SysRoleConvert.Instance.sysRolesToSysRoleDTOs(list);
     }
 
     /**
@@ -38,7 +38,7 @@ public class SysRoleDaoImpl extends ServiceImpl<SysRoleMapper,SysRole> implement
     @Override
     public List<SysRoleDTO> findByIds(Long...ids){
         List<SysRole> list = baseMapper.selectBatchIds(Arrays.asList(ids));
-        return null == list ? new ArrayList<>() : SysRoleConvert.Instance.sysRolesToSysRolesDTO(list);
+        return null == list ? new ArrayList<>() : SysRoleConvert.Instance.sysRolesToSysRoleDTOs(list);
     }
 
     /**
@@ -49,7 +49,7 @@ public class SysRoleDaoImpl extends ServiceImpl<SysRoleMapper,SysRole> implement
         QueryWrapper<SysRole> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByAsc("orders");
         List<SysRole> list = baseMapper.selectList(queryWrapper);
-        return null == list ? new ArrayList<>() : SysRoleConvert.Instance.sysRolesToSysRolesDTO(list);
+        return null == list ? new ArrayList<>() : SysRoleConvert.Instance.sysRolesToSysRoleDTOs(list);
     }
 
     /**
@@ -62,7 +62,7 @@ public class SysRoleDaoImpl extends ServiceImpl<SysRoleMapper,SysRole> implement
         QueryWrapper<SysRole> queryWrapper = new QueryWrapper<>();
         queryWrapper.in("value",Arrays.asList(values));
         List<SysRole> list = baseMapper.selectList(queryWrapper);
-        return null == list ? new ArrayList<>() : SysRoleConvert.Instance.sysRolesToSysRolesDTO(list);
+        return null == list ? new ArrayList<>() : SysRoleConvert.Instance.sysRolesToSysRoleDTOs(list);
     }
 
 

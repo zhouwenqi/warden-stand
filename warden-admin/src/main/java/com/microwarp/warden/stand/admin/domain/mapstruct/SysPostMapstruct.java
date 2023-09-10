@@ -19,7 +19,7 @@ import java.util.List;
 public interface SysPostMapstruct {
     SysPostMapstruct Instance = Mappers.getMapper(SysPostMapstruct.class);
     SysPostVO sysPostDtoToSysPostVO(SysPostDTO sysPostDTO);
-    List<SysPostVO> sysPostsDtoToSysPostsVO(List<SysPostDTO> sysPostsDTO);
+    List<SysPostVO> sysPostDtosToSysPostVOs(List<SysPostDTO> sysPostDTOs);
     SysPostDTO sysPostCreateRequestToSysPostDTO(SysPostCreateRequest sysPostRequest);
     SysPostDTO sysPostUpdateRequestToSysPostDTO(SysPostUpdateRequest sysPostRequest);
 }

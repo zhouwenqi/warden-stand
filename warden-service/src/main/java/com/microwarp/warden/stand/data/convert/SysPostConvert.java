@@ -16,7 +16,7 @@ import java.util.List;
 public interface SysPostConvert {
     SysPostConvert Instance = Mappers.getMapper(SysPostConvert.class);
     SysPostDTO sysPostToSysPostDTO(SysPost sysPost);
-    List<SysPostDTO> sysPostToSysPostsDTO(List<SysPost> sysPosts);
+    List<SysPostDTO> sysPostsToSysPostsDTOs(List<SysPost> sysPosts);
     SysPost sysPostDtoToSysPost(SysPostDTO sysPostDTO);
 
 }

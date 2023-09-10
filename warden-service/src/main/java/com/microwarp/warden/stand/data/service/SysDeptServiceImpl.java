@@ -1,8 +1,9 @@
 package com.microwarp.warden.stand.data.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
+import com.microwarp.warden.stand.common.core.pageing.BaseSortDTO;
 import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
 import com.microwarp.warden.stand.common.core.pageing.PageInfo;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
@@ -14,6 +15,7 @@ import com.microwarp.warden.stand.data.dao.SysUserDao;
 import com.microwarp.warden.stand.data.entity.SysDept;
 import com.microwarp.warden.stand.facade.sysdept.dto.SysDeptDTO;
 import com.microwarp.warden.stand.facade.sysdept.dto.SysDeptSearchDTO;
+import com.microwarp.warden.stand.facade.sysdept.dto.SysDeptTreeDTO;
 import com.microwarp.warden.stand.facade.sysdept.service.SysDeptService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * service - 部门
@@ -34,12 +37,31 @@ public class SysDeptServiceImpl implements SysDeptService {
     private SysUserDao sysUserDao;
 
     /**
-     * 查询部门信息
+     * 查询部门信息(含上级部门信息)
      * @param id 部门id
      * @return
      */
+    @Override
     public SysDeptDTO findById(Long id){
-        return sysDeptDao.findById(id);
+        SysDeptDTO sysDeptDTO = sysDeptDao.findById(id);
+        recursionParent(sysDeptDTO);
+        return sysDeptDTO;
+    }
+
+    /**
+     * 获取部门信息(含子部门列表)
+     * @param id
+     * @return
+     */
+    @Override
+    public SysDeptTreeDTO findChildsById(Long id){
+        SysDept sysDept = sysDeptDao.getById(id);
+        if(null == sysDept){
+            return null;
+        }
+        SysDeptTreeDTO sysDeptTreeDTO = SysDeptConvert.Instance.sysDeptToSysDeptTreeDTO(sysDept);
+        sysDeptTreeDTO.setChildren(sysDeptDao.findByParentId(sysDept.getParentId()));
+        return sysDeptTreeDTO;
     }
 
     /**
@@ -47,6 +69,7 @@ public class SysDeptServiceImpl implements SysDeptService {
      * @param sysDeptDTO 部门信息
      * @return
      */
+    @Override
     public SysDeptDTO create(SysDeptDTO sysDeptDTO){
         QueryWrapper<SysDept> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("name",sysDeptDTO.getName());
@@ -62,6 +85,7 @@ public class SysDeptServiceImpl implements SysDeptService {
      * 更新部门信息
      * @param sysDeptDTO 部门id
      */
+    @Override
     public void update(SysDeptDTO sysDeptDTO){
         QueryWrapper<SysDept> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("name",sysDeptDTO.getName());
@@ -74,10 +98,35 @@ public class SysDeptServiceImpl implements SysDeptService {
     }
 
     /**
+     * 部门拖曳和排序
+     * @param baseSortDTO 排序数据
+     */
+    @Transactional
+    public void dragAndSort(BaseSortDTO baseSortDTO){
+        if(null != baseSortDTO.getParentId() && null != baseSortDTO.getDragId()){
+            SysDept sysDept = new SysDept();
+            sysDept.setParentId(baseSortDTO.getParentId());
+            sysDept.setId(baseSortDTO.getDragId());
+            sysDeptDao.updateById(sysDept);
+        }
+        if(null != baseSortDTO.getIds() && baseSortDTO.getIds().length > 0){
+            int i = 0;
+            for(Long id:baseSortDTO.getIds()){
+                UpdateWrapper<SysDept> updateWrapper = new UpdateWrapper<>();
+                updateWrapper.set("orders",i);
+                updateWrapper.eq("id",id);
+                sysDeptDao.update(updateWrapper);
+                i ++;
+            }
+        }
+    }
+
+    /**
      * 删除部门信息
      * @param id 部门id
      */
     @Transactional
+    @Override
     public void delete(Long...id){
         if(null == id || id.length < 1){
             return;
@@ -87,10 +136,49 @@ public class SysDeptServiceImpl implements SysDeptService {
     }
 
     /**
+     * 递归获取父级部门
+     * @param sysDeptDTO 当门部门
+     */
+    private void recursionParent(SysDeptDTO sysDeptDTO){
+        if(sysDeptDTO.getParentId() != null && sysDeptDTO.getParentId() > 0){
+            sysDeptDTO.setParentDept(findById(sysDeptDTO.getParentId()));
+            if(null != sysDeptDTO.getParentDept()) {
+                recursionParent(sysDeptDTO.getParentDept());
+            }
+        }
+    }
+
+    /**
+     * 递归获取下级部门列表
+     * @param list 部门列表
+     */
+    private void recursionChildren(List<SysDeptTreeDTO> list){
+        if(null == list || list.size() < 1){
+            return;
+        }
+        for(SysDeptTreeDTO sysDeptTreeDTO:list){
+            sysDeptTreeDTO.setChildren(sysDeptDao.findByParentId(sysDeptTreeDTO.getId()));
+            recursionChildren(sysDeptTreeDTO.getChildren());
+        }
+    }
+
+    /**
+     * 获取部门树型结构
+     * @return 树型数据
+     */
+    @Override
+    public List<SysDeptTreeDTO> findTrees(){
+        List<SysDeptTreeDTO> root = sysDeptDao.findByParentId(0L);
+        recursionChildren(root);
+        return root;
+    }
+
+    /**
      * 分页查询部门信息
      * @param iSearchPageable 查询参数
      * @return
      */
+    @Override
     public ResultPage<SysDeptDTO> findPage(ISearchPageable<SysDeptSearchDTO> iSearchPageable){
         QueryWrapper<SysDept> queryWrapper = new QueryWrapper<>();
         if(StringUtils.isNotBlank(iSearchPageable.getSearchValue())) {
@@ -127,7 +215,7 @@ public class SysDeptServiceImpl implements SysDeptService {
         page.setOrders(PageConvert.Instance.sortFieldsToOrderItems(iSearchPageable.getSorts()));
         sysDeptDao.page(page,queryWrapper);
         ResultPage<SysDeptDTO> resultPage = new ResultPage<>();
-        resultPage.setList(SysDeptConvert.Instance.sysDeptsToSysDeptsDTO(page.getRecords()));
+        resultPage.setList(SysDeptConvert.Instance.sysDeptsToSysDeptDTOs(page.getRecords()));
         resultPage.setPageInfo(pageInfo);
         return resultPage;
     }

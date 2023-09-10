@@ -1,9 +1,11 @@
 package com.microwarp.warden.stand.admin.controller;
 
+import com.microwarp.warden.stand.admin.domain.SortRequest;
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysPostMapstruct;
 import com.microwarp.warden.stand.admin.domain.vo.SysPostCreateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysPostUpdateRequest;
 import com.microwarp.warden.stand.admin.service.LogService;
+import com.microwarp.warden.stand.common.core.annotation.RepeatRequestCheck;
 import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
 import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
 import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
@@ -20,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * controller - 岗位
@@ -57,6 +60,7 @@ public class PostController extends BaseController {
      * @return
      */
     @PostMapping("/post")
+    @RepeatRequestCheck
     @PreAuthorize("hasAuthority('post:create')")
     public ResultModel postInfo(@Validated @RequestBody SysPostCreateRequest sysPostRequest){
         SysPostDTO sysPostDTO = SysPostMapstruct.Instance.sysPostCreateRequestToSysPostDTO(sysPostRequest);
@@ -75,6 +79,7 @@ public class PostController extends BaseController {
      * @return
      */
     @PatchMapping("/post")
+    @RepeatRequestCheck
     @PreAuthorize("hasAuthority('post:modify')")
     public ResultModel putInfo(@Validated @RequestBody SysPostUpdateRequest sysPostRequest){
         SysPostDTO sysPostDTO = SysPostMapstruct.Instance.sysPostUpdateRequestToSysPostDTO(sysPostRequest);
@@ -82,6 +87,18 @@ public class PostController extends BaseController {
 
         // 写入日志
         writeLog("修改岗位信息:"+sysPostDTO.getName()+"["+sysPostDTO.getCode()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_POST,sysPostDTO.getId());
+        return ResultModel.success();
+    }
+
+    /**
+     * 岗位拖拽排序
+     * @param sortRequest 排序参数
+     * @return
+     */
+    @PutMapping("/posts/sort")
+    @PreAuthorize("hasAuthority('post:modify')")
+    public ResultModel sort(@Validated @RequestBody SortRequest sortRequest){
+        sysPostService.dragAndSort(sortRequest);
         return ResultModel.success();
     }
 
@@ -102,6 +119,19 @@ public class PostController extends BaseController {
     }
 
     /**
+     * 查询所有部门信息
+     * @return
+     */
+    @GetMapping("/posts")
+    @PreAuthorize("hasAuthority('post:view')")
+    public ResultModel all(){
+        ResultModel resultModel = ResultModel.success();
+        List<SysPostDTO> list = sysPostService.findAll();
+        resultModel.addData("list",SysPostMapstruct.Instance.sysPostDtosToSysPostVOs(list));
+        return resultModel;
+    }
+
+    /**
      * 分页查询岗位信息
      * @param searchPageable 查询条件
      * @return
@@ -111,7 +141,7 @@ public class PostController extends BaseController {
     public ResultModel search(@RequestBody SearchPageable<BasicSearchDTO> searchPageable){
         ResultModel resultModel = ResultModel.success();
         ResultPage<SysPostDTO> resultPage = sysPostService.findPage(searchPageable);
-        resultModel.addData("list",SysPostMapstruct.Instance.sysPostsDtoToSysPostsVO(resultPage.getList()));
+        resultModel.addData("list",SysPostMapstruct.Instance.sysPostDtosToSysPostVOs(resultPage.getList()));
         resultModel.addData("pageInfo",resultPage.getPageInfo());
         return resultModel;
     }

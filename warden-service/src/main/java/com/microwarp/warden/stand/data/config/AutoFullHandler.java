@@ -17,7 +17,7 @@ public class AutoFullHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject){
         this.strictInsertFill(metaObject,"createDate",Date.class,new Date());
         this.strictInsertFill(metaObject,"updateDate",Date.class,new Date());
-        this.strictInsertFill(metaObject,"orders",Integer.class,0);
+        this.strictInsertFill(metaObject,"orders",Long.class,System.currentTimeMillis());
         this.strictInsertFill(metaObject,"disabled",Boolean.class, false);
     }
     @Override

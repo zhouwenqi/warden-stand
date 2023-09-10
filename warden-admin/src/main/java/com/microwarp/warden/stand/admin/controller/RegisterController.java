@@ -4,6 +4,7 @@ import com.microwarp.warden.stand.admin.domain.mapstruct.SysUserMapstruct;
 import com.microwarp.warden.stand.admin.domain.vo.SysUserRegisterRequest;
 import com.microwarp.warden.stand.admin.service.CaptchaService;
 import com.microwarp.warden.stand.admin.service.LogService;
+import com.microwarp.warden.stand.common.core.annotation.RepeatRequestCheck;
 import com.microwarp.warden.stand.common.core.config.WardenGlobalConfig;
 import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
 import com.microwarp.warden.stand.common.core.enums.AppTerminalEnum;
@@ -47,6 +48,7 @@ public class RegisterController {
      * @return
      */
     @PostMapping("/register")
+    @RepeatRequestCheck
     public ResultModel register(@RequestBody @Validated SysUserRegisterRequest registerRequest){
         if(!wardenGlobalConfig.getEnableRegister()){
             throw new WardenRequireParamterException("注册功能已关闭");

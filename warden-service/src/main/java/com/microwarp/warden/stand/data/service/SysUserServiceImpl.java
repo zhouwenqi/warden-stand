@@ -161,6 +161,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
      * 更新用户密码
      * @param sysUserPasswordDTO 密码参数
      */
+    @Override
     @Transactional
     @CacheEvict(value = "sysUserDetailsId", key = "#sysUserPasswordDTO.userId")
     public void updatePassowrd(SysUserPasswordDTO sysUserPasswordDTO){
@@ -205,6 +206,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
      * @param iSearchPageable 查询参数
      * @return
      */
+    @Override
     public ResultPage<SysUserDTO> findPage(ISearchPageable<SysUserSearchDTO> iSearchPageable){
         QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
         if(StringUtils.isNotBlank(iSearchPageable.getSearchValue())) {
@@ -226,7 +228,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
         page.setOrders(PageConvert.Instance.sortFieldsToOrderItems(iSearchPageable.getSorts()));
         sysUserDao.page(page,queryWrapper);
         ResultPage<SysUserDTO> resultPage = new ResultPage<>();
-        resultPage.setList(SysUserConvert.Instance.sysUsersToSysUsersDTO(page.getRecords()));
+        resultPage.setList(SysUserConvert.Instance.sysUsersToSysUserDTOs(page.getRecords()));
         pageInfo = PageConvert.Instance.pageToPageInfo(page);
         resultPage.setPageInfo(pageInfo);
         return resultPage;
@@ -236,6 +238,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
      * 删除系统用户
      * @param userId 用户id
      */
+    @Override
     @Transactional
     @CacheEvict(value = "sysUserDetailsId", key = "#userId")
     public void delete(Long userId){
@@ -252,6 +255,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
      * 清除用户详情缓存
      * @param userId 用户ID
      */
+    @Override
     public void clearCache(Long userId){
         if(null == userId){
             iCacheService.batchRemove("sysUserDetailsUid", null);
@@ -266,6 +270,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     /**
      * 清除所有用户详情缓存
      */
+    @Override
     public void clearAll(){
         clearCache(null);
     }

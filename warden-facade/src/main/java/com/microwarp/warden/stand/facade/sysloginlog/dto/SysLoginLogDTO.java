@@ -5,12 +5,15 @@ import com.microwarp.warden.stand.common.core.enums.AppTerminalEnum;
 import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
 import com.microwarp.warden.stand.common.core.enums.PlatformTypeEnum;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * dto - 登录日志
  */
-public class SysLoginLogDTO {
+public class SysLoginLogDTO implements Serializable {
+    private static final long serialVersionUID = -7766149123554024267L;
+    private Long id;
     /** 用户id */
     private Long userId;
     /** 用户帐号 */
@@ -31,6 +34,14 @@ public class SysLoginLogDTO {
     private Date createDate;
     /** 修改时间 */
     private Date updateDate;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getUserId() {
         return userId;

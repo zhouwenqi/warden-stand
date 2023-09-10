@@ -3,20 +3,29 @@ package com.microwarp.warden.stand.common.utils;
 import com.microwarp.warden.stand.common.core.constant.HttpConstants;
 import com.microwarp.warden.stand.common.core.enums.AppTerminalEnum;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Web - util
  * @author zhouwenqi
  */
 public class WebUtil {
+    private static final Logger logger = LoggerFactory.getLogger(WebUtil.class);
     /**
      * 获取客户端IP地址
      * @param request 请求上下文
@@ -103,5 +112,20 @@ public class WebUtil {
         HttpServletRequest request = getRequest();
         Object guestObject = request.getAttribute(HttpConstants.HEADER_GUEST_KEY);
         return null == guestObject ? null : guestObject.toString();
+    }
+
+    public static String getBody(HttpServletRequest request){
+        StringBuilder stringBuilder = new StringBuilder();
+        try{
+            BufferedReader reader = request.getReader();
+            String line;
+            while ((line = reader.readLine())!= null){
+                stringBuilder.append(line);
+            }
+            reader.close();
+        }catch (IOException e){
+            logger.warn("获取request-body失败:{}",e.getMessage());
+        }
+        return stringBuilder.toString();
     }
 }

@@ -1,11 +1,9 @@
 package com.microwarp.warden.stand.data.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
-import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
-import com.microwarp.warden.stand.common.core.pageing.PageInfo;
-import com.microwarp.warden.stand.common.core.pageing.ResultPage;
+import com.microwarp.warden.stand.common.core.pageing.*;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
 import com.microwarp.warden.stand.common.utils.StringUtil;
 import com.microwarp.warden.stand.data.convert.PageConvert;
@@ -21,7 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * service - 岗位
@@ -41,6 +41,7 @@ public class SysPostServiceImpl extends BaseServiceImpl<SysPost> implements SysP
      * @param id 岗位id
      * @return
      */
+    @Override
     public SysPostDTO findById(Long id){
         return  sysPostDao.findById(id);
     }
@@ -50,6 +51,7 @@ public class SysPostServiceImpl extends BaseServiceImpl<SysPost> implements SysP
      * @param sysPostDTO 岗位信息
      * @return
      */
+    @Override
     @Transactional
     public SysPostDTO create(SysPostDTO sysPostDTO){
         QueryWrapper<SysPost> queryWrapper = new QueryWrapper<>();
@@ -72,6 +74,7 @@ public class SysPostServiceImpl extends BaseServiceImpl<SysPost> implements SysP
      * 更新岗位信息
      * @param sysPostDTO 岗位信息
      */
+    @Override
     @Transactional
     public void update(SysPostDTO sysPostDTO){
         QueryWrapper<SysPost> queryWrapper = new QueryWrapper<>();
@@ -93,9 +96,29 @@ public class SysPostServiceImpl extends BaseServiceImpl<SysPost> implements SysP
     }
 
     /**
+     * 岗位拖拽排序
+     * @param baseSortDTO 排序参数
+     */
+    @Override
+    @Transactional
+    public void dragAndSort(BaseSortDTO baseSortDTO){
+        if(null != baseSortDTO.getIds() && baseSortDTO.getIds().length > 0){
+            int i = 0;
+            for(Long id:baseSortDTO.getIds()){
+                UpdateWrapper<SysPost> updateWrapper = new UpdateWrapper<>();
+                updateWrapper.set("orders",i);
+                updateWrapper.eq("id",id);
+                sysPostDao.update(updateWrapper);
+                i ++;
+            }
+        }
+    }
+
+    /**
      * 删除岗位信息
      * @param id 岗位id
      */
+    @Override
     @Transactional
     public void delete(Long... id){
         if(null == id || id.length < 1){
@@ -108,10 +131,25 @@ public class SysPostServiceImpl extends BaseServiceImpl<SysPost> implements SysP
     }
 
     /**
+     * 获取所有岗位信息
+     * @return 所有岗位列表
+     */
+    @Override
+    public List<SysPostDTO> findAll(){
+        QueryWrapper<SysPost> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByAsc("orders");
+        List<SysPost> list = sysPostDao.list(queryWrapper);
+        return null == list || list.size() < 1 ? new ArrayList<>() : SysPostConvert.Instance.sysPostsToSysPostsDTOs(list);
+    }
+
+
+
+    /**
      * 分页查询岗位信息
      * @param iSearchPageable 查询参数
      * @return
      */
+    @Override
     public ResultPage<SysPostDTO> findPage(ISearchPageable<BasicSearchDTO> iSearchPageable){
         QueryWrapper<SysPost> queryWrapper = new QueryWrapper<>();
         if(StringUtils.isNotBlank(iSearchPageable.getSearchValue())) {
@@ -135,7 +173,7 @@ public class SysPostServiceImpl extends BaseServiceImpl<SysPost> implements SysP
         page.setOrders(PageConvert.Instance.sortFieldsToOrderItems(iSearchPageable.getSorts()));
         sysPostDao.page(page,queryWrapper);
         ResultPage<SysPostDTO> resultPage = new ResultPage<>();
-        resultPage.setList(SysPostConvert.Instance.sysPostToSysPostsDTO(page.getRecords()));
+        resultPage.setList(SysPostConvert.Instance.sysPostsToSysPostsDTOs(page.getRecords()));
         pageInfo = PageConvert.Instance.pageToPageInfo(page);
         resultPage.setPageInfo(pageInfo);
         return resultPage;

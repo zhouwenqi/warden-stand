@@ -1,10 +1,12 @@
 package com.microwarp.warden.stand.admin.controller;
 
+import com.microwarp.warden.stand.admin.domain.SortRequest;
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysRoleMapstruct;
 import com.microwarp.warden.stand.admin.domain.vo.SysRoleCreateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysRolePermissionRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysRoleUpdateRequest;
 import com.microwarp.warden.stand.admin.service.LogService;
+import com.microwarp.warden.stand.common.core.annotation.RepeatRequestCheck;
 import com.microwarp.warden.stand.common.core.constant.SecurityConstants;
 import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
 import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
@@ -66,6 +68,7 @@ public class RoleController extends BaseController {
      * @return
      */
     @PostMapping("/role")
+    @RepeatRequestCheck
     @PreAuthorize("hasAuthority('role:create')")
     public ResultModel postRole(@Validated @RequestBody SysRoleCreateRequest createRequest){
         SysRoleDTO sysRoleDTO = SysRoleMapstruct.Instance.sysRoleCreateRequestTosysRoleDTO(createRequest);
@@ -84,6 +87,7 @@ public class RoleController extends BaseController {
      * @return
      */
     @PatchMapping("/role")
+    @RepeatRequestCheck
     @PreAuthorize("hasAuthority('role:modify')")
     public ResultModel putRole(@Validated @RequestBody SysRoleUpdateRequest updateRequest){
         SysRoleDTO sysRoleDTO = sysRoleService.findById(updateRequest.getId());
@@ -106,6 +110,7 @@ public class RoleController extends BaseController {
      * @return
      */
     @PutMapping("/role/permissions")
+    @RepeatRequestCheck
     @PreAuthorize("hasAuthority('role:modify')")
     public ResultModel putRolePermissions(@Validated @RequestBody SysRolePermissionRequest roleRequest){
         SysRoleDTO sysRoleDTO = sysRoleService.findById(roleRequest.getRoleId());
@@ -146,6 +151,32 @@ public class RoleController extends BaseController {
     }
 
     /**
+     * 角色拖拽排序
+     * @param sortRequest 排序参数
+     * @return
+     */
+    @PutMapping("/roles/sort")
+    @PreAuthorize("hasAuthority('role:modify')")
+    public ResultModel sort(@Validated @RequestBody SortRequest sortRequest){
+        sysRoleService.dragAndSort(sortRequest);
+        return ResultModel.success();
+    }
+
+    /**
+     * 查询所有角色信息
+     * @return
+     */
+    @GetMapping("/roles")
+    @PreAuthorize("hasAuthority('role:view')")
+    public ResultModel all(){
+        ResultModel resultModel = ResultModel.success();
+        List<SysRoleDTO> list = sysRoleService.findAll();
+        resultModel.addData("list",SysRoleMapstruct.Instance.sysRoleDtosToSysRoleVOs(list));
+        return resultModel;
+    }
+
+
+    /**
      * 分页查询角色
      * @param searchPageable 查询条件
      * @return
@@ -155,7 +186,7 @@ public class RoleController extends BaseController {
     public ResultModel postSearch(@RequestBody SearchPageable<BasicSearchDTO> searchPageable){
         ResultModel resultModel = ResultModel.success();
         ResultPage<SysRoleDTO> resultPage = sysRoleService.findPage(searchPageable);
-        resultModel.addData("list", resultPage.getList());
+        resultModel.addData("list", SysRoleMapstruct.Instance.sysRoleDtosToSysRoleVOs(resultPage.getList()));
         resultModel.addData("pageInfo",resultPage.getPageInfo());
         return  resultModel;
     }

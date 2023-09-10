@@ -87,7 +87,7 @@ public class SysLoginLogServiceImpl extends BaseServiceImpl<SysLoginLog> impleme
                 queryWrapper.and(true, wrapper -> wrapper.eq("user_id", searchDTO.getUserId()));
             }
 
-            if(null != searchDTO.getStatus()) {
+            if(null != searchDTO.getStatus() && searchDTO.getStatus().length > 0) {
                 queryWrapper.and(true, wrapper -> wrapper.in("status", Arrays.asList(searchDTO.getStatus())));
             }
             useBaseFilter(queryWrapper,searchDTO);
@@ -97,7 +97,7 @@ public class SysLoginLogServiceImpl extends BaseServiceImpl<SysLoginLog> impleme
         page.setOrders(PageConvert.Instance.sortFieldsToOrderItems(iSearchPageable.getSorts()));
         sysLoginLogDao.page(page,queryWrapper);
         ResultPage<SysLoginLogDTO> resultPage = new ResultPage<>();
-        resultPage.setList(SysLoginLogConvert.Instance.sysLoginLogsToSysLoginLogsDTO(page.getRecords()));
+        resultPage.setList(SysLoginLogConvert.Instance.sysLoginLogsToSysLoginLogDTOs(page.getRecords()));
         pageInfo = PageConvert.Instance.pageToPageInfo(page);
         resultPage.setPageInfo(pageInfo);
         return resultPage;

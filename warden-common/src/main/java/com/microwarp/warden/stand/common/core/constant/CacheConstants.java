@@ -11,4 +11,5 @@ public class CacheConstants {
     public static final String CACHE_DICT_DATAS = "dictionaryDatas";
     /** 验证码缓存名 */
     public static final String CACHE_CAPTCHA = "captcha";
+    public static final String CACHE_REPEAT = "repeatData";
 }

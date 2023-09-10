@@ -15,7 +15,7 @@ import javax.cache.CacheManager;
 public class EhcacheService implements ICacheService {
     private static CacheManager cacheManager;
 
-    private Cache getCache(String name){
+    private <T> Cache<String,T> getCache(String name){
         if(null == cacheManager) {
              cacheManager = SpringUtil.getBean(CacheManager.class);
         }
@@ -26,14 +26,11 @@ public class EhcacheService implements ICacheService {
      * 保存缓存
      * @param cacheName 缓存名
      * @param key 键名
-     * @param object 保存对象
+     * @param t 保存对象
      */
-    public void save(String cacheName, String key, Object object){
-        Cache cache = getCache(cacheName);
-        if(null == cache){
-            return;
-        }
-        cache.put(key,object);
+    public <T> void save(String cacheName, String key, T t){
+        Cache<String,T> cache = getCache(cacheName);
+        cache.put(key, t);
     }
 
     /**
@@ -51,12 +48,12 @@ public class EhcacheService implements ICacheService {
      * @param cacheNames 缓存名列表
      * @param keys 键名列表
      */
-    public void batchRemove(String[] cacheNames, String[] keys) {
+    public <T> void batchRemove(String[] cacheNames, String[] keys) {
         if(null == cacheNames || cacheNames.length < 1){
             return;
         }
         for(String name:cacheNames){
-            Cache cache = getCache(name);
+            Cache<String,T> cache = getCache(name);
             if(null == cache){
                 continue;
             }
@@ -80,11 +77,8 @@ public class EhcacheService implements ICacheService {
             }
         }
     }
-    public Object get(String cacheName,String key){
-        Cache cache = getCache(cacheName);
-        if(null == cache){
-            return null;
-        }
+    public <T> T get(String cacheName,String key){
+        Cache<String,T> cache = getCache(cacheName);
         return cache.get(key);
     }
 }

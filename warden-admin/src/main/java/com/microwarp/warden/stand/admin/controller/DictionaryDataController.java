@@ -1,9 +1,11 @@
 package com.microwarp.warden.stand.admin.controller;
 
+import com.microwarp.warden.stand.admin.domain.SortRequest;
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysDictionaryDataMapstruct;
 import com.microwarp.warden.stand.admin.domain.vo.SysDictionaryDataCreateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysDictionaryDataUpdateRequest;
 import com.microwarp.warden.stand.admin.service.LogService;
+import com.microwarp.warden.stand.common.core.annotation.RepeatRequestCheck;
 import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
 import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
@@ -61,7 +63,7 @@ public class DictionaryDataController extends BaseController {
         }
         List<SysDictionaryDataDTO> list = sysDictionaryDataService.findByDictId(dictId);
         ResultModel resultModel = ResultModel.success();
-        resultModel.addData("list", SysDictionaryDataMapstruct.Instance.sysDictionaryDatasDtoToSysDictionaryDatasVO(list));
+        resultModel.addData("list", SysDictionaryDataMapstruct.Instance.sysDictionaryDataDtosToSysDictionaryDataVOs(list));
         return resultModel;
     }
 
@@ -91,6 +93,7 @@ public class DictionaryDataController extends BaseController {
      * @return
      */
     @PostMapping("/dictionaryData")
+    @RepeatRequestCheck
     @PreAuthorize("hasAuthority('dictionary:create')")
     public ResultModel postDictionaryData(@Validated @RequestBody SysDictionaryDataCreateRequest dataRequest){
         SysDictionaryDataDTO sysDictionaryDataDTO = SysDictionaryDataMapstruct.Instance.sysDictionaryDataCreateRequestToSysDictionaryDataDTO(dataRequest);
@@ -104,11 +107,24 @@ public class DictionaryDataController extends BaseController {
     }
 
     /**
+     * 字典数据项拖拽排序
+     * @param sortRequest 排序参数
+     * @return
+     */
+    @PutMapping("/dictionaryDatas/sort")
+    @PreAuthorize("hasAuthority('dictionary:modify')")
+    public ResultModel sort(@Validated @RequestBody SortRequest sortRequest){
+        sysDictionaryDataService.dragAndSort(sortRequest);
+        return ResultModel.success();
+    }
+
+    /**
      * 更新一条字典数据
      * @param dataRequest 字典数据
      * @return
      */
     @PatchMapping("/dictionaryData")
+    @RepeatRequestCheck
     @PreAuthorize("hasAuthority('dictionary:modify')")
     public ResultModel putDictionaryData(@Validated @RequestBody SysDictionaryDataUpdateRequest dataRequest){
         SysDictionaryDataDTO sysDictionaryDataDTO = SysDictionaryDataMapstruct.Instance.sysDictionaryDataUpdateRequestToSysDictionaryDataDTO(dataRequest);

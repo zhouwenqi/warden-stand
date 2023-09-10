@@ -15,6 +15,8 @@ public class SysDept extends LogicEntity {
     private String phone;
     /** 部门编号 */
     private String code;
+    /** 上级部门ID */
+    private Long parentId;
     /** 负责人id */
     private Long leaderId;
     /** 全拼 */
@@ -24,7 +26,7 @@ public class SysDept extends LogicEntity {
     /** 描述 */
     private String description;
     /** 排序值 */
-    private Integer orders;
+    private Long orders;
     /** 禁用 */
     private Boolean disabled;
 
@@ -50,6 +52,14 @@ public class SysDept extends LogicEntity {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
     public Long getLeaderId() {
@@ -84,11 +94,11 @@ public class SysDept extends LogicEntity {
         this.description = description;
     }
 
-    public Integer getOrders() {
+    public Long getOrders() {
         return orders;
     }
 
-    public void setOrders(Integer orders) {
+    public void setOrders(Long orders) {
         this.orders = orders;
     }
 

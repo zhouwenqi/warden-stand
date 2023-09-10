@@ -19,7 +19,7 @@ import java.util.List;
 public interface SysLoginLogMapstruct {
     SysLoginLogMapstruct Instance = Mappers.getMapper(SysLoginLogMapstruct.class);
     SysLoginLogVO sysLoginLogDtoToSysLoginLogVO(SysLoginLogDTO sysLoginLogDTO);
-    List<SysLoginLogVO> sysLoginLogsDtoToSysLoginLogsVO(List<SysLoginLogDTO> sysLoginLogsDTO);
+    List<SysLoginLogVO> sysLoginLogDtosToSysLoginLogVOs(List<SysLoginLogDTO> sysLoginLogsDTO);
     SysLoginLogExcel sysLoginLogDtoToSysLoginLogExcel(SysLoginLogDTO sysLoginLogDTO);
-    List<SysLoginLogExcel> sysLoginLogsDtoToSysLoginLogsExcel(List<SysLoginLogDTO> sysLoginsLogDTO);
+    List<SysLoginLogExcel> sysLoginLogDtosToSysLoginLogExcels(List<SysLoginLogDTO> sysLoginLogDTOs);
 }

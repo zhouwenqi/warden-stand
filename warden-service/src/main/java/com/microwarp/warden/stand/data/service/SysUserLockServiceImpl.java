@@ -26,6 +26,7 @@ public class SysUserLockServiceImpl implements SysUserLockService {
      * @param ip ip地址
      * @return
      */
+    @Override
     public boolean isLocked(Long userId,String ip){
         return sysUserLockDao.isLocked(userId,ip);
     }
@@ -35,6 +36,7 @@ public class SysUserLockServiceImpl implements SysUserLockService {
      * @param ip ip地址
      * @return
      */
+    @Override
     public long totalByIp(String ip){
         QueryWrapper<SysUserLock> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("ip",ip);
@@ -49,6 +51,7 @@ public class SysUserLockServiceImpl implements SysUserLockService {
      * @param ip IP地址
      * @param unlockTime 解锁时间(时间为空永久锁住)
      */
+    @Override
     public void add(Long userId, String ip, Date unlockTime){
         sysUserLockDao.lock(userId,ip,unlockTime);
     }

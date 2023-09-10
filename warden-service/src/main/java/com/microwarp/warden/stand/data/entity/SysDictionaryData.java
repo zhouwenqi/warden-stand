@@ -22,7 +22,7 @@ public class SysDictionaryData extends LogicEntity  {
     /** 默认项 */
     private Boolean dataDefault;
     /** 排序 */
-    private Integer orders;
+    private Long orders;
     /** 是否禁用 */
     private Boolean disabled;
 
@@ -74,11 +74,11 @@ public class SysDictionaryData extends LogicEntity  {
         this.dataDefault = dataDefault;
     }
 
-    public Integer getOrders() {
+    public Long getOrders() {
         return orders;
     }
 
-    public void setOrders(Integer orders) {
+    public void setOrders(Long orders) {
         this.orders = orders;
     }
 
