@@ -1,5 +1,6 @@
 package com.microwarp.warden.stand.common.utils;
 
+import com.microwarp.warden.stand.common.core.enums.PlatformTypeEnum;
 import com.microwarp.warden.stand.common.security.JwtUser;
 import com.microwarp.warden.stand.common.security.SignType;
 import com.microwarp.warden.stand.common.security.UserType;
@@ -255,6 +256,26 @@ public class JwtUtil {
             }
         }
         return signed(jwt,key);
+    }
+
+    /**
+     * Jwt用户类型转平台类型
+     * @param userType 用户类型
+     * @return
+     */
+    public static PlatformTypeEnum convertToPlatform(UserType userType){
+        PlatformTypeEnum platformTypeEnum = PlatformTypeEnum.UNKNOWN;
+        switch (userType){
+            case SYSTEM:
+                platformTypeEnum = PlatformTypeEnum.BACKSTAGE;
+                break;
+            case NORMAL:
+                platformTypeEnum = PlatformTypeEnum.FORESTAGE;
+                break;
+            case GUEST:
+                platformTypeEnum = PlatformTypeEnum.UNKNOWN;
+        }
+        return platformTypeEnum;
     }
 
     /**

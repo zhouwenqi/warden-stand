@@ -13,6 +13,15 @@
             <offheap unit="MB">10</offheap>
         </resources>
     </cache-template>
+    <cache-template name="token-template">
+        <expiry>
+            <none />
+        </expiry>
+        <resources>
+            <heap unit="entries">5000</heap>
+            <offheap unit="MB">100</offheap>
+        </resources>
+    </cache-template>
     <cache-template name="captcha-template">
         <expiry>
             <ttl unit="hours">1</ttl>
@@ -50,5 +59,17 @@
     <cache alias="repeatData" uses-template="repeat-template">
         <key-type>java.lang.String</key-type>
         <value-type>com.microwarp.warden.stand.common.core.cache.RepeatData</value-type>
+    </cache>
+    <cache alias="deptData" uses-template="sys-template">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.util.List</value-type>
+    </cache>
+    <cache alias="sysConfig" uses-template="sys-template">
+        <key-type>java.lang.String</key-type>
+        <value-type>com.microwarp.warden.stand.facade.sysconfig.dto.SysConfigDTO</value-type>
+    </cache>
+    <cache alias="wardenTokens" uses-template="token-template">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.util.List</value-type>
     </cache>
 </config>

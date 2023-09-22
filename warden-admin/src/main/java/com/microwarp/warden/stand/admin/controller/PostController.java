@@ -99,6 +99,8 @@ public class PostController extends BaseController {
     @PreAuthorize("hasAuthority('post:modify')")
     public ResultModel sort(@Validated @RequestBody SortRequest sortRequest){
         sysPostService.dragAndSort(sortRequest);
+        // 写入日志
+        writeLog("修改岗位排序:"+sortRequest.getDragId()+"["+sortRequest.getDragId()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_POST,sortRequest.getIds());
         return ResultModel.success();
     }
 

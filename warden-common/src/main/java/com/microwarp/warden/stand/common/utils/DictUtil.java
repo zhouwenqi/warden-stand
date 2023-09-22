@@ -15,6 +15,12 @@ public class DictUtil {
         addEnum(AppTerminalEnum.class,AppTerminalEnum.values(),"应用终端");
         addEnum(TerminalEnum.class,TerminalEnum.values(),"设备终端");
         addEnum(ModuleTypeEnum.class,ModuleTypeEnum.values(),"模块类型");
+        addEnum(ActionStatusEnum.class,ActionStatusEnum.values(),"操作状态");
+        addEnum(ActionTypeEnum.class,ActionTypeEnum.values(),"操作类型");
+        addEnum(CaptchaTypeEnum.class,CaptchaTypeEnum.values(),"验证码类型");
+        addEnum(MessageTypeEnum.class,MessageTypeEnum.values(),"消息类型");
+        addEnum(PlatformTypeEnum.class,PlatformTypeEnum.values(),"平台类型");
+        addEnum(TopicEnum.class,TopicEnum.values(),"消息主题");
     }
     public static WardenDictionary getEnumDictionary(String key){
         return  WardenDictionary.DictMap.get(key);

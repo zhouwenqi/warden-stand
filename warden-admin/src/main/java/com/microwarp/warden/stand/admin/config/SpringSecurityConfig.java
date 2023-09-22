@@ -11,17 +11,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import javax.annotation.Resource;
 import java.util.Collections;
@@ -54,18 +50,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public WardenAuthenticationUserFilter wardenAuthenticationUserFilter() throws Exception{
         return new WardenAuthenticationUserFilter();
-    }
-
-    private CorsConfigurationSource corsConfigurationSource(){
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.setAllowedMethods(Collections.singletonList("*"));
-        config.setAllowedHeaders(Collections.singletonList("*"));
-        config.setAllowedOriginPatterns(Collections.singletonList("*"));
-        config.setMaxAge(3600L);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**",config);
-        return source;
     }
 
     @Override
@@ -103,7 +87,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/register")
                 .antMatchers("/error")
                 .antMatchers("/captcha/**")
-                .antMatchers("/config/**")
+                .antMatchers("/config/global")
                 .antMatchers("/test/**")
                 .mvcMatchers(faceUri+"**")
                 .antMatchers("/*.ico");

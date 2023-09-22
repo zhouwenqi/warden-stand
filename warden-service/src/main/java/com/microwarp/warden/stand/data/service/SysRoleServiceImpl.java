@@ -192,7 +192,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
                     .or()
                     .like("value", iSearchPageable.getSearchValue())
                     .or()
-                    .likeLeft("description", iSearchPageable.getSearchValue())
+                    .like("description", iSearchPageable.getSearchValue())
             );
         }
         if(null != iSearchPageable.getFilters()){

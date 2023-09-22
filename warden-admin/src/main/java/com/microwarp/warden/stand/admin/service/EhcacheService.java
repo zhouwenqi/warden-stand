@@ -22,6 +22,7 @@ public class EhcacheService implements ICacheService {
         return cacheManager.getCache(name);
     }
 
+
     /**
      * 保存缓存
      * @param cacheName 缓存名
@@ -81,4 +82,5 @@ public class EhcacheService implements ICacheService {
         Cache<String,T> cache = getCache(cacheName);
         return cache.get(key);
     }
+
 }

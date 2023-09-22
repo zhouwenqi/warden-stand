@@ -36,8 +36,6 @@ public class LoginLogController extends BaseController {
     private SysLoginLogService sysLoginLogService;
     @Autowired
     private ExcelExportService excelExportService;
-    @Autowired
-    private LogService logService;
 
     /**
      * 获取登录日志信息

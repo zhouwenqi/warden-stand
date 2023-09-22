@@ -4,7 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Administrator on 10/9/2023.
+ * dto - 部门树
+ * @author zhouwenqi
  */
 public class SysDeptTreeDTO implements Serializable {
     private static final long serialVersionUID = 3962547095741903449L;

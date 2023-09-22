@@ -13,7 +13,9 @@ import com.microwarp.warden.stand.data.mapper.SysUserMapper;
 import com.microwarp.warden.stand.facade.sysuser.dto.SysUserDTO;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * dao - 系统用户 - impl
@@ -41,6 +43,17 @@ public class SysUserDaoImpl extends ServiceImpl<SysUserMapper,SysUser> implement
         queryWrapper.eq("uid",uid);
         SysUser sysUser = baseMapper.selectOne(queryWrapper);
         return SysUserConvert.Instance.sysUserToSysUserDTO(sysUser);
+    }
+
+    /**
+     * 查询所有有效系统用户
+     * @return 系统用户列表
+     */
+    public List<SysUser> findAll(){
+        QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("disabled",false);
+        List<SysUser> list = baseMapper.selectList(queryWrapper);
+        return null == list ? new ArrayList<>() : list;
     }
 
     /**

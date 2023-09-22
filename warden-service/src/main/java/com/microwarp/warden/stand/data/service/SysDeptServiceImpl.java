@@ -3,6 +3,8 @@ package com.microwarp.warden.stand.data.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Lists;
+import com.microwarp.warden.stand.common.core.constant.CacheConstants;
 import com.microwarp.warden.stand.common.core.pageing.BaseSortDTO;
 import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
 import com.microwarp.warden.stand.common.core.pageing.PageInfo;
@@ -17,16 +19,22 @@ import com.microwarp.warden.stand.facade.sysdept.dto.SysDeptDTO;
 import com.microwarp.warden.stand.facade.sysdept.dto.SysDeptSearchDTO;
 import com.microwarp.warden.stand.facade.sysdept.dto.SysDeptTreeDTO;
 import com.microwarp.warden.stand.facade.sysdept.service.SysDeptService;
+import com.microwarp.warden.stand.facade.sysuser.service.SysUserService;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * service - 部门
+ * service - 部门 - impl
  * @author zhouwenqi
  */
 @Service
@@ -35,6 +43,8 @@ public class SysDeptServiceImpl implements SysDeptService {
     private SysDeptDao sysDeptDao;
     @Resource
     private SysUserDao sysUserDao;
+    @Resource
+    private SysUserService sysUserService;
 
     /**
      * 查询部门信息(含上级部门信息)
@@ -70,6 +80,8 @@ public class SysDeptServiceImpl implements SysDeptService {
      * @return
      */
     @Override
+    @Transactional
+    @CacheEvict(value = CacheConstants.CACHE_DEPT_TREE, allEntries = true)
     public SysDeptDTO create(SysDeptDTO sysDeptDTO){
         QueryWrapper<SysDept> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("name",sysDeptDTO.getName());
@@ -85,7 +97,9 @@ public class SysDeptServiceImpl implements SysDeptService {
      * 更新部门信息
      * @param sysDeptDTO 部门id
      */
+    @Transactional
     @Override
+    @CacheEvict(value = "deptData",allEntries = true)
     public void update(SysDeptDTO sysDeptDTO){
         QueryWrapper<SysDept> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("name",sysDeptDTO.getName());
@@ -95,6 +109,8 @@ public class SysDeptServiceImpl implements SysDeptService {
         }
         SysDept sysDept = SysDeptConvert.Instance.sysDeptDtoToSysDept(sysDeptDTO);
         sysDeptDao.updateById(sysDept);
+        // 清除用户缓存
+        sysUserService.clearAll();
     }
 
     /**
@@ -102,12 +118,16 @@ public class SysDeptServiceImpl implements SysDeptService {
      * @param baseSortDTO 排序数据
      */
     @Transactional
+    @Override
+    @CacheEvict(value = "deptData",allEntries = true)
     public void dragAndSort(BaseSortDTO baseSortDTO){
         if(null != baseSortDTO.getParentId() && null != baseSortDTO.getDragId()){
             SysDept sysDept = new SysDept();
             sysDept.setParentId(baseSortDTO.getParentId());
             sysDept.setId(baseSortDTO.getDragId());
             sysDeptDao.updateById(sysDept);
+            // 清除用户缓存
+            sysUserService.clearAll();
         }
         if(null != baseSortDTO.getIds() && baseSortDTO.getIds().length > 0){
             int i = 0;
@@ -127,12 +147,17 @@ public class SysDeptServiceImpl implements SysDeptService {
      */
     @Transactional
     @Override
+    @CacheEvict(value = CacheConstants.CACHE_DEPT_TREE, allEntries = true)
     public void delete(Long...id){
         if(null == id || id.length < 1){
             return;
         }
-        sysDeptDao.removeBatchByIds(Arrays.asList(id));
-        sysUserDao.clearDeptId(id);
+        List<Long> ids = new ArrayList<>();
+        recursionIds(Arrays.asList(id),ids);
+        sysDeptDao.removeBatchByIds(ids);
+        sysUserDao.clearDeptId(ids.toArray(new Long[ids.size()]));
+        // 清除用户缓存
+        sysUserService.clearAll();
     }
 
     /**
@@ -157,8 +182,31 @@ public class SysDeptServiceImpl implements SysDeptService {
             return;
         }
         for(SysDeptTreeDTO sysDeptTreeDTO:list){
-            sysDeptTreeDTO.setChildren(sysDeptDao.findByParentId(sysDeptTreeDTO.getId()));
+            List<SysDeptTreeDTO> children = sysDeptDao.findByParentId(sysDeptTreeDTO.getId());
+            sysDeptTreeDTO.setChildren(children.size() < 1 ? null : children);
             recursionChildren(sysDeptTreeDTO.getChildren());
+        }
+    }
+
+    /**
+     * 递归获取所有部门ID
+     * @param ids 下级部门ID列表
+     * @param deptIds 门部ID平铺列表
+     * @return
+     */
+    @Override
+    public void recursionIds(List<Long> ids,List<Long> deptIds){
+        if(ids != null && ids.size() > 0){
+            deptIds.addAll(ids);
+            for (Long id:ids){
+                QueryWrapper<SysDept> queryWrapper = new QueryWrapper<>();
+                queryWrapper.select("id");
+                queryWrapper.eq("parent_id",id);
+                List<SysDept> sysDepts = sysDeptDao.list(queryWrapper);
+                if(null != sysDepts && sysDepts.size()>0){
+                   recursionIds(sysDepts.stream().map(SysDept::getId).collect(Collectors.toList()),deptIds);
+                }
+            }
         }
     }
 
@@ -167,6 +215,7 @@ public class SysDeptServiceImpl implements SysDeptService {
      * @return 树型数据
      */
     @Override
+    @Cacheable(value = CacheConstants.CACHE_DEPT_TREE, key="'tree'", unless = "#result.size() < 1")
     public List<SysDeptTreeDTO> findTrees(){
         List<SysDeptTreeDTO> root = sysDeptDao.findByParentId(0L);
         recursionChildren(root);

@@ -24,7 +24,7 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 
 /**
- * service - 字典
+ * service - 字典 - impl
  * @author zhouwenqi
  */
 @Service

@@ -13,7 +13,8 @@ public enum ActionTypeEnum implements BaseEnum {
     JOIN(6,"加入"),
     LOGIN(7,"登录"),
     QUIT(8,"退出"),
-    PAYMENT(9,"支付");
+    PAYMENT(9,"支付"),
+    PUSH(10,"推送");
     int code;
     String tag;
     ActionTypeEnum(int code, String tag){

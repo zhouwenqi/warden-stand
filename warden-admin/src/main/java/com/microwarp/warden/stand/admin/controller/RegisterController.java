@@ -14,6 +14,8 @@ import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
 import com.microwarp.warden.stand.common.exception.WardenRequireParamterException;
 import com.microwarp.warden.stand.common.model.ResultModel;
 import com.microwarp.warden.stand.common.utils.WebUtil;
+import com.microwarp.warden.stand.facade.sysconfig.dto.SysConfigDTO;
+import com.microwarp.warden.stand.facade.sysconfig.service.SysConfigService;
 import com.microwarp.warden.stand.facade.sysuser.dto.SysUserDTO;
 import com.microwarp.warden.stand.facade.sysuser.dto.SysUserDetailsDTO;
 import com.microwarp.warden.stand.facade.sysuser.service.SysUserService;
@@ -41,6 +43,8 @@ public class RegisterController {
     private LogService logService;
     @Autowired
     private CaptchaService captchaService;
+    @Autowired
+    private SysConfigService sysConfigService;
 
     /**
      * 注册系统用户
@@ -50,7 +54,8 @@ public class RegisterController {
     @PostMapping("/register")
     @RepeatRequestCheck
     public ResultModel register(@RequestBody @Validated SysUserRegisterRequest registerRequest){
-        if(!wardenGlobalConfig.getEnableRegister()){
+        SysConfigDTO sysConfigDTO = sysConfigService.findCurrent();
+        if(!sysConfigDTO.getEnabledRegister()){
             throw new WardenRequireParamterException("注册功能已关闭");
         }
 

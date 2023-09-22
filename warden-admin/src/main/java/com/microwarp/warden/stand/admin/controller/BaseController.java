@@ -6,6 +6,7 @@ import com.microwarp.warden.stand.admin.utils.SecurityUtil;
 import com.microwarp.warden.stand.common.core.constant.AttrConstants;
 import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
 import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
+import com.microwarp.warden.stand.common.security.JwtUser;
 import com.microwarp.warden.stand.common.utils.WebUtil;
 import com.microwarp.warden.stand.facade.sysuser.dto.SysUserDetailsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,10 @@ public class BaseController {
     public SecurityUser getSecruityUser(){
         HttpServletRequest request = WebUtil.getRequest();
         return (SecurityUser)request.getAttribute(AttrConstants.SECURITY_USER_KEY);
+    }
+    public JwtUser getJwtUser(){
+        HttpServletRequest request = WebUtil.getRequest();
+        return (JwtUser) request.getAttribute(AttrConstants.JWT_USER_KEY);
     }
     public void writeLog(String logContent,ActionTypeEnum actionType, ModuleTypeEnum moduleType, Long... mateId){
         String ip = WebUtil.getIpAddr();

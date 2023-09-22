@@ -75,8 +75,6 @@ public class RepeatedRequestInterceptor implements HandlerInterceptor {
     }
 
     private boolean compareTimes(RepeatData data, RepeatData firstData,int interval){
-        long xm = data.getTime() - firstData.getTime();
-        System.out.print("xm:"+xm);
         return data.getTime() - firstData.getTime() < interval;
     }
 }

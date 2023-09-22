@@ -27,7 +27,7 @@ import javax.annotation.Resource;
 import java.util.*;
 
 /**
- * service - 字典数据
+ * service - 字典数据 - impl
  * @author zhouwenqi
  */
 @Service
@@ -153,7 +153,7 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
      * @param code 字典编码
      * @return
      */
-    @Cacheable(value = "dictionaryDatas", key="#code", unless = "#result.size() < 1")
+    @Cacheable(value = CacheConstants.CACHE_DICT_DATAS, key="#code", unless = "#result.size() < 1")
     public List<SysDictionaryDataDTO> findByDictCode(String code){
         SysDictionaryDTO sysDictionaryDTO = sysDictionaryDao.findByCode(code);
         if(null == sysDictionaryDTO || sysDictionaryDTO.getDisabled()){

@@ -48,7 +48,7 @@ public class DeptController extends BaseController {
     @PreAuthorize("hasAuthority('dept:view')")
     public ResultModel getInfo(@PathVariable("id") Long id){
         if(null == id){
-            throw new WardenRequireParamterException("部门id不能为空");
+            throw new WardenRequireParamterException("部门ID不能为空");
         }
         SysDeptDTO sysDeptDTO = sysDeptService.findById(id);
         if(null == sysDeptDTO){

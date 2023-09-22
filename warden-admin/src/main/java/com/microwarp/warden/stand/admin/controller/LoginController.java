@@ -1,24 +1,32 @@
 package com.microwarp.warden.stand.admin.controller;
 
+import com.microwarp.warden.stand.admin.domain.pojo.SseMessage;
+import com.microwarp.warden.stand.admin.domain.pojo.TokenUser;
 import com.microwarp.warden.stand.admin.domain.vo.SysUserLoginRequest;
 import com.microwarp.warden.stand.admin.service.CaptchaService;
 import com.microwarp.warden.stand.admin.service.LoginService;
+import com.microwarp.warden.stand.admin.service.SseService;
+import com.microwarp.warden.stand.admin.service.TokenCacheService;
 import com.microwarp.warden.stand.admin.utils.TokenUtil;
 import com.microwarp.warden.stand.common.core.config.WardenGlobalConfig;
 import com.microwarp.warden.stand.common.core.constant.SecurityConstants;
-import com.microwarp.warden.stand.common.core.enums.ActionStatusEnum;
-import com.microwarp.warden.stand.common.core.enums.AppTerminalEnum;
-import com.microwarp.warden.stand.common.core.enums.PlatformTypeEnum;
+import com.microwarp.warden.stand.common.core.enums.*;
 import com.microwarp.warden.stand.common.exception.WardenAccountFailedException;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
 import com.microwarp.warden.stand.common.model.ResultModel;
+import com.microwarp.warden.stand.common.security.JwtUser;
+import com.microwarp.warden.stand.common.security.UserType;
+import com.microwarp.warden.stand.common.utils.JwtUtil;
 import com.microwarp.warden.stand.common.utils.WebUtil;
+import com.microwarp.warden.stand.facade.sysconfig.service.SysConfigService;
 import com.microwarp.warden.stand.facade.sysuser.dto.SysUserDTO;
 import com.microwarp.warden.stand.facade.sysuser.dto.SysUserDetailsDTO;
 import com.microwarp.warden.stand.facade.sysuser.service.SysUserLockService;
 import com.microwarp.warden.stand.facade.sysuser.service.SysUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
@@ -35,6 +43,7 @@ import java.util.*;
  */
 @RestController
 public class LoginController extends BaseController {
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     @Autowired
     private WardenGlobalConfig wardenGlobalConfig;
     @Autowired
@@ -47,6 +56,12 @@ public class LoginController extends BaseController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private CaptchaService captchaService;
+    @Autowired
+    private SysConfigService sysConfigService;
+    @Autowired
+    private TokenCacheService tokenCacheService;
+    @Autowired
+    private SseService sseService;
 
     /**
      * 登录
@@ -120,6 +135,20 @@ public class LoginController extends BaseController {
         Date expireDate = DateUtils.addHours(new Date(),effectiveHour);
         String token = TokenUtil.build(sysUserDetailsDTO,expireDate);
         resultModel.addData("token",token);
+
+        // token写入缓存
+        TokenUser tokenUser = new TokenUser();
+        tokenUser.setType(UserType.SYSTEM);
+        tokenUser.setUserId(sysUserDetailsDTO.getId().toString());
+        tokenUser.setUsername(sysUserDetailsDTO.getUid());
+        if(!sysConfigService.findCurrent().getAllowManyToken()){
+            SseMessage<String> message = new SseMessage<>();
+            message.setMsgId(System.currentTimeMillis());
+            message.setTopic(TopicEnum.EVENT_TOKEN_OFFLINE);
+            sseService.sendMessage(message,tokenUser,token);
+            tokenCacheService.clear(tokenUser);
+        }
+        tokenCacheService.add(tokenUser,token);
 
         // 清除登录失败计数
         loginService.success(sysUserDetailsDTO.getId(),ip);

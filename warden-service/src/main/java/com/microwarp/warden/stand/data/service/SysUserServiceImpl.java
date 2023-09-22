@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.microwarp.warden.stand.common.core.cache.ICacheService;
+import com.microwarp.warden.stand.common.core.constant.CacheConstants;
 import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
 import com.microwarp.warden.stand.common.core.pageing.PageInfo;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
@@ -76,7 +77,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
      * @return
      */
     @Override
-    @Cacheable(value = "sysUserDetailsId", key="#id", unless = "#result eq null")
+    @Cacheable(value = CacheConstants.CACHE_USER_ID, key="#id", unless = "#result eq null")
     public SysUserDetailsDTO findDetailsById(Long id){
         SysUserDTO sysUserDTO = findById(id);
         return findDetailsByUserDTO(sysUserDTO);
@@ -88,7 +89,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
      * @return
      */
     @Override
-    @Cacheable(value = "sysUserDetailsUid", key="#uid", unless = "#result eq null")
+    @Cacheable(value = CacheConstants.CACHE_USER_UID, key="#uid", unless = "#result eq null")
     public SysUserDetailsDTO findDetailsByUid(String uid){
         SysUserDTO sysUserDTO = findByUid(uid);
         return findDetailsByUserDTO(sysUserDTO);
@@ -138,8 +139,8 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     @Override
     @Caching(
             put = {
-                    @CachePut(value ="sysUserDetailsId",key="#sysUserDTO.id", unless = "#sysUserDTO.id eq null"),
-                    @CachePut(value ="sysUserDetailsUid",key="#result.uid", unless = "#result eq null")
+                    @CachePut(value = CacheConstants.CACHE_USER_ID,key="#sysUserDTO.id", unless = "#sysUserDTO.id eq null"),
+                    @CachePut(value = CacheConstants.CACHE_USER_UID,key="#result.uid", unless = "#result eq null")
             }
     )
     @Transactional
@@ -163,7 +164,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
      */
     @Override
     @Transactional
-    @CacheEvict(value = "sysUserDetailsId", key = "#sysUserPasswordDTO.userId")
+    @CacheEvict(value = CacheConstants.CACHE_USER_ID, key = "#sysUserPasswordDTO.userId")
     public void updatePassowrd(SysUserPasswordDTO sysUserPasswordDTO){
         if(null == sysUserPasswordDTO.getUserId()){
             throw new WardenRequireParamterException();
@@ -177,7 +178,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
         // 因为还有以uid为key的缓存，所在要手动清理一下
         SysUser user = sysUserDao.getById(sysUserPasswordDTO.getUserId());
         if(null != user){
-            iCacheService.batchRemove("sysUserDetailsUid", user.getUid());
+            iCacheService.batchRemove(CacheConstants.CACHE_USER_UID, user.getUid());
         }
     }
 
@@ -240,15 +241,16 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
      */
     @Override
     @Transactional
-    @CacheEvict(value = "sysUserDetailsId", key = "#userId")
+    @CacheEvict(value = CacheConstants.CACHE_USER_ID, key = "#userId")
     public void delete(Long userId){
         // 因为还有以uid为key的缓存，所在要手动清理一下
         SysUser sysUser = sysUserDao.getById(userId);
         if(null != sysUser){
-            iCacheService.batchRemove("sysUserDetailsUid", sysUser.getUid());
+            iCacheService.batchRemove(CacheConstants.CACHE_USER_UID, sysUser.getUid());
         }
         sysUserDao.removeById(userId);
         sysRoleDao.deleteRoleByUserId(userId);
+
     }
 
     /**
@@ -258,12 +260,12 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     @Override
     public void clearCache(Long userId){
         if(null == userId){
-            iCacheService.batchRemove("sysUserDetailsUid", null);
-            iCacheService.batchRemove("sysUserDetailsId", null);
+            iCacheService.batchRemove(CacheConstants.CACHE_USER_UID, null);
+            iCacheService.batchRemove(CacheConstants.CACHE_USER_ID, null);
         }else{
             SysUser sysUser = sysUserDao.getById(userId);
-            iCacheService.batchRemove("sysUserDetailsUid", sysUser.getUid());
-            iCacheService.batchRemove("sysUserDetailsId", userId.toString());
+            iCacheService.batchRemove(CacheConstants.CACHE_USER_UID, sysUser.getUid());
+            iCacheService.batchRemove(CacheConstants.CACHE_USER_ID, userId.toString());
         }
     }
 
