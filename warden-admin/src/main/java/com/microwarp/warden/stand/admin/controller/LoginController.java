@@ -7,6 +7,7 @@ import com.microwarp.warden.stand.admin.service.CaptchaService;
 import com.microwarp.warden.stand.admin.service.LoginService;
 import com.microwarp.warden.stand.admin.service.SseService;
 import com.microwarp.warden.stand.admin.service.TokenCacheService;
+import com.microwarp.warden.stand.admin.utils.SecurityUtil;
 import com.microwarp.warden.stand.admin.utils.TokenUtil;
 import com.microwarp.warden.stand.common.core.config.WardenGlobalConfig;
 import com.microwarp.warden.stand.common.core.constant.SecurityConstants;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -157,9 +159,23 @@ public class LoginController extends BaseController {
         return resultModel;
     }
 
+    /**
+     * 退出登录
+     * @return
+     */
     @RequestMapping("/logout")
-    public SysUserDTO logout(Long id){
-        return sysUserService.findById(id);
+    public ResultModel logout(HttpServletRequest request){
+        String ip = WebUtil.getIpAddr();
+        JwtUser jwtUser = getJwtUser();
+        String token = request.getHeader(wardenGlobalConfig.getTokenKeyName());
+        if(null != jwtUser && StringUtils.isNotBlank(token)) {
+            // 清除缓存
+            tokenCacheService.remove(jwtUser,token);
+            // 清除登录失败计数
+            loginService.success(Long.parseLong(jwtUser.getUserId()), ip);
+        }
+        return ResultModel.success();
+
     }
 
 }

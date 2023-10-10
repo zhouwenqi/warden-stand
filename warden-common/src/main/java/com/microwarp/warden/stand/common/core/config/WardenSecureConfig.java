@@ -2,7 +2,9 @@ package com.microwarp.warden.stand.common.core.config;
 
 import com.microwarp.warden.stand.common.utils.AesUtil;
 import com.microwarp.warden.stand.common.utils.DesUitl;
+import com.microwarp.warden.stand.common.utils.JwtUtil;
 import com.microwarp.warden.stand.common.utils.RsaUtil;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,6 +26,8 @@ public class WardenSecureConfig {
     private String desKey;
     /** Des张量 */
     private String desIv;
+
+    private String jwtSignature = "aes";
 
     public String getRsaPublicKey() {
         return rsaPublicKey;
@@ -68,5 +72,21 @@ public class WardenSecureConfig {
     public void setDesIv(String desIv) {
         this.desIv = desIv;
         DesUitl.DEFAULT_IV = desIv;
+    }
+
+    public String getJwtSignature() {
+        return jwtSignature;
+    }
+
+    public void setJwtSignature(String jwtSignature) {
+        this.jwtSignature = jwtSignature;
+        switch (jwtSignature.toLowerCase()){
+            case "aes":
+                JwtUtil.DEFAULT_SIGN_ALGORITHM = SignatureAlgorithm.HS256;
+                break;
+            case "rsa":
+                JwtUtil.DEFAULT_SIGN_ALGORITHM = SignatureAlgorithm.RS256;
+                break;
+        }
     }
 }

@@ -121,7 +121,7 @@ public class PostController extends BaseController {
     }
 
     /**
-     * 查询所有部门信息
+     * 查询所有岗位信息
      * @return
      */
     @GetMapping("/posts")

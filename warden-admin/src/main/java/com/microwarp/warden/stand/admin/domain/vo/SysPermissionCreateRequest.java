@@ -14,6 +14,10 @@ public class SysPermissionCreateRequest {
     @NotBlank(message = "权限值不能为空")
     @Pattern(regexp = "^[a-zA-Z0-9_:]{6,50}",message = "权限值只能是a-zA-Z0-9_:等6-50位字符")
     private String value;
+    /** 父级权限ID */
+    @Min(value = 0,message = "上级权限ID错误")
+    @Max(value = Long.MAX_VALUE,message = "上级权限ID错误")
+    private Long parentId;
     /** 排序值 */
     @Max(value = Long.MAX_VALUE, message = "排序值过大")
     @Min(value = 0, message = "排序值最小是0")
@@ -33,6 +37,14 @@ public class SysPermissionCreateRequest {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
     public Long getOrders() {

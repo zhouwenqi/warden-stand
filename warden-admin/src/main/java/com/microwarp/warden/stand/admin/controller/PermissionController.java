@@ -3,6 +3,7 @@ package com.microwarp.warden.stand.admin.controller;
 import com.microwarp.warden.stand.admin.domain.SortRequest;
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysPermissionMapstruct;
 import com.microwarp.warden.stand.admin.domain.vo.SysPermissionCreateRequest;
+import com.microwarp.warden.stand.admin.domain.vo.SysPermissionTreeVO;
 import com.microwarp.warden.stand.admin.domain.vo.SysPermissionUpdateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysPermissionVO;
 import com.microwarp.warden.stand.admin.service.ExcelExportService;
@@ -15,6 +16,7 @@ import com.microwarp.warden.stand.common.core.pageing.SearchPageable;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
 import com.microwarp.warden.stand.common.model.ResultModel;
 import com.microwarp.warden.stand.facade.syspermission.dto.SysPermissionDTO;
+import com.microwarp.warden.stand.facade.syspermission.dto.SysPermissionTreeDTO;
 import com.microwarp.warden.stand.facade.syspermission.service.SysPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -102,6 +104,19 @@ public class PermissionController extends BaseController {
         return ResultModel.success();
     }
 
+
+    /**
+     * 权限项拖拽排序
+     * @param sortRequest 排序参数
+     * @return
+     */
+    @PutMapping("/permissions/sort")
+    @PreAuthorize("hasAuthority('permission:modify')")
+    public ResultModel sort(@Validated @RequestBody SortRequest sortRequest){
+        sysPermissionService.dragAndSort(sortRequest);
+        return ResultModel.success();
+    }
+
     /**
      * 查询所有权限
      * @return
@@ -116,16 +131,18 @@ public class PermissionController extends BaseController {
     }
 
     /**
-     * 权限项拖拽排序
-     * @param sortRequest 排序参数
-     * @return
+     * 获取所有权限树
+     * @return 权限树
      */
-    @PutMapping("/permissions/sort")
-    @PreAuthorize("hasAuthority('permission:modify')")
-    public ResultModel sort(@Validated @RequestBody SortRequest sortRequest){
-        sysPermissionService.dragAndSort(sortRequest);
-        return ResultModel.success();
+    @GetMapping("/permissions/tree")
+    @PreAuthorize("hasAuthority('permission:view')")
+    public ResultModel tree(){
+        ResultModel resultModel = ResultModel.success();
+        List<SysPermissionTreeDTO> list = sysPermissionService.findTrees();
+        resultModel.addData("list",SysPermissionMapstruct.Instance.sysPermissionTreeDtosToSysPermissionTreeVOs(list));
+        return resultModel;
     }
+
 
     /**
      * 权限页分查询

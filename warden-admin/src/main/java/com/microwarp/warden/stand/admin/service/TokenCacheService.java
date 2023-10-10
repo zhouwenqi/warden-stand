@@ -5,10 +5,12 @@ import com.microwarp.warden.stand.admin.utils.TokenUtil;
 import com.microwarp.warden.stand.common.core.cache.ICacheService;
 import com.microwarp.warden.stand.common.core.constant.CacheConstants;
 import com.microwarp.warden.stand.common.security.JwtUser;
+import com.microwarp.warden.stand.common.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -31,7 +33,14 @@ public class TokenCacheService  {
     public List<String> getTokens(JwtUser jwtUser){
         String key = getCacheKey(jwtUser);
         List<String> list = iCacheService.get(CacheConstants.CACHE_TOKENS,key);
-        return null == list ? new ArrayList() : list;
+        if(null == list){
+            return new ArrayList<>();
+        }
+        boolean expireItem = checkTokens(list);
+        if(expireItem){
+            iCacheService.save(CacheConstants.CACHE_TOKENS,key,list);
+        }
+        return list;
     }
 
     /**
@@ -92,6 +101,37 @@ public class TokenCacheService  {
         List<String> tokens = getTokens(tokenUser);
         tokens.add(token);
         set(tokenUser,tokens);
+    }
+
+    /**
+     * 检查是否有过期的token
+     * 并从列表中移除
+     * @param tokens token列表
+     * @return
+     */
+    public boolean checkTokens(List<String> tokens){
+        boolean expire = false;
+        Iterator<String> iterator = tokens.iterator();
+        while (iterator.hasNext()){
+            String token = iterator.next();
+            JwtUser jwtUser = TokenUtil.parse(token);
+            if(null == jwtUser){
+                iterator.remove();
+                expire = true;
+            }
+        }
+        return expire;
+    }
+
+    /**
+     * 移除一个token
+     * @param jwtUser 用户信息
+     * @param token 用户token
+     */
+    public void remove(JwtUser jwtUser, String token){
+        List<String> tokens = getTokens(jwtUser);
+        tokens.remove(token);
+        set(jwtUser,tokens);
     }
 
     /**

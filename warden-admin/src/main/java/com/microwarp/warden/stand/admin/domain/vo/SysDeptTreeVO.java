@@ -14,6 +14,8 @@ public class SysDeptTreeVO {
     private String phone;
     /** 部门编号 */
     private String code;
+    /** 上级部门ID */
+    private Long parentId;
     /** 负责人id */
     private Long leaderId;
     /** 下级部门 */
@@ -59,6 +61,14 @@ public class SysDeptTreeVO {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
     public Long getLeaderId() {

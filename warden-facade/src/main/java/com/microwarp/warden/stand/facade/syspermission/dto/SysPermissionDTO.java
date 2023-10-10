@@ -13,6 +13,10 @@ public class SysPermissionDTO implements Serializable {
     private String name;
     /** 权限值 */
     private String value;
+    /** 父级权限ID */
+    private Long parentId;
+    /** 父级权限 */
+    private SysPermissionDTO parentPermission;
     /** 排序值 */
     private Long orders;
     /** 创建时间 */
@@ -42,6 +46,22 @@ public class SysPermissionDTO implements Serializable {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public SysPermissionDTO getParentPermission() {
+        return parentPermission;
+    }
+
+    public void setParentPermission(SysPermissionDTO parentPermission) {
+        this.parentPermission = parentPermission;
     }
 
     public Long getOrders() {

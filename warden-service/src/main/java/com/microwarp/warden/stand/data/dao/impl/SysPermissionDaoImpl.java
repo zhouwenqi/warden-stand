@@ -8,6 +8,7 @@ import com.microwarp.warden.stand.data.dao.SysPermissionDao;
 import com.microwarp.warden.stand.data.entity.SysPermission;
 import com.microwarp.warden.stand.data.mapper.SysPermissionMapper;
 import com.microwarp.warden.stand.facade.syspermission.dto.SysPermissionDTO;
+import com.microwarp.warden.stand.facade.syspermission.dto.SysPermissionTreeDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -18,6 +19,29 @@ import java.util.*;
  */
 @Repository
 public class SysPermissionDaoImpl extends ServiceImpl<SysPermissionMapper,SysPermission> implements SysPermissionDao {
+    /**
+     * 查询权限信息
+     * @param id 权限ID
+     * @return 权限信息
+     */
+    public SysPermissionDTO findById(Long id){
+        SysPermission sysPermission = baseMapper.selectById(id);
+        return null == sysPermission ? null : SysPermissionConvert.Instance.sysPermissionToSysPermissionDTO(sysPermission);
+    }
+
+    /**
+     * 获取子权限列表
+     * @param parentId 父级权限ID
+     * @return 权限列表
+     */
+    public List<SysPermissionTreeDTO> findByParentId(Long parentId){
+        QueryWrapper<SysPermission> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("parent_id",parentId);
+        queryWrapper.orderByAsc("orders");
+        List<SysPermission> list = baseMapper.selectList(queryWrapper);
+        return null == list ? new ArrayList<>() : SysPermissionConvert.Instance.sysPermissionsToSysPermissionTreeDTOs(list);
+    }
+
     /**
      * 查询所有权限
      * @return

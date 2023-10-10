@@ -1,11 +1,15 @@
-package com.microwarp.warden.stand.admin.domain.vo;
+package com.microwarp.warden.stand.facade.syspermission.dto;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
- * vo - 权限 - response
+ * dto - 权限树
+ * @author zhouwenqi
  */
-public class SysPermissionVO {
+public class SysPermissionTreeDTO implements Serializable {
+    private static final long serialVersionUID = -3226893010613379382L;
     private Long id;
     /** 权限名称 */
     private String name;
@@ -13,8 +17,8 @@ public class SysPermissionVO {
     private String value;
     /** 父级权限ID */
     private Long parentId;
-    /** 父级权限 */
-    private SysPermissionVO parentPermission;
+    /** 子权限列表 */
+    private List<SysPermissionTreeDTO> children;
     /** 排序值 */
     private Long orders;
     /** 创建时间 */
@@ -54,12 +58,12 @@ public class SysPermissionVO {
         this.parentId = parentId;
     }
 
-    public SysPermissionVO getParentPermission() {
-        return parentPermission;
+    public List<SysPermissionTreeDTO> getChildren() {
+        return children;
     }
 
-    public void setParentPermission(SysPermissionVO parentPermission) {
-        this.parentPermission = parentPermission;
+    public void setChildren(List<SysPermissionTreeDTO> children) {
+        this.children = children;
     }
 
     public Long getOrders() {

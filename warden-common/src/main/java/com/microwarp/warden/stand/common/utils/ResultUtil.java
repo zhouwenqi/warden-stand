@@ -3,7 +3,8 @@ package com.microwarp.warden.stand.common.utils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Created by Administrator on 2023/7/7.
+ * 判断当前response状态码包装类型
+ * @author zhouwenqi
  */
 public class ResultUtil {
     public static boolean ResponseForeverOk = false;

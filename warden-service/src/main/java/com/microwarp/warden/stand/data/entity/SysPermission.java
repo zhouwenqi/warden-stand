@@ -13,6 +13,8 @@ public class SysPermission extends BaseEntity {
     private String name;
     /** 权限值 */
     private String value;
+    /** 父级权限ID */
+    private Long parentId;
     /** 排序值 */
     private Long orders;
 
@@ -30,6 +32,14 @@ public class SysPermission extends BaseEntity {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
     public Long getOrders() {

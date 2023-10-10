@@ -109,6 +109,9 @@ public class MessageController extends BaseController {
     @PostMapping("/messages/search")
     public ResultModel search(@RequestBody SearchPageable<SysMessageSearchDTO> searchPageable){
         JwtUser jwtUser = getJwtUser();
+        if(null == searchPageable.getFilters()){
+            searchPageable.setFilters(new SysMessageSearchDTO());
+        }
         searchPageable.getFilters().setToId(Long.parseLong(jwtUser.getUserId()));
         searchPageable.getFilters().setToPlatform(JwtUtil.convertToPlatform(jwtUser.getType()));
         ResultPage<SysMessageDTO> resultPage = sysMessageService.findPage(searchPageable);

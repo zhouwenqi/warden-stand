@@ -38,7 +38,7 @@ public class ConfigController {
         return resultModel;
     }
     /**
-     * 获取系统配置
+     * 更新系统配置
      * @return
      */
     @PatchMapping("system")

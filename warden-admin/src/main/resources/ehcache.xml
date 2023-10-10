@@ -64,6 +64,10 @@
         <key-type>java.lang.String</key-type>
         <value-type>java.util.List</value-type>
     </cache>
+    <cache alias="permissionData" uses-template="sys-template">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.util.List</value-type>
+    </cache>
     <cache alias="sysConfig" uses-template="sys-template">
         <key-type>java.lang.String</key-type>
         <value-type>com.microwarp.warden.stand.facade.sysconfig.dto.SysConfigDTO</value-type>

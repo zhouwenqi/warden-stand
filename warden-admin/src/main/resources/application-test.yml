@@ -40,8 +40,9 @@ warden:
   global:
     result-model-package: true
     response-forever-ok: false
-    enable-register: true
     enable-captcha: true
+  logs:
+    path: 'f:/logs/warden-stand'
   admin:
     face-upload-dir: 'f:/warden/face/'
     face-uri: '/face/'

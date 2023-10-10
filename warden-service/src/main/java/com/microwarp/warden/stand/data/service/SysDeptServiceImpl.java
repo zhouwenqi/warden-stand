@@ -64,7 +64,7 @@ public class SysDeptServiceImpl implements SysDeptService {
      * @return
      */
     @Override
-    public SysDeptTreeDTO findChildsById(Long id){
+    public SysDeptTreeDTO findChildrenById(Long id){
         SysDept sysDept = sysDeptDao.getById(id);
         if(null == sysDept){
             return null;
@@ -99,7 +99,7 @@ public class SysDeptServiceImpl implements SysDeptService {
      */
     @Transactional
     @Override
-    @CacheEvict(value = "deptData",allEntries = true)
+    @CacheEvict(value = CacheConstants.CACHE_DEPT_TREE, allEntries = true)
     public void update(SysDeptDTO sysDeptDTO){
         QueryWrapper<SysDept> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("name",sysDeptDTO.getName());
@@ -119,7 +119,7 @@ public class SysDeptServiceImpl implements SysDeptService {
      */
     @Transactional
     @Override
-    @CacheEvict(value = "deptData",allEntries = true)
+    @CacheEvict(value = CacheConstants.CACHE_DEPT_TREE, allEntries = true)
     public void dragAndSort(BaseSortDTO baseSortDTO){
         if(null != baseSortDTO.getParentId() && null != baseSortDTO.getDragId()){
             SysDept sysDept = new SysDept();
@@ -191,7 +191,7 @@ public class SysDeptServiceImpl implements SysDeptService {
     /**
      * 递归获取所有部门ID
      * @param ids 下级部门ID列表
-     * @param deptIds 门部ID平铺列表
+     * @param deptIds 部门ID平铺列表
      * @return
      */
     @Override

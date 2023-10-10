@@ -27,7 +27,7 @@ public interface SysDeptService {
      * @param id
      * @return
      */
-    SysDeptTreeDTO findChildsById(Long id);
+    SysDeptTreeDTO findChildrenById(Long id);
 
     /**
      * 获取部门树型结构
@@ -60,7 +60,7 @@ public interface SysDeptService {
     /**
      * 递归获取所有部门ID
      * @param ids 下级部门ID列表
-     * @param deptIds 门部ID平铺列表
+     * @param deptIds 部门ID平铺列表
      * @return
      */
     void recursionIds(List<Long> ids,List<Long> deptIds);

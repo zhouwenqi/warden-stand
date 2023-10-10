@@ -1,26 +1,28 @@
 package com.microwarp.warden.stand.admin.domain.vo;
 
-import javax.validation.constraints.*;
+import java.util.Date;
+import java.util.List;
 
 /**
- * vo - 更新权限信息 - request
+ * vo - 权限树 - response
+ * @author zhouwenqi
  */
-public class SysPermissionUpdateRequest {
-    @NotNull(message = "权限ID不能为空")
+public class SysPermissionTreeVO {
     private Long id;
     /** 权限名称 */
-    @Pattern(regexp = "^[0-9a-zA-Z\\u4e00-\\u9fa5]{4,40}",message = "权限名只能是4-40个中文或数字或英文字符")
     private String name;
     /** 权限值 */
-    @Pattern(regexp = "^[a-zA-Z0-9_:]{6,50}",message = "权限值只能是a-zA-Z0-9_:等6-50位字符")
     private String value;
-    @Min(value = 0,message = "上级权限ID错误")
-    @Max(value = Long.MAX_VALUE,message = "上级权限ID错误")
+    /** 父级权限ID */
     private Long parentId;
+    /** 子级权限 */
+    private List<SysPermissionTreeVO> children;
     /** 排序值 */
-    @Max(value = Long.MAX_VALUE, message = "排序值过大")
-    @Min(value = 0, message = "排序值最小是0")
     private Long orders;
+    /** 创建时间 */
+    private Date createDate;
+    /** 修改时间 */
+    private Date updateDate;
 
     public Long getId() {
         return id;
@@ -54,11 +56,35 @@ public class SysPermissionUpdateRequest {
         this.parentId = parentId;
     }
 
+    public List<SysPermissionTreeVO> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<SysPermissionTreeVO> children) {
+        this.children = children;
+    }
+
     public Long getOrders() {
         return orders;
     }
 
     public void setOrders(Long orders) {
         this.orders = orders;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 }

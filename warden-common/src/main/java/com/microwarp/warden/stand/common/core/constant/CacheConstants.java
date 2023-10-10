@@ -15,8 +15,10 @@ public class CacheConstants {
     public static final String CACHE_CAPTCHA = "captcha";
     /** 校验重复数据缓存名 */
     public static final String CACHE_REPEAT = "repeatData";
-    /** 部门缓存名 */
+    /** 部门树缓存名 */
     public static final String CACHE_DEPT_TREE = "deptData";
+    /** 权限树缓存名 */
+    public static final String CACHE_PERMISSION_TREE = "permissionData";
     /** 当前系统配置缓存名 */
     public static final String CACHE_CONFIG_CURRENT = "sysConfig";
     /** 当前Token缓存名 */

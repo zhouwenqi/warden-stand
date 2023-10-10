@@ -26,9 +26,6 @@ public class WardenGlobalConfig {
      */
     private Boolean resultModelPackage = true;
 
-    /** 开启注册功能 */
-    private Boolean enableRegister = false;
-
     /** 启用验证码 */
     private Boolean enableCaptcha = false;
 
@@ -66,14 +63,6 @@ public class WardenGlobalConfig {
 
     public void setTokenEffectiveHour(int tokenEffectiveHour) {
         this.tokenEffectiveHour = tokenEffectiveHour;
-    }
-
-    public Boolean getEnableRegister() {
-        return enableRegister;
-    }
-
-    public void setEnableRegister(Boolean enableRegister) {
-        this.enableRegister = enableRegister;
     }
 
     public Boolean getEnableCaptcha() {

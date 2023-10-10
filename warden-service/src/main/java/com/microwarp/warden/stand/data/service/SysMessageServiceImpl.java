@@ -163,7 +163,7 @@ public class SysMessageServiceImpl extends BaseServiceImpl<SysMessage> implement
             }
 
             if(null != searchDTO.getMsgType() && searchDTO.getMsgType().length > 0) {
-                queryWrapper.and(true, wrapper -> wrapper.in("message_type", Arrays.asList(searchDTO.getMsgType())));
+                queryWrapper.and(true, wrapper -> wrapper.in("msg_type", Arrays.asList(searchDTO.getMsgType())));
             }
 
             if(null != searchDTO.getReading()){

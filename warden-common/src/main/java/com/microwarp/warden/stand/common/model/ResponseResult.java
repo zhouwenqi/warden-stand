@@ -15,10 +15,10 @@ public class ResponseResult {
         response.resetBuffer();
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
-//        response.setHeader("Access-Control-Allow-Origin","*");
-//        response.setHeader("Access-Control-Allow-Headers","*");
-//        response.setHeader("Access-Control-Allow-Methods","*");
-//        response.setHeader("Access-Control-Allow-Credentials","true");
+        response.setHeader("Access-Control-Allow-Origin","*");
+        response.setHeader("Access-Control-Allow-Headers","*");
+        response.setHeader("Access-Control-Allow-Methods","*");
+        response.setHeader("Access-Control-Allow-Credentials","true");
         int statusCode = foreverOk ? HttpStatus.OK.value() : resultModel.getCode();
         response.setStatus(statusCode);
         String data = JsonUtil.objectToJson(resultModel);
