@@ -63,7 +63,7 @@ public class OperationLogController extends BaseController {
      */
     @PostMapping("/operationLogs/search")
     @PreAuthorize("hasAuthority('operatoin:log:view')")
-    public ResultModel search(SearchPageable<SysOperationLogSearchDTO> searchPageable){
+    public ResultModel search(@RequestBody SearchPageable<SysOperationLogSearchDTO> searchPageable){
         ResultModel resultModel = ResultModel.success();
         ResultPage<SysOperationLogDTO> page = sysOperationLogService.findPage(searchPageable);
         resultModel.addData("list", SysOperationLogMapstruct.Instance.sysOperationLogDtosToSysOperationLogVOs(page.getList()));
