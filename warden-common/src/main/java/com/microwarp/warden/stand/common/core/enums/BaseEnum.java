@@ -10,7 +10,6 @@ import java.lang.reflect.Field;
  */
 public interface BaseEnum {
     String TAG_NAME="tag";
-    String VALUE_NAME ="name";
     String INDEX_NAME="code";
     default String getTag(){
         Field field = ReflectionUtil.findField(this.getClass(),TAG_NAME);
@@ -32,18 +31,6 @@ public interface BaseEnum {
         try{
             field.setAccessible(true);
             return Integer.parseInt(field.get(this).toString());
-        }catch (IllegalAccessException e){
-            throw new RuntimeException(e);
-        }
-    }
-    default String getName(){
-        Field field = ReflectionUtil.findField(this.getClass(),VALUE_NAME);
-        if(null == field){
-            return null;
-        }
-        try{
-            field.setAccessible(true);
-            return field.get(this).toString();
         }catch (IllegalAccessException e){
             throw new RuntimeException(e);
         }
