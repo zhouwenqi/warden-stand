@@ -191,6 +191,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
         if(null == sysUserDTO){
             return null;
         }
+
         SysUserDetailsDTO sysUserDetailsDTO = SysUserConvert.Instance.sysUserDtoToUserDetailsDTO(sysUserDTO);
         Set<SysRoleDTO> roleDTOS = new HashSet<>(sysRoleDao.findByUserId(sysUserDTO.getId()));
         Long[] roleIds = roleDTOS.stream().map(SysRoleDTO::getId).toArray(Long[]::new);

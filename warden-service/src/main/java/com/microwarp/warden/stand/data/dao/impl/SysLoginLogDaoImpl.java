@@ -26,7 +26,7 @@ public class SysLoginLogDaoImpl extends ServiceImpl<SysLoginLogMapper,SysLoginLo
             return null;
         }
         SysLoginLog sysLoginLog = baseMapper.selectById(id);
-        return null == sysLoginLog ? null : SysLoginLogConvert.Instance.sysLoginLogToSysOperationLogDTO(sysLoginLog);
+        return null == sysLoginLog ? null : SysLoginLogConvert.Instance.sysLoginLogToSysLoginLogDTO(sysLoginLog);
     }
 
     /**

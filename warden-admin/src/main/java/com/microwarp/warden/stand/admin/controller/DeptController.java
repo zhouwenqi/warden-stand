@@ -4,19 +4,14 @@ import com.microwarp.warden.stand.admin.domain.SortRequest;
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysDeptMapstruct;
 import com.microwarp.warden.stand.admin.domain.vo.SysDeptCreateRequest;
 import com.microwarp.warden.stand.admin.domain.vo.SysDeptUpdateRequest;
-import com.microwarp.warden.stand.admin.service.LogService;
-import com.microwarp.warden.stand.admin.utils.SecurityUtil;
 import com.microwarp.warden.stand.common.core.annotation.RepeatRequestCheck;
 import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
-import com.microwarp.warden.stand.common.core.enums.AppTerminalEnum;
 import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
-import com.microwarp.warden.stand.common.core.enums.PlatformTypeEnum;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.common.core.pageing.SearchPageable;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
 import com.microwarp.warden.stand.common.exception.WardenRequireParamterException;
 import com.microwarp.warden.stand.common.model.ResultModel;
-import com.microwarp.warden.stand.common.utils.WebUtil;
 import com.microwarp.warden.stand.facade.sysdept.dto.SysDeptDTO;
 import com.microwarp.warden.stand.facade.sysdept.dto.SysDeptSearchDTO;
 import com.microwarp.warden.stand.facade.sysdept.dto.SysDeptTreeDTO;
@@ -26,8 +21,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
