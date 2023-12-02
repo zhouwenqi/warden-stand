@@ -49,7 +49,7 @@ public class SysPostServiceImpl extends BaseServiceImpl<SysPost> implements SysP
     /**
      * 创建岗位信息
      * @param sysPostDTO 岗位信息
-     * @return
+     * @return 岗位信息
      */
     @Override
     @Transactional

@@ -40,7 +40,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
 
     /**
      * 查询所有权限
-     * @return
+     * @return 权限信息
      */
     @Override
     public List<SysPermissionDTO> findAll(){
@@ -210,7 +210,6 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
      * 递归获取所有权限ID
      * @param ids 下级权限ID列表
      * @param permissionIds 权限ID平铺列表
-     * @return
      */
     @Override
     public void recursionIds(List<Long> ids,List<Long> permissionIds){
@@ -231,7 +230,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
     /**
      * 根据权限id查询权限列表
      * @param ids 权限值
-     * @return
+     * @return 权限列表
      */
     @Override
     public List<SysPermissionDTO> findByIds(Long... ids){
@@ -253,7 +252,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
     /**
      * 分页查询权限信息
      * @param iSearchPageable 查询条件
-     * @return
+     * @return 权限列表
      */
     @Override
     public ResultPage<SysPermissionDTO> findPage(ISearchPageable<BasicSearchDTO> iSearchPageable){

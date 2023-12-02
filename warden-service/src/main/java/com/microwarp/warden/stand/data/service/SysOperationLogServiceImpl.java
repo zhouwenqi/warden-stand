@@ -30,7 +30,7 @@ public class SysOperationLogServiceImpl extends BaseServiceImpl<SysOperationLog>
     /**
      * 查询操作日志信息
      * @param id 日志id
-     * @return
+     * @return 日志信息
      */
     public SysOperationLogDTO findById(Long id){
         return sysOperationLogDao.findById(id);
@@ -63,7 +63,7 @@ public class SysOperationLogServiceImpl extends BaseServiceImpl<SysOperationLog>
     /**
      * 分页查询操作日志
      * @param iSearchPageable 查询条件
-     * @return
+     * @return 日志列表
      */
     public ResultPage<SysOperationLogDTO> findPage(ISearchPageable<SysOperationLogSearchDTO> iSearchPageable){
         QueryWrapper<SysOperationLog> queryWrapper = new QueryWrapper<>();

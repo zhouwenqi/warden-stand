@@ -42,7 +42,7 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
     /**
      * 查询字典数据
      * @param id 字典数据id
-     * @return
+     * @return 字典数据
      */
     public SysDictionaryDataDTO findById(Long id){
         return sysDictionaryDataDao.findById(id);
@@ -51,7 +51,7 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
     /**
      * 创建字典数据
      * @param sysDictionaryDataDTO 字典数据
-     * @return
+     * @return 字典数据
      */
     public SysDictionaryDataDTO create(SysDictionaryDataDTO sysDictionaryDataDTO){
         QueryWrapper<SysDictionaryData> queryWrapper = new QueryWrapper<>();
@@ -138,7 +138,7 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
     /**
      * 获取字典数据列表
      * @param dictId 字典id
-     * @return
+     * @return 字典数据列表
      */
     public List<SysDictionaryDataDTO> findByDictId(Long dictId){
         QueryWrapper<SysDictionaryData> queryWrapper = new QueryWrapper<>();
@@ -151,7 +151,7 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
     /**
      * 查询字典数据(过滤禁用数据)
      * @param code 字典编码
-     * @return
+     * @return 字典数据列表
      */
     @Cacheable(value = CacheConstants.CACHE_DICT_DATAS, key="#code", unless = "#result.size() < 1")
     public List<SysDictionaryDataDTO> findByDictCode(String code){

@@ -30,7 +30,7 @@ public class SysLoginLogServiceImpl extends BaseServiceImpl<SysLoginLog> impleme
     /**
      * 查询登录日志信息
      * @param id 日志id
-     * @return
+     * @return 日志信息
      */
     public SysLoginLogDTO findById(Long id){
         return sysLoginLogDao.findById(id);
@@ -63,7 +63,7 @@ public class SysLoginLogServiceImpl extends BaseServiceImpl<SysLoginLog> impleme
     /**
      * 分页查询登录日志
      * @param iSearchPageable 查询条件
-     * @return
+     * @return 日志列表
      */
     public ResultPage<SysLoginLogDTO> findPage(ISearchPageable<SysLoginLogSearchDTO> iSearchPageable){
         QueryWrapper<SysLoginLog> queryWrapper = new QueryWrapper<>();

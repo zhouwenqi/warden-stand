@@ -181,7 +181,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
     /**
      * 分页查询角色列表
      * @param iSearchPageable 查询条件
-     * @return
+     * @return 角色列表
      */
     @Override
     public ResultPage<SysRoleDTO> findPage(ISearchPageable<BasicSearchDTO> iSearchPageable){

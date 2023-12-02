@@ -54,7 +54,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     /**
      * 查询用户基本信息
      * @param id  用户id
-     * @return
+     * @return 用户信息
      */
     @Override
     public SysUserDTO findById(Long id){
@@ -64,7 +64,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     /**
      * 查询用户基本信息
      * @param uid  用户名(帐号)
-     * @return
+     * @return 用户信息
      */
     @Override
     public SysUserDTO findByUid(String uid){
@@ -74,7 +74,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     /**
      * 查询用户详情
      * @param id 用户ID
-     * @return
+     * @return 用户信息
      */
     @Override
     @Cacheable(value = CacheConstants.CACHE_USER_ID, key="#id", unless = "#result eq null")
@@ -86,7 +86,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     /**
      * 查询用户详情
      * @param uid 用户名(帐号)
-     * @return
+     * @return 用户信息
      */
     @Override
     @Cacheable(value = CacheConstants.CACHE_USER_UID, key="#uid", unless = "#result eq null")
@@ -98,7 +98,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     /**
      * 插入系统用户
      * @param sysUserDTO 用户信息
-     * @return
+     * @return 用户信息
      */
     @Override
     @Transactional
@@ -120,7 +120,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     /**
      * 创建系统用户
      * @param sysUserRequestDTO 用户信息
-     * @return
+     * @return 用户信息
      */
     @Override
     @Transactional
@@ -185,7 +185,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     /**
      * 根据DTO用户信息查询用户详情
      * @param sysUserDTO 用户信息
-     * @return
+     * @return 用户信息
      */
     private SysUserDetailsDTO findDetailsByUserDTO(SysUserDTO sysUserDTO){
         if(null == sysUserDTO){
@@ -206,7 +206,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     /**
      * 分页查询用户列表信息
      * @param iSearchPageable 查询参数
-     * @return
+     * @return 用户列表
      */
     @Override
     public ResultPage<SysUserDTO> findPage(ISearchPageable<SysUserSearchDTO> iSearchPageable){

@@ -30,7 +30,7 @@ public class SysNoticeServiceImpl extends BaseServiceImpl<SysNotice> implements 
     /**
      * 查询公告信息
      * @param id 公告ID
-     * @return
+     * @return 公告信息
      */
     @Override
     public SysNoticeDTO findById(Long id){
@@ -41,7 +41,7 @@ public class SysNoticeServiceImpl extends BaseServiceImpl<SysNotice> implements 
     /**
      * 创建系统公告
      * @param sysNoticeDTO 公告内容
-     * @return
+     * @return 公告信息
      */
     @Override
     public SysNoticeDTO create(SysNoticeDTO sysNoticeDTO) {
@@ -74,7 +74,7 @@ public class SysNoticeServiceImpl extends BaseServiceImpl<SysNotice> implements 
     /**
      * 分页查询系统公告
      * @param iSearchPageable 查询条件
-     * @return
+     * @return 公告列表
      */
     @Override
     public ResultPage<SysNoticeDTO> findPage(ISearchPageable<BasicSearchDTO> iSearchPageable){

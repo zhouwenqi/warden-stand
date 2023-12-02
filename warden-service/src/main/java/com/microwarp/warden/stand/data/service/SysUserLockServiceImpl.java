@@ -34,7 +34,7 @@ public class SysUserLockServiceImpl implements SysUserLockService {
     /**
      * 统计当前ip锁记录数
      * @param ip ip地址
-     * @return
+     * @return 锁记录
      */
     @Override
     public long totalByIp(String ip){

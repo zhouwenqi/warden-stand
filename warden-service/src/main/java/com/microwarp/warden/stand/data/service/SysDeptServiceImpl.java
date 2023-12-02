@@ -49,7 +49,7 @@ public class SysDeptServiceImpl implements SysDeptService {
     /**
      * 查询部门信息(含上级部门信息)
      * @param id 部门id
-     * @return
+     * @return 部门信息
      */
     @Override
     public SysDeptDTO findById(Long id){
@@ -60,8 +60,8 @@ public class SysDeptServiceImpl implements SysDeptService {
 
     /**
      * 获取部门信息(含子部门列表)
-     * @param id
-     * @return
+     * @param id 部门id
+     * @return 商门信息
      */
     @Override
     public SysDeptTreeDTO findChildrenById(Long id){
@@ -77,7 +77,7 @@ public class SysDeptServiceImpl implements SysDeptService {
     /**
      * 创建部门
      * @param sysDeptDTO 部门信息
-     * @return
+     * @return 部门信息
      */
     @Override
     @Transactional
@@ -192,7 +192,6 @@ public class SysDeptServiceImpl implements SysDeptService {
      * 递归获取所有部门ID
      * @param ids 下级部门ID列表
      * @param deptIds 部门ID平铺列表
-     * @return
      */
     @Override
     public void recursionIds(List<Long> ids,List<Long> deptIds){
@@ -225,7 +224,7 @@ public class SysDeptServiceImpl implements SysDeptService {
     /**
      * 分页查询部门信息
      * @param iSearchPageable 查询参数
-     * @return
+     * @return 部门列表
      */
     @Override
     public ResultPage<SysDeptDTO> findPage(ISearchPageable<SysDeptSearchDTO> iSearchPageable){

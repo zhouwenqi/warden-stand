@@ -62,7 +62,7 @@ public class SysMessageServiceImpl extends BaseServiceImpl<SysMessage> implement
     /**
      * 创建一条系统消息
      * @param sysMessageDTO 消息内容
-     * @return
+     * @return 消息内容
      */
     @Override
     public SysMessageDTO create(SysMessageDTO sysMessageDTO){
@@ -120,7 +120,7 @@ public class SysMessageServiceImpl extends BaseServiceImpl<SysMessage> implement
     /**
      * 获取未读消息数量
      * @param jwtUser 接收人
-     * @return
+     * @return 未读数量
      */
     @Override
     public long totalUnread(JwtUser jwtUser){
@@ -134,7 +134,7 @@ public class SysMessageServiceImpl extends BaseServiceImpl<SysMessage> implement
     /**
      * 分页系统消息
      * @param iSearchPageable 查询条件
-     * @return
+     * @return 消息列表
      */
     @Override
     public ResultPage<SysMessageDTO> findPage(ISearchPageable<SysMessageSearchDTO> iSearchPageable){

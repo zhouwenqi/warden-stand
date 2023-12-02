@@ -41,7 +41,7 @@ public class SysDictionaryServiceImpl implements SysDictionaryService {
     /**
      * 查询字典信息
      * @param id 字典id
-     * @return
+     * @return 字典信息
      */
     public SysDictionaryDTO findById(Long id){
         return sysDictionaryDao.findById(id);
@@ -50,7 +50,7 @@ public class SysDictionaryServiceImpl implements SysDictionaryService {
     /**
      * 查询字典信息
      * @param code 字典编码
-     * @return
+     * @return 字典信息
      */
     public SysDictionaryDTO findByCode(String code){
         return sysDictionaryDao.findByCode(code);
@@ -59,7 +59,7 @@ public class SysDictionaryServiceImpl implements SysDictionaryService {
     /**
      * 创建字典
      * @param sysDictionaryDTO 字典信息
-     * @return
+     * @return 字典列表
      */
     @Transactional
     public SysDictionaryDTO create(SysDictionaryDTO sysDictionaryDTO){
@@ -122,7 +122,7 @@ public class SysDictionaryServiceImpl implements SysDictionaryService {
     /**
      * 分页查询字典信息
      * @param iSearchPageable 查询参数
-     * @return
+     * @return 字典列表
      */
     public ResultPage<SysDictionaryDTO> findPage(ISearchPageable<BasicSearchDTO> iSearchPageable){
         QueryWrapper<SysDictionary> queryWrapper = new QueryWrapper<>();
