@@ -1,7 +1,6 @@
 package com.microwarp.warden.stand.data.dao.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.microwarp.warden.stand.data.basic.BaseDaoImpl;
 import com.microwarp.warden.stand.data.convert.SysPostConvert;
 import com.microwarp.warden.stand.data.dao.SysPostDao;
 import com.microwarp.warden.stand.data.entity.SysPost;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Repository;
  * @author zhouwenqi
  */
 @Repository
-public class SysPostDaoImpl extends ServiceImpl<SysPostMapper,SysPost> implements SysPostDao {
+public class SysPostDaoImpl extends BaseDaoImpl<SysPostMapper,SysPost> implements SysPostDao {
     @Override
     public SysPostDTO findById(Long id){
         SysPost sysPost = getById(id);

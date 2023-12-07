@@ -1,6 +1,7 @@
 package com.microwarp.warden.stand.data.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.microwarp.warden.stand.data.basic.BaseEntity;
 
 /**
  * entity - 系统角色

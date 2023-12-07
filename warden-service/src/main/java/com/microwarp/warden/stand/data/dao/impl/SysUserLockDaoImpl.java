@@ -2,7 +2,7 @@ package com.microwarp.warden.stand.data.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.microwarp.warden.stand.data.basic.BaseDaoImpl;
 import com.microwarp.warden.stand.data.convert.SysUserLockConvert;
 import com.microwarp.warden.stand.data.dao.SysUserLockDao;
 import com.microwarp.warden.stand.data.entity.SysUserLock;
@@ -18,7 +18,7 @@ import java.util.List;
  * @author zhouwenqi
  */
 @Repository
-public class SysUserLockDaoImpl extends ServiceImpl<SysUserLockMapper,SysUserLock> implements SysUserLockDao {
+public class SysUserLockDaoImpl extends BaseDaoImpl<SysUserLockMapper,SysUserLock> implements SysUserLockDao {
     /**
      * 查询用户锁列表
      * @param userId 用户id

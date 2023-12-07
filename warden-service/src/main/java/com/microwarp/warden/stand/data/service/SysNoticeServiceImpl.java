@@ -6,6 +6,7 @@ import com.microwarp.warden.stand.common.core.pageing.BasicSearchDTO;
 import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
 import com.microwarp.warden.stand.common.core.pageing.PageInfo;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
+import com.microwarp.warden.stand.data.basic.BaseServiceImpl;
 import com.microwarp.warden.stand.data.convert.PageConvert;
 import com.microwarp.warden.stand.data.convert.SysNoticeConvert;
 import com.microwarp.warden.stand.data.dao.SysNoticeDao;
@@ -23,9 +24,7 @@ import java.util.Arrays;
  * @author zhouwenqi
  */
 @Service
-public class SysNoticeServiceImpl extends BaseServiceImpl<SysNotice> implements SysNoticeService {
-    @Resource
-    private SysNoticeDao sysNoticeDao;
+public class SysNoticeServiceImpl extends BaseServiceImpl<SysNotice,SysNoticeDao> implements SysNoticeService {
 
     /**
      * 查询公告信息
@@ -34,7 +33,7 @@ public class SysNoticeServiceImpl extends BaseServiceImpl<SysNotice> implements 
      */
     @Override
     public SysNoticeDTO findById(Long id){
-        SysNotice sysNotice = sysNoticeDao.getById(id);
+        SysNotice sysNotice = this.dao.getById(id);
         return null == sysNotice ? null : SysNoticeConvert.Instance.sysNoticeToSysNoticeDTO(sysNotice);
     }
 
@@ -46,7 +45,7 @@ public class SysNoticeServiceImpl extends BaseServiceImpl<SysNotice> implements 
     @Override
     public SysNoticeDTO create(SysNoticeDTO sysNoticeDTO) {
         SysNotice sysNotice = SysNoticeConvert.Instance.sysNoticeDtoToSysNotice(sysNoticeDTO);
-        sysNoticeDao.save(sysNotice);
+        this.dao.save(sysNotice);
         return findById(sysNotice.getId());
     }
 
@@ -57,7 +56,7 @@ public class SysNoticeServiceImpl extends BaseServiceImpl<SysNotice> implements 
     @Override
     public void update(SysNoticeDTO sysNoticeDTO){
         SysNotice sysNotice = SysNoticeConvert.Instance.sysNoticeDtoToSysNotice(sysNoticeDTO);
-        sysNoticeDao.updateById(sysNotice);
+        this.dao.updateById(sysNotice);
     }
 
     /**
@@ -67,7 +66,7 @@ public class SysNoticeServiceImpl extends BaseServiceImpl<SysNotice> implements 
     @Override
     public void delete(Long ... id){
         if(null != id && id.length > 0){
-            sysNoticeDao.removeByIds(Arrays.asList(id));
+            this.dao.removeByIds(Arrays.asList(id));
         }
     }
 
@@ -87,12 +86,12 @@ public class SysNoticeServiceImpl extends BaseServiceImpl<SysNotice> implements 
             );
         }
         if(null != iSearchPageable.getFilters()){
-            useBaseFilter(queryWrapper,iSearchPageable.getFilters());
+            this.dao.useBaseFilter(queryWrapper,iSearchPageable.getFilters());
         }
         PageInfo pageInfo = iSearchPageable.getPageInfo();
         Page<SysNotice> page = new Page<>(pageInfo.getCurrent(),pageInfo.getPageSize());
         page.setOrders(PageConvert.Instance.sortFieldsToOrderItems(iSearchPageable.getSorts()));
-        sysNoticeDao.page(page,queryWrapper);
+        this.dao.page(page,queryWrapper);
         ResultPage<SysNoticeDTO> resultPage = new ResultPage<>();
         resultPage.setList(SysNoticeConvert.Instance.sysNoticesToSysNoticeDTOs(page.getRecords()));
         pageInfo = PageConvert.Instance.pageToPageInfo(page);

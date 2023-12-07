@@ -1,6 +1,6 @@
 package com.microwarp.warden.stand.data.dao;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.microwarp.warden.stand.data.basic.BaseDao;
 import com.microwarp.warden.stand.data.entity.SysUserLock;
 import com.microwarp.warden.stand.facade.sysuser.dto.SysUserLockDTO;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * dao - 系统用户锁
  * @author zhouwenqi
  */
-public interface SysUserLockDao extends IService<SysUserLock> {
+public interface SysUserLockDao extends BaseDao<SysUserLock> {
     /**
      * 查询一条锁记录
      * @param userId 系统用户id

@@ -1,14 +1,14 @@
 package com.microwarp.warden.stand.data.dao;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.microwarp.warden.stand.common.security.JwtUser;
+import com.microwarp.warden.stand.data.basic.BaseDao;
 import com.microwarp.warden.stand.data.entity.SysMessage;
 import com.microwarp.warden.stand.facade.sysmessage.dto.SysMessageDTO;
 
 /**
  * dao - 系统消息
  */
-public interface SysMessageDao extends IService<SysMessage> {
+public interface SysMessageDao extends BaseDao<SysMessage> {
     /**
      * 查询一条系统消息
      * @param id 消息ID

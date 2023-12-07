@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.microwarp.warden.stand.common.core.constant.CacheConstants;
 import com.microwarp.warden.stand.common.core.pageing.*;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
+import com.microwarp.warden.stand.data.basic.BaseServiceImpl;
 import com.microwarp.warden.stand.data.convert.PageConvert;
 import com.microwarp.warden.stand.data.convert.SysPermissionConvert;
 import com.microwarp.warden.stand.data.dao.SysPermissionDao;
@@ -32,9 +33,7 @@ import java.util.stream.Collectors;
  * @author zhouwenqi
  */
 @Service
-public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> implements SysPermissionService {
-    @Resource
-    private SysPermissionDao sysPermissionDao;
+public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission,SysPermissionDao> implements SysPermissionService {
     @Resource
     private SysUserService sysUserService;
 
@@ -46,7 +45,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
     public List<SysPermissionDTO> findAll(){
         QueryWrapper<SysPermission> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByAsc("orders");
-        List<SysPermission> list = sysPermissionDao.list(queryWrapper);
+        List<SysPermission> list = this.dao.list(queryWrapper);
         if(null == list || list.size() < 1)
         {
             return new ArrayList<>();
@@ -61,7 +60,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
      */
     @Override
     public SysPermissionDTO findById(Long id){
-        SysPermissionDTO sysPermissionDTO = sysPermissionDao.findById(id);
+        SysPermissionDTO sysPermissionDTO = this.dao.findById(id);
         recursionParent(sysPermissionDTO);
         return sysPermissionDTO;
     }
@@ -72,12 +71,12 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
      * @return 权限信息
      */
     public SysPermissionTreeDTO findChildrenById(Long id){
-        SysPermission sysPermission = sysPermissionDao.getById(id);
+        SysPermission sysPermission = this.dao.getById(id);
         if(null == sysPermission){
             return null;
         }
         SysPermissionTreeDTO sysPermissionTreeDTO = SysPermissionConvert.Instance.sysPermissionToSysPermissionTreeDTO(sysPermission);
-        sysPermissionTreeDTO.setChildren(sysPermissionDao.findByParentId(sysPermission.getParentId()));
+        sysPermissionTreeDTO.setChildren(this.dao.findByParentId(sysPermission.getParentId()));
         return  sysPermissionTreeDTO;
     }
     /**
@@ -90,11 +89,11 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
     public SysPermissionDTO create(SysPermissionDTO sysPermissionDTO){
         QueryWrapper<SysPermission> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("value",sysPermissionDTO.getValue());
-        if(sysPermissionDao.count(queryWrapper) > 0){
+        if(this.dao.count(queryWrapper) > 0){
             throw new WardenParamterErrorException("权限值不能重复");
         }
         SysPermission sysPermission = SysPermissionConvert.Instance.sysPermissionDtoToSysPermission(sysPermissionDTO);
-        sysPermissionDao.save(sysPermission);
+        this.dao.save(sysPermission);
         return findById(sysPermission.getId());
     }
 
@@ -109,11 +108,11 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
         QueryWrapper<SysPermission> queryWrapper = new QueryWrapper<>();
         queryWrapper.ne("id",sysPermissionDTO.getId());
         queryWrapper.eq("value",sysPermissionDTO.getValue());
-        if(sysPermissionDao.count(queryWrapper) > 0){
+        if(this.dao.count(queryWrapper) > 0){
             throw new WardenParamterErrorException("权限值不能重复");
         }
         SysPermission sysPermission = SysPermissionConvert.Instance.sysPermissionDtoToSysPermission(sysPermissionDTO);
-        sysPermissionDao.updateById(sysPermission);
+        this.dao.updateById(sysPermission);
 
         // 清除用户缓存
         sysUserService.clearAll();
@@ -132,7 +131,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
         }
         List<Long> ids = new ArrayList<>();
         recursionIds(Arrays.asList(id),ids);
-        sysPermissionDao.delete(ids.toArray(new Long[ids.size()]));
+        this.dao.delete(ids.toArray(new Long[ids.size()]));
         // 清除用户缓存
         sysUserService.clearAll();
     }
@@ -145,7 +144,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
     @Override
     @Transactional
     public void saveRolePermission(Long roleId,Long... permissionIds){
-        sysPermissionDao.saveRolePermission(roleId, permissionIds);
+        this.dao.saveRolePermission(roleId, permissionIds);
         // 清除用户缓存
         sysUserService.clearAll();
     }
@@ -162,7 +161,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
             SysPermission sysPermission = new SysPermission();
             sysPermission.setParentId(baseSortDTO.getParentId());
             sysPermission.setId(baseSortDTO.getDragId());
-            sysPermissionDao.updateById(sysPermission);
+            this.dao.updateById(sysPermission);
             // 清除用户缓存
             sysUserService.clearAll();
         }
@@ -172,7 +171,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
                 UpdateWrapper<SysPermission> updateWrapper = new UpdateWrapper<>();
                 updateWrapper.set("orders",i);
                 updateWrapper.eq("id",id);
-                sysPermissionDao.update(updateWrapper);
+                this.dao.update(updateWrapper);
                 i ++;
             }
         }
@@ -200,7 +199,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
             return;
         }
         for(SysPermissionTreeDTO sysPermissionTreeDTO:list){
-            List<SysPermissionTreeDTO> sysPermissionTreeDTOS = sysPermissionDao.findByParentId(sysPermissionTreeDTO.getId());
+            List<SysPermissionTreeDTO> sysPermissionTreeDTOS = this.dao.findByParentId(sysPermissionTreeDTO.getId());
             sysPermissionTreeDTO.setChildren(sysPermissionTreeDTOS.size() < 1 ? null : sysPermissionTreeDTOS);
             recursionChildren(sysPermissionTreeDTO.getChildren());
         }
@@ -219,7 +218,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
                 QueryWrapper<SysPermission> queryWrapper = new QueryWrapper<>();
                 queryWrapper.select("id");
                 queryWrapper.eq("parent_id",id);
-                List<SysPermission> sysPermissions = sysPermissionDao.list(queryWrapper);
+                List<SysPermission> sysPermissions = this.dao.list(queryWrapper);
                 if(null != sysPermissions && sysPermissions.size()>0){
                     recursionIds(sysPermissions.stream().map(SysPermission::getId).collect(Collectors.toList()),permissionIds);
                 }
@@ -234,7 +233,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
      */
     @Override
     public List<SysPermissionDTO> findByIds(Long... ids){
-        return sysPermissionDao.findByIds(ids);
+        return this.dao.findByIds(ids);
     }
 
     /**
@@ -244,7 +243,7 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
     @Override
     @Cacheable(value = CacheConstants.CACHE_PERMISSION_TREE, key="'tree'", unless = "#result.size() < 1")
     public List<SysPermissionTreeDTO> findTrees(){
-        List<SysPermissionTreeDTO> root = sysPermissionDao.findByParentId(0L);
+        List<SysPermissionTreeDTO> root = this.dao.findByParentId(0L);
         recursionChildren(root);
         return root;
     }
@@ -266,13 +265,13 @@ public class SysPermissionServiceImpl extends BaseServiceImpl<SysPermission> imp
         }
 
         if(null != iSearchPageable.getFilters()){
-            useBaseFilter(queryWrapper,iSearchPageable.getFilters());
+            this.dao.useBaseFilter(queryWrapper,iSearchPageable.getFilters());
 
         }
         PageInfo pageInfo = iSearchPageable.getPageInfo();
         Page<SysPermission> page = new Page<>(pageInfo.getCurrent(),pageInfo.getPageSize());
         page.setOrders(PageConvert.Instance.sortFieldsToOrderItems(iSearchPageable.getSorts()));
-        sysPermissionDao.page(page,queryWrapper);
+        this.dao.page(page,queryWrapper);
         ResultPage<SysPermissionDTO> resultPage = new ResultPage<>();
         resultPage.setList(SysPermissionConvert.Instance.sysPermissionsToSysPermissionDTOs(page.getRecords()));
         pageInfo = PageConvert.Instance.pageToPageInfo(page);

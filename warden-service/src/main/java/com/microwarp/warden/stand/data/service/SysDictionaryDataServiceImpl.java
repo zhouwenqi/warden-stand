@@ -7,6 +7,7 @@ import com.microwarp.warden.stand.common.core.cache.ICacheService;
 import com.microwarp.warden.stand.common.core.constant.CacheConstants;
 import com.microwarp.warden.stand.common.core.pageing.*;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
+import com.microwarp.warden.stand.data.basic.BaseServiceImpl;
 import com.microwarp.warden.stand.data.convert.PageConvert;
 import com.microwarp.warden.stand.data.convert.SysDictionaryConvert;
 import com.microwarp.warden.stand.data.convert.SysDictionaryDataConvert;
@@ -31,9 +32,8 @@ import java.util.*;
  * @author zhouwenqi
  */
 @Service
-public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
-    @Resource
-    private SysDictionaryDataDao sysDictionaryDataDao;
+public class SysDictionaryDataServiceImpl extends BaseServiceImpl<SysDictionaryData,SysDictionaryDataDao> implements SysDictionaryDataService {
+
     @Resource
     private SysDictionaryDao sysDictionaryDao;
     @Resource
@@ -45,7 +45,7 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
      * @return 字典数据
      */
     public SysDictionaryDataDTO findById(Long id){
-        return sysDictionaryDataDao.findById(id);
+        return this.dao.findById(id);
     }
 
     /**
@@ -57,11 +57,11 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
         QueryWrapper<SysDictionaryData> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("dict_id",sysDictionaryDataDTO.getDictId());
         queryWrapper.eq("data_key",sysDictionaryDataDTO.getDataKey());
-        if(sysDictionaryDataDao.count(queryWrapper) > 0){
+        if(this.dao.count(queryWrapper) > 0){
             throw new WardenParamterErrorException("字典数据key不能重复");
         }
         SysDictionaryData sysDictionaryData = SysDictionaryDataConvert.Instance.sysDictionaryDataDtoToSysDictionaryData(sysDictionaryDataDTO);
-        sysDictionaryDataDao.save(sysDictionaryData);
+        this.dao.save(sysDictionaryData);
 
         // 手动删除缓存
         String[] dictCodes = sysDictionaryDao.findCodeByDataIds(sysDictionaryData.getId());
@@ -80,7 +80,7 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
         if(null == sysDictionaryDataDTO.getId()){
             return;
         }
-        SysDictionaryData dictionaryData = sysDictionaryDataDao.getById(sysDictionaryDataDTO.getId());
+        SysDictionaryData dictionaryData = this.dao.getById(sysDictionaryDataDTO.getId());
         if(null == dictionaryData){
             throw new WardenParamterErrorException("字典数据不存在");
         }
@@ -88,11 +88,11 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
         queryWrapper.eq("dict_id",sysDictionaryDataDTO.getDictId());
         queryWrapper.eq("data_key",sysDictionaryDataDTO.getDataKey());
         queryWrapper.ne("id",sysDictionaryDataDTO.getId());
-        if(sysDictionaryDataDao.count(queryWrapper) > 0){
+        if(this.dao.count(queryWrapper) > 0){
             throw new WardenParamterErrorException("字典数据key不能重复");
         }
         SysDictionaryData sysDictionaryData = SysDictionaryDataConvert.Instance.sysDictionaryDataDtoToSysDictionaryData(sysDictionaryDataDTO);
-        sysDictionaryDataDao.updateById(sysDictionaryData);
+        this.dao.updateById(sysDictionaryData);
         // 手动删除缓存
         String[] dictCodes = sysDictionaryDao.findCodeByDataIds(sysDictionaryData.getId());
         if(dictCodes.length> 0){
@@ -113,7 +113,7 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
                 UpdateWrapper<SysDictionaryData> updateWrapper = new UpdateWrapper<>();
                 updateWrapper.set("orders",i);
                 updateWrapper.eq("id",id);
-                sysDictionaryDataDao.update(updateWrapper);
+                this.dao.update(updateWrapper);
                 i ++;
             }
         }
@@ -132,7 +132,7 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
         if(dictCodes.length> 0){
             iCacheService.batchRemove(CacheConstants.CACHE_DICT_DATAS, dictCodes);
         }
-        sysDictionaryDataDao.removeBatchByIds(Arrays.asList(id));
+        this.dao.removeBatchByIds(Arrays.asList(id));
     }
 
     /**
@@ -144,7 +144,7 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
         QueryWrapper<SysDictionaryData> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("dict_id",dictId);
         queryWrapper.orderByAsc("orders");
-        List<SysDictionaryData> list = sysDictionaryDataDao.list(queryWrapper);
+        List<SysDictionaryData> list = this.dao.list(queryWrapper);
         return null == list || list.size() < 1 ? new ArrayList<>() : SysDictionaryDataConvert.Instance.sysDictionaryDatasToSysDictionaryDatasDTO(list);
     }
 
@@ -163,7 +163,7 @@ public class SysDictionaryDataServiceImpl implements SysDictionaryDataService {
         queryWrapper.eq("dict_id",sysDictionaryDTO.getId());
         queryWrapper.eq("disabled",false);
         queryWrapper.orderByAsc("orders");
-        List<SysDictionaryData> list = sysDictionaryDataDao.list(queryWrapper);
+        List<SysDictionaryData> list = this.dao.list(queryWrapper);
         return null == list || list.size() < 1 ? new ArrayList<>() : SysDictionaryDataConvert.Instance.sysDictionaryDatasToSysDictionaryDatasDTO(list);
     }
 }

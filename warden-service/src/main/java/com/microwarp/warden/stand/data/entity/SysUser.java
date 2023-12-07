@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.microwarp.warden.stand.common.core.enums.GenderEnum;
+import com.microwarp.warden.stand.data.basic.LogicEntity;
 
 /**
  * entity - 系统用户

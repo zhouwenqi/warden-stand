@@ -1,8 +1,10 @@
-package com.microwarp.warden.stand.data.entity;
+package com.microwarp.warden.stand.data.basic;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 
-import javax.persistence.Entity;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -10,9 +12,8 @@ import java.util.Date;
  * entity - 基类
  * @author zhouwenqi
  */
-@Entity
 public class BaseEntity implements Serializable {
-    private static final long serialVersionUID = 3443596067302208839L;
+    private static final long serialVersionUID = 6830328944244879075L;
     /** 自增id */
     @TableId(type = IdType.AUTO)
     private Long id;

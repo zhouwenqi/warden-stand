@@ -1,7 +1,7 @@
 package com.microwarp.warden.stand.data.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.microwarp.warden.stand.data.basic.BaseDaoImpl;
 import com.microwarp.warden.stand.data.convert.SysRoleConvert;
 import com.microwarp.warden.stand.data.dao.SysRoleDao;
 import com.microwarp.warden.stand.data.entity.SysRole;
@@ -10,14 +10,13 @@ import com.microwarp.warden.stand.facade.sysrole.dto.SysRoleDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * dao - 系统角色 - impl
  * @author zhouwenqi
  */
 @Repository
-public class SysRoleDaoImpl extends ServiceImpl<SysRoleMapper,SysRole> implements SysRoleDao {
+public class SysRoleDaoImpl extends BaseDaoImpl<SysRoleMapper,SysRole> implements SysRoleDao {
 
     /**
      * 查询用户角色列表

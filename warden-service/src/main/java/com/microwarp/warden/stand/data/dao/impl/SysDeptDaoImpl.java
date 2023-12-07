@@ -1,7 +1,7 @@
 package com.microwarp.warden.stand.data.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.microwarp.warden.stand.data.basic.BaseDaoImpl;
 import com.microwarp.warden.stand.data.convert.SysDeptConvert;
 import com.microwarp.warden.stand.data.dao.SysDeptDao;
 import com.microwarp.warden.stand.data.entity.SysDept;
@@ -18,7 +18,7 @@ import java.util.List;
  * @author zhouwenqi
  */
 @Repository
-public class SysDeptDaoImpl extends ServiceImpl<SysDeptMapper,SysDept> implements SysDeptDao {
+public class SysDeptDaoImpl extends BaseDaoImpl<SysDeptMapper,SysDept> implements SysDeptDao {
 
     /**
      * 查询部门信息

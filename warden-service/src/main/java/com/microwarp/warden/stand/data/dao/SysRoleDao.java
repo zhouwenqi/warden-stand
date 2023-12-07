@@ -1,17 +1,16 @@
 package com.microwarp.warden.stand.data.dao;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.microwarp.warden.stand.data.basic.BaseDao;
 import com.microwarp.warden.stand.data.entity.SysRole;
 import com.microwarp.warden.stand.facade.sysrole.dto.SysRoleDTO;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * dao - 系统角色
  * @author zhouwenqi
  */
-public interface SysRoleDao extends IService<SysRole> {
+public interface SysRoleDao extends BaseDao<SysRole> {
     /**
      * 查询用户角色列表
      * @param id 用户id

@@ -5,6 +5,7 @@ import com.microwarp.warden.stand.common.core.enums.ActionTypeEnum;
 import com.microwarp.warden.stand.common.core.enums.AppTerminalEnum;
 import com.microwarp.warden.stand.common.core.enums.ModuleTypeEnum;
 import com.microwarp.warden.stand.common.core.enums.PlatformTypeEnum;
+import com.microwarp.warden.stand.data.basic.LogicEntity;
 
 /**
  * entity - 操作日志

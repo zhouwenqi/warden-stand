@@ -10,6 +10,7 @@ import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
 import com.microwarp.warden.stand.common.core.pageing.PageInfo;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
+import com.microwarp.warden.stand.data.basic.BaseServiceImpl;
 import com.microwarp.warden.stand.data.convert.PageConvert;
 import com.microwarp.warden.stand.data.convert.SysDeptConvert;
 import com.microwarp.warden.stand.data.dao.SysDeptDao;
@@ -38,9 +39,7 @@ import java.util.stream.Collectors;
  * @author zhouwenqi
  */
 @Service
-public class SysDeptServiceImpl implements SysDeptService {
-    @Resource
-    private SysDeptDao sysDeptDao;
+public class SysDeptServiceImpl extends BaseServiceImpl<SysDept,SysDeptDao> implements SysDeptService {
     @Resource
     private SysUserDao sysUserDao;
     @Resource
@@ -53,7 +52,7 @@ public class SysDeptServiceImpl implements SysDeptService {
      */
     @Override
     public SysDeptDTO findById(Long id){
-        SysDeptDTO sysDeptDTO = sysDeptDao.findById(id);
+        SysDeptDTO sysDeptDTO = this.dao.findById(id);
         recursionParent(sysDeptDTO);
         return sysDeptDTO;
     }
@@ -65,12 +64,12 @@ public class SysDeptServiceImpl implements SysDeptService {
      */
     @Override
     public SysDeptTreeDTO findChildrenById(Long id){
-        SysDept sysDept = sysDeptDao.getById(id);
+        SysDept sysDept = this.dao.getById(id);
         if(null == sysDept){
             return null;
         }
         SysDeptTreeDTO sysDeptTreeDTO = SysDeptConvert.Instance.sysDeptToSysDeptTreeDTO(sysDept);
-        sysDeptTreeDTO.setChildren(sysDeptDao.findByParentId(sysDept.getParentId()));
+        sysDeptTreeDTO.setChildren(this.dao.findByParentId(sysDept.getParentId()));
         return sysDeptTreeDTO;
     }
 
@@ -85,11 +84,11 @@ public class SysDeptServiceImpl implements SysDeptService {
     public SysDeptDTO create(SysDeptDTO sysDeptDTO){
         QueryWrapper<SysDept> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("name",sysDeptDTO.getName());
-        if(sysDeptDao.count(queryWrapper) > 0){
+        if(this.dao.count(queryWrapper) > 0){
             throw new WardenParamterErrorException("部门名称不能重复");
         }
         SysDept sysDept = SysDeptConvert.Instance.sysDeptDtoToSysDept(sysDeptDTO);
-        sysDeptDao.save(sysDept);
+        this.dao.save(sysDept);
         return findById(sysDept.getId());
     }
 
@@ -104,11 +103,11 @@ public class SysDeptServiceImpl implements SysDeptService {
         QueryWrapper<SysDept> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("name",sysDeptDTO.getName());
         queryWrapper.ne("id",sysDeptDTO.getId());
-        if(sysDeptDao.count(queryWrapper) > 0){
+        if(this.dao.count(queryWrapper) > 0){
             throw new WardenParamterErrorException("部门名称不能重复");
         }
         SysDept sysDept = SysDeptConvert.Instance.sysDeptDtoToSysDept(sysDeptDTO);
-        sysDeptDao.updateById(sysDept);
+        this.dao.updateById(sysDept);
         // 清除用户缓存
         sysUserService.clearAll();
     }
@@ -125,7 +124,7 @@ public class SysDeptServiceImpl implements SysDeptService {
             SysDept sysDept = new SysDept();
             sysDept.setParentId(baseSortDTO.getParentId());
             sysDept.setId(baseSortDTO.getDragId());
-            sysDeptDao.updateById(sysDept);
+            this.dao.updateById(sysDept);
             // 清除用户缓存
             sysUserService.clearAll();
         }
@@ -135,7 +134,7 @@ public class SysDeptServiceImpl implements SysDeptService {
                 UpdateWrapper<SysDept> updateWrapper = new UpdateWrapper<>();
                 updateWrapper.set("orders",i);
                 updateWrapper.eq("id",id);
-                sysDeptDao.update(updateWrapper);
+                this.dao.update(updateWrapper);
                 i ++;
             }
         }
@@ -154,7 +153,7 @@ public class SysDeptServiceImpl implements SysDeptService {
         }
         List<Long> ids = new ArrayList<>();
         recursionIds(Arrays.asList(id),ids);
-        sysDeptDao.removeBatchByIds(ids);
+        this.dao.removeBatchByIds(ids);
         sysUserDao.clearDeptId(ids.toArray(new Long[ids.size()]));
         // 清除用户缓存
         sysUserService.clearAll();
@@ -182,7 +181,7 @@ public class SysDeptServiceImpl implements SysDeptService {
             return;
         }
         for(SysDeptTreeDTO sysDeptTreeDTO:list){
-            List<SysDeptTreeDTO> children = sysDeptDao.findByParentId(sysDeptTreeDTO.getId());
+            List<SysDeptTreeDTO> children = this.dao.findByParentId(sysDeptTreeDTO.getId());
             sysDeptTreeDTO.setChildren(children.size() < 1 ? null : children);
             recursionChildren(sysDeptTreeDTO.getChildren());
         }
@@ -201,7 +200,7 @@ public class SysDeptServiceImpl implements SysDeptService {
                 QueryWrapper<SysDept> queryWrapper = new QueryWrapper<>();
                 queryWrapper.select("id");
                 queryWrapper.eq("parent_id",id);
-                List<SysDept> sysDepts = sysDeptDao.list(queryWrapper);
+                List<SysDept> sysDepts = this.dao.list(queryWrapper);
                 if(null != sysDepts && sysDepts.size()>0){
                    recursionIds(sysDepts.stream().map(SysDept::getId).collect(Collectors.toList()),deptIds);
                 }
@@ -216,7 +215,7 @@ public class SysDeptServiceImpl implements SysDeptService {
     @Override
     @Cacheable(value = CacheConstants.CACHE_DEPT_TREE, key="'tree'", unless = "#result.size() < 1")
     public List<SysDeptTreeDTO> findTrees(){
-        List<SysDeptTreeDTO> root = sysDeptDao.findByParentId(0L);
+        List<SysDeptTreeDTO> root = this.dao.findByParentId(0L);
         recursionChildren(root);
         return root;
     }
@@ -261,7 +260,7 @@ public class SysDeptServiceImpl implements SysDeptService {
         PageInfo pageInfo = iSearchPageable.getPageInfo();
         Page<SysDept> page = new Page<>(pageInfo.getCurrent(),pageInfo.getPageSize());
         page.setOrders(PageConvert.Instance.sortFieldsToOrderItems(iSearchPageable.getSorts()));
-        sysDeptDao.page(page,queryWrapper);
+        this.dao.page(page,queryWrapper);
         ResultPage<SysDeptDTO> resultPage = new ResultPage<>();
         resultPage.setList(SysDeptConvert.Instance.sysDeptsToSysDeptDTOs(page.getRecords()));
         resultPage.setPageInfo(pageInfo);

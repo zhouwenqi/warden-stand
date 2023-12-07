@@ -1,6 +1,7 @@
 package com.microwarp.warden.stand.data.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.microwarp.warden.stand.data.basic.BaseServiceImpl;
 import com.microwarp.warden.stand.data.dao.SysUserLockDao;
 import com.microwarp.warden.stand.data.entity.SysUserLock;
 import com.microwarp.warden.stand.facade.sysuser.dto.SysUserLockDTO;
@@ -16,9 +17,7 @@ import java.util.Date;
  * @author zhouwenqi
  */
 @Service
-public class SysUserLockServiceImpl implements SysUserLockService {
-    @Resource
-    private SysUserLockDao sysUserLockDao;
+public class SysUserLockServiceImpl extends BaseServiceImpl<SysUserLock,SysUserLockDao> implements SysUserLockService {
 
     /**
      * 判断用户是否被锁定
@@ -28,7 +27,7 @@ public class SysUserLockServiceImpl implements SysUserLockService {
      */
     @Override
     public boolean isLocked(Long userId,String ip){
-        return sysUserLockDao.isLocked(userId,ip);
+        return this.dao.isLocked(userId,ip);
     }
 
     /**
@@ -42,7 +41,7 @@ public class SysUserLockServiceImpl implements SysUserLockService {
         queryWrapper.eq("ip",ip);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         queryWrapper.ge("unlock_time", simpleDateFormat.format(new Date()));
-        return sysUserLockDao.count(queryWrapper);
+        return this.dao.count(queryWrapper);
     }
 
     /**
@@ -53,6 +52,6 @@ public class SysUserLockServiceImpl implements SysUserLockService {
      */
     @Override
     public void add(Long userId, String ip, Date unlockTime){
-        sysUserLockDao.lock(userId,ip,unlockTime);
+        this.dao.lock(userId,ip,unlockTime);
     }
 }

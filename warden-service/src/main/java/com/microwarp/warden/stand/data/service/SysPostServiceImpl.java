@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.microwarp.warden.stand.common.core.pageing.*;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
 import com.microwarp.warden.stand.common.utils.StringUtil;
+import com.microwarp.warden.stand.data.basic.BaseServiceImpl;
 import com.microwarp.warden.stand.data.convert.PageConvert;
 import com.microwarp.warden.stand.data.convert.SysPostConvert;
 import com.microwarp.warden.stand.data.dao.SysPostDao;
@@ -28,9 +29,7 @@ import java.util.List;
  * @author zhouwenqi
  */
 @Service
-public class SysPostServiceImpl extends BaseServiceImpl<SysPost> implements SysPostService {
-    @Resource
-    private SysPostDao sysPostDao;
+public class SysPostServiceImpl extends BaseServiceImpl<SysPost,SysPostDao> implements SysPostService {
     @Resource
     private SysUserDao sysUserDao;
     @Resource
@@ -43,7 +42,7 @@ public class SysPostServiceImpl extends BaseServiceImpl<SysPost> implements SysP
      */
     @Override
     public SysPostDTO findById(Long id){
-        return  sysPostDao.findById(id);
+        return  this.dao.findById(id);
     }
 
     /**
@@ -56,7 +55,7 @@ public class SysPostServiceImpl extends BaseServiceImpl<SysPost> implements SysP
     public SysPostDTO create(SysPostDTO sysPostDTO){
         QueryWrapper<SysPost> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("name",sysPostDTO.getName());
-        if(sysPostDao.count(queryWrapper)>0){
+        if(this.dao.count(queryWrapper)>0){
             throw new WardenParamterErrorException("部门名称不能重复");
         }
         // 岗位拼音处理
@@ -66,7 +65,7 @@ public class SysPostServiceImpl extends BaseServiceImpl<SysPost> implements SysP
             sysPostDTO.setPy(pinyins[1]);
         }
         SysPost sysPost = SysPostConvert.Instance.sysPostDtoToSysPost(sysPostDTO);
-        sysPostDao.save(sysPost);
+        this.dao.save(sysPost);
         return findById(sysPost.getId());
     }
 
@@ -80,7 +79,7 @@ public class SysPostServiceImpl extends BaseServiceImpl<SysPost> implements SysP
         QueryWrapper<SysPost> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("name",sysPostDTO.getName());
         queryWrapper.ne("id",sysPostDTO.getId());
-        if(sysPostDao.count(queryWrapper)>0){
+        if(this.dao.count(queryWrapper)>0){
             throw new WardenParamterErrorException("部门名称不能重复");
         }
         // 岗位拼音处理
@@ -90,7 +89,7 @@ public class SysPostServiceImpl extends BaseServiceImpl<SysPost> implements SysP
             sysPostDTO.setPy(pinyins[1]);
         }
         SysPost sysPost = SysPostConvert.Instance.sysPostDtoToSysPost(sysPostDTO);
-        sysPostDao.updateById(sysPost);
+        this.dao.updateById(sysPost);
         // 清除用户缓存
         sysUserService.clearAll();
     }
@@ -108,7 +107,7 @@ public class SysPostServiceImpl extends BaseServiceImpl<SysPost> implements SysP
                 UpdateWrapper<SysPost> updateWrapper = new UpdateWrapper<>();
                 updateWrapper.set("orders",i);
                 updateWrapper.eq("id",id);
-                sysPostDao.update(updateWrapper);
+                this.dao.update(updateWrapper);
                 i ++;
             }
         }
@@ -124,7 +123,7 @@ public class SysPostServiceImpl extends BaseServiceImpl<SysPost> implements SysP
         if(null == id || id.length < 1){
             return;
         }
-        sysPostDao.removeBatchByIds(Arrays.asList(id));
+        this.dao.removeBatchByIds(Arrays.asList(id));
         sysUserDao.clearPostId(id);
         // 清除用户缓存
         sysUserService.clearAll();
@@ -138,7 +137,7 @@ public class SysPostServiceImpl extends BaseServiceImpl<SysPost> implements SysP
     public List<SysPostDTO> findAll(){
         QueryWrapper<SysPost> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByAsc("orders");
-        List<SysPost> list = sysPostDao.list(queryWrapper);
+        List<SysPost> list = this.dao.list(queryWrapper);
         return null == list || list.size() < 1 ? new ArrayList<>() : SysPostConvert.Instance.sysPostsToSysPostsDTOs(list);
     }
 
@@ -166,12 +165,12 @@ public class SysPostServiceImpl extends BaseServiceImpl<SysPost> implements SysP
             );
         }
         if(null != iSearchPageable.getFilters()){
-            useBaseFilter(queryWrapper,iSearchPageable.getFilters());
+            this.dao.useBaseFilter(queryWrapper,iSearchPageable.getFilters());
         }
         PageInfo pageInfo = iSearchPageable.getPageInfo();
         Page<SysPost> page = new Page<>(pageInfo.getCurrent(),pageInfo.getPageSize());
         page.setOrders(PageConvert.Instance.sortFieldsToOrderItems(iSearchPageable.getSorts()));
-        sysPostDao.page(page,queryWrapper);
+        this.dao.page(page,queryWrapper);
         ResultPage<SysPostDTO> resultPage = new ResultPage<>();
         resultPage.setList(SysPostConvert.Instance.sysPostsToSysPostsDTOs(page.getRecords()));
         pageInfo = PageConvert.Instance.pageToPageInfo(page);

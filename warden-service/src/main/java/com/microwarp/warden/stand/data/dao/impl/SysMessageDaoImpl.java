@@ -2,9 +2,9 @@ package com.microwarp.warden.stand.data.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.microwarp.warden.stand.common.security.JwtUser;
 import com.microwarp.warden.stand.common.utils.JwtUtil;
+import com.microwarp.warden.stand.data.basic.BaseDaoImpl;
 import com.microwarp.warden.stand.data.convert.SysMessageConvert;
 import com.microwarp.warden.stand.data.dao.SysMessageDao;
 import com.microwarp.warden.stand.data.entity.SysMessage;
@@ -18,7 +18,7 @@ import java.util.Arrays;
  * dao - 系统消息 - impl
  */
 @Repository
-public class SysMessageDaoImpl extends ServiceImpl<SysMessageMapper,SysMessage> implements SysMessageDao {
+public class SysMessageDaoImpl extends BaseDaoImpl<SysMessageMapper,SysMessage> implements SysMessageDao {
 
     /**
      * 查询一条系统消息

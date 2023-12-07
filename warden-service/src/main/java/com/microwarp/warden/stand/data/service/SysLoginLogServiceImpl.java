@@ -6,6 +6,7 @@ import com.microwarp.warden.stand.common.core.enums.ActionStatusEnum;
 import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
 import com.microwarp.warden.stand.common.core.pageing.PageInfo;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
+import com.microwarp.warden.stand.data.basic.BaseServiceImpl;
 import com.microwarp.warden.stand.data.convert.PageConvert;
 import com.microwarp.warden.stand.data.convert.SysLoginLogConvert;
 import com.microwarp.warden.stand.data.dao.SysLoginLogDao;
@@ -24,9 +25,7 @@ import java.util.Arrays;
  * @author zhouwenqi
  */
 @Service
-public class SysLoginLogServiceImpl extends BaseServiceImpl<SysLoginLog> implements SysLoginLogService {
-    @Resource
-    private SysLoginLogDao sysLoginLogDao;
+public class SysLoginLogServiceImpl extends BaseServiceImpl<SysLoginLog,SysLoginLogDao> implements SysLoginLogService {
 
     /**
      * 查询登录日志信息
@@ -34,7 +33,7 @@ public class SysLoginLogServiceImpl extends BaseServiceImpl<SysLoginLog> impleme
      * @return 日志信息
      */
     public SysLoginLogDTO findById(Long id){
-        return sysLoginLogDao.findById(id);
+        return this.dao.findById(id);
     }
 
     /**
@@ -48,7 +47,7 @@ public class SysLoginLogServiceImpl extends BaseServiceImpl<SysLoginLog> impleme
         queryWrapper.eq("status", ActionStatusEnum.SUCCESS);
         queryWrapper.orderByDesc("create_date");
         queryWrapper.last("limit 1");
-        SysLoginLog sysLoginLog = sysLoginLogDao.getOne(queryWrapper);
+        SysLoginLog sysLoginLog = this.dao.getOne(queryWrapper);
         return null == sysLoginLog ? null : SysLoginLogConvert.Instance.sysLoginLogToSysLoginLogDTO(sysLoginLog);
     }
 
@@ -58,7 +57,7 @@ public class SysLoginLogServiceImpl extends BaseServiceImpl<SysLoginLog> impleme
      */
     public void add(SysLoginLogDTO sysLoginLogDTO){
         SysLoginLog sysLoginLog = SysLoginLogConvert.Instance.sysLoginLogDtoToSysLoginLog(sysLoginLogDTO);
-        sysLoginLogDao.save(sysLoginLog);
+        this.dao.save(sysLoginLog);
     }
 
     /**
@@ -66,14 +65,14 @@ public class SysLoginLogServiceImpl extends BaseServiceImpl<SysLoginLog> impleme
      * @param id 日志id
      */
     public void delete(Long... id){
-        sysLoginLogDao.delete(id);
+        this.dao.delete(id);
     }
 
     /**
      * 清空登录日志
      */
     public void clearAll(){
-        sysLoginLogDao.clearAll();
+        this.dao.clearAll();
     }
 
     /**
@@ -106,12 +105,12 @@ public class SysLoginLogServiceImpl extends BaseServiceImpl<SysLoginLog> impleme
             if(null != searchDTO.getStatus() && searchDTO.getStatus().length > 0) {
                 queryWrapper.and(true, wrapper -> wrapper.in("status", Arrays.asList(searchDTO.getStatus())));
             }
-            useBaseFilter(queryWrapper,searchDTO);
+            this.dao.useBaseFilter(queryWrapper,searchDTO);
         }
         PageInfo pageInfo = iSearchPageable.getPageInfo();
         Page<SysLoginLog> page = new Page<>(pageInfo.getCurrent(),pageInfo.getPageSize());
         page.setOrders(PageConvert.Instance.sortFieldsToOrderItems(iSearchPageable.getSorts()));
-        sysLoginLogDao.page(page,queryWrapper);
+        this.dao.page(page,queryWrapper);
         ResultPage<SysLoginLogDTO> resultPage = new ResultPage<>();
         resultPage.setList(SysLoginLogConvert.Instance.sysLoginLogsToSysLoginLogDTOs(page.getRecords()));
         pageInfo = PageConvert.Instance.pageToPageInfo(page);

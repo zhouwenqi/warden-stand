@@ -1,8 +1,7 @@
 package com.microwarp.warden.stand.data.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.microwarp.warden.stand.data.basic.BaseDaoImpl;
 import com.microwarp.warden.stand.data.convert.SysPermissionConvert;
 import com.microwarp.warden.stand.data.dao.SysPermissionDao;
 import com.microwarp.warden.stand.data.entity.SysPermission;
@@ -18,7 +17,7 @@ import java.util.*;
  * @author zhouwenqi
  */
 @Repository
-public class SysPermissionDaoImpl extends ServiceImpl<SysPermissionMapper,SysPermission> implements SysPermissionDao {
+public class SysPermissionDaoImpl extends BaseDaoImpl<SysPermissionMapper,SysPermission> implements SysPermissionDao {
     /**
      * 查询权限信息
      * @param id 权限ID

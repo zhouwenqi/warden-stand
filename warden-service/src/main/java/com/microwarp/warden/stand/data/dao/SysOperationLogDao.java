@@ -1,13 +1,13 @@
 package com.microwarp.warden.stand.data.dao;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.microwarp.warden.stand.data.basic.BaseDao;
 import com.microwarp.warden.stand.data.entity.SysOperationLog;
 import com.microwarp.warden.stand.facade.sysoperationlog.dto.SysOperationLogDTO;
 
 /**
  * dao - 操作日志
  */
-public interface SysOperationLogDao extends IService<SysOperationLog> {
+public interface SysOperationLogDao extends BaseDao<SysOperationLog> {
     /**
      * 查询操作日志信息
      * @param id 日志id

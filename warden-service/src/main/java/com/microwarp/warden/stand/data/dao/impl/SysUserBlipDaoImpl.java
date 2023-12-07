@@ -2,7 +2,7 @@ package com.microwarp.warden.stand.data.dao.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.microwarp.warden.stand.data.basic.BaseDaoImpl;
 import com.microwarp.warden.stand.data.dao.SysUserBlipDao;
 import com.microwarp.warden.stand.data.entity.SysUserBlip;
 import com.microwarp.warden.stand.data.mapper.SysUserBlipMapper;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
  * @author zhouwenqi
  */
 @Repository
-public class SysUserBlipDaoImpl extends ServiceImpl<SysUserBlipMapper,SysUserBlip> implements SysUserBlipDao{
+public class SysUserBlipDaoImpl extends BaseDaoImpl<SysUserBlipMapper,SysUserBlip> implements SysUserBlipDao{
     /**
      * 查询一条用户标记信息
      * @param userId 用户id

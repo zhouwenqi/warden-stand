@@ -10,7 +10,7 @@ public class SysConfigVO {
     private Boolean enabledRegister;
     /** 允许一个帐号生成多个有效token */
     private Boolean allowManyToken;
-    /** 开始再次验证功能 */
+    /** 开启再次验证功能 */
     private Boolean enabledAgainVerify;
 
     public Boolean getEnabledRegister() {

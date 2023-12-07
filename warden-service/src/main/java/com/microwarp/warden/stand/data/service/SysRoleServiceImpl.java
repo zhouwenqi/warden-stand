@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.microwarp.warden.stand.common.core.pageing.*;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
+import com.microwarp.warden.stand.data.basic.BaseServiceImpl;
 import com.microwarp.warden.stand.data.convert.PageConvert;
 import com.microwarp.warden.stand.data.convert.SysRoleConvert;
 import com.microwarp.warden.stand.data.dao.SysPermissionDao;
@@ -27,9 +28,7 @@ import java.util.List;
  * @author zhouwenqi
  */
 @Service
-public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysRoleService {
-    @Resource
-    private SysRoleDao sysRoleDao;
+public class SysRoleServiceImpl extends BaseServiceImpl<SysRole,SysRoleDao> implements SysRoleService {
     @Resource
     private  SysPermissionDao sysPermissionDao;
     @Resource
@@ -41,7 +40,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
      */
     @Override
     public List<SysRoleDTO> findAll(){
-        return sysRoleDao.findAll();
+        return this.dao.findAll();
     }
     /**
      * 查询系统角色信息
@@ -50,7 +49,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
      */
     @Override
     public SysRoleDTO findById(Long id){
-        SysRole sysRole = sysRoleDao.getById(id);
+        SysRole sysRole = this.dao.getById(id);
         return null != sysRole ? SysRoleConvert.Instance.sysRoleToSysRoleDTO(sysRole) : null;
     }
 
@@ -61,7 +60,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
      */
     @Override
     public List<SysRoleDTO> findByIds(Long...ids){
-        return sysRoleDao.findByIds(ids);
+        return this.dao.findByIds(ids);
     }
 
     /**
@@ -90,7 +89,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
          // 先删除角色与权限关系信息
          sysPermissionDao.deletePermissionByRoleIds(id);
          // 先删除角色与用户关系信息，和角色信息
-         sysRoleDao.deleteByIds(id);
+        this.dao.deleteByIds(id);
         // 清除用户缓存
         sysUserService.clearAll();
     }
@@ -105,11 +104,11 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
     public SysRoleDTO create(SysRoleDTO sysRoleDTO) {
         QueryWrapper<SysRole> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("value",sysRoleDTO.getValue());
-        if(sysRoleDao.count(queryWrapper) > 0){
+        if(this.dao.count(queryWrapper) > 0){
             throw new WardenParamterErrorException("角色值不能重复");
         }
         SysRole sysRole = SysRoleConvert.Instance.sysRoleDtoToSysSysRole(sysRoleDTO);
-        sysRoleDao.save(sysRole);
+        this.dao.save(sysRole);
         return findById(sysRole.getId());
     }
 
@@ -126,11 +125,11 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
         QueryWrapper<SysRole> queryWrapper = new QueryWrapper<>();
         queryWrapper.ne("id",sysRoleDTO.getId());
         queryWrapper.eq("value",sysRoleDTO.getValue());
-        if(sysRoleDao.count(queryWrapper) > 0){
+        if(this.dao.count(queryWrapper) > 0){
             throw new WardenParamterErrorException("角色值不能重复");
         }
         SysRole sysRole = SysRoleConvert.Instance.sysRoleDtoToSysSysRole(sysRoleDTO);
-        sysRoleDao.updateById(sysRole);
+        this.dao.updateById(sysRole);
         // 清除用户缓存
         sysUserService.clearAll();
     }
@@ -148,7 +147,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
                 UpdateWrapper<SysRole> updateWrapper = new UpdateWrapper<>();
                 updateWrapper.set("orders",i);
                 updateWrapper.eq("id",id);
-                sysRoleDao.update(updateWrapper);
+                this.dao.update(updateWrapper);
                 i ++;
             }
         }
@@ -163,7 +162,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
     @Override
     @Transactional
     public void saveUserRoles(Long userId, Long... roleIds) {
-        sysRoleDao.saveUserRoles(userId, roleIds);
+        this.dao.saveUserRoles(userId, roleIds);
         // 清除用户缓存
         sysUserService.clearCache(userId);
     }
@@ -175,7 +174,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
      */
     @Override
     public List<SysRoleDTO> findByValues(String...values){
-        return sysRoleDao.findByValues(values);
+        return this.dao.findByValues(values);
     }
 
     /**
@@ -196,12 +195,12 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRole> implements SysR
             );
         }
         if(null != iSearchPageable.getFilters()){
-            useBaseFilter(queryWrapper,iSearchPageable.getFilters());
+            this.dao.useBaseFilter(queryWrapper,iSearchPageable.getFilters());
         }
         PageInfo pageInfo = iSearchPageable.getPageInfo();
         Page<SysRole> page = new Page<>(pageInfo.getCurrent(),pageInfo.getPageSize());
         page.setOrders(PageConvert.Instance.sortFieldsToOrderItems(iSearchPageable.getSorts()));
-        sysRoleDao.page(page,queryWrapper);
+        this.dao.page(page,queryWrapper);
         ResultPage<SysRoleDTO> resultPage = new ResultPage<>();
         resultPage.setList(SysRoleConvert.Instance.sysRolesToSysRoleDTOs(page.getRecords()));
         pageInfo = PageConvert.Instance.pageToPageInfo(page);

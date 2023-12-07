@@ -1,6 +1,6 @@
 package com.microwarp.warden.stand.data.dao;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.microwarp.warden.stand.data.basic.BaseDao;
 import com.microwarp.warden.stand.data.entity.SysDictionary;
 import com.microwarp.warden.stand.facade.sysdictionary.dto.SysDictionaryDTO;
 
@@ -8,7 +8,7 @@ import com.microwarp.warden.stand.facade.sysdictionary.dto.SysDictionaryDTO;
  * dao - 字典
  * @author zhouwenqi
  */
-public interface SysDictionaryDao extends IService<SysDictionary> {
+public interface SysDictionaryDao extends BaseDao<SysDictionary> {
     /**
      * 查询字典信息
      * @param id 字典id

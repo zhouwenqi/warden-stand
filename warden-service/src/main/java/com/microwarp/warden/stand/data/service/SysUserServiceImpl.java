@@ -11,6 +11,7 @@ import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
 import com.microwarp.warden.stand.common.exception.WardenRequireParamterException;
 import com.microwarp.warden.stand.common.utils.StringUtil;
+import com.microwarp.warden.stand.data.basic.BaseServiceImpl;
 import com.microwarp.warden.stand.data.convert.PageConvert;
 import com.microwarp.warden.stand.data.convert.SysUserConvert;
 import com.microwarp.warden.stand.data.dao.*;
@@ -37,9 +38,7 @@ import java.util.Set;
  * @author zhouwenqi
  */
 @Service
-public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysUserService {
-    @Resource
-    private SysUserDao sysUserDao;
+public class SysUserServiceImpl extends BaseServiceImpl<SysUser,SysUserDao> implements SysUserService {
     @Resource
     private SysRoleDao sysRoleDao;
     @Resource
@@ -58,7 +57,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
      */
     @Override
     public SysUserDTO findById(Long id){
-        return sysUserDao.findById(id);
+        return this.dao.findById(id);
     }
 
     /**
@@ -68,7 +67,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
      */
     @Override
     public SysUserDTO findByUid(String uid){
-        return sysUserDao.findByUid(uid);
+        return this.dao.findByUid(uid);
     }
 
     /**
@@ -113,7 +112,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
             sysUserDTO.setPy(pinyins[1]);
         }
         SysUser sysUser = SysUserConvert.Instance.sysUserDtoToSysUser(sysUserDTO);
-        sysUserDao.save(sysUser);
+        this.dao.save(sysUser);
         return sysUser.getId();
     }
 
@@ -152,7 +151,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
             sysUserDTO.setPy(pinyins[1]);
         }
         SysUser sysUser = SysUserConvert.Instance.sysUserDtoToSysUser(sysUserDTO);
-        sysUserDao.updateById(sysUser);
+        this.dao.updateById(sysUser);
         // 因为还有以uid为key的缓存，所在要手动清理一下
         return findDetailsById(sysUser.getId());
 
@@ -173,10 +172,10 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
         UpdateWrapper<SysUser> updateWrapper = new UpdateWrapper<>();
         updateWrapper.set("pwd",sysUserPasswordDTO.getNewPassword());
         updateWrapper.eq("id",sysUserPasswordDTO.getUserId());
-        sysUserDao.update(updateWrapper);
+        this.dao.update(updateWrapper);
 
         // 因为还有以uid为key的缓存，所在要手动清理一下
-        SysUser user = sysUserDao.getById(sysUserPasswordDTO.getUserId());
+        SysUser user = this.dao.getById(sysUserPasswordDTO.getUserId());
         if(null != user){
             iCacheService.batchRemove(CacheConstants.CACHE_USER_UID, user.getUid());
         }
@@ -223,12 +222,12 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
             );
         }
         if(null != iSearchPageable.getFilters()){
-            useBaseFilter(queryWrapper,iSearchPageable.getFilters());
+            this.dao.useBaseFilter(queryWrapper,iSearchPageable.getFilters());
         }
         PageInfo pageInfo = iSearchPageable.getPageInfo();
         Page<SysUser> page = new Page<>(pageInfo.getCurrent(),pageInfo.getPageSize());
         page.setOrders(PageConvert.Instance.sortFieldsToOrderItems(iSearchPageable.getSorts()));
-        sysUserDao.page(page,queryWrapper);
+        this.dao.page(page,queryWrapper);
         ResultPage<SysUserDTO> resultPage = new ResultPage<>();
         resultPage.setList(SysUserConvert.Instance.sysUsersToSysUserDTOs(page.getRecords()));
         pageInfo = PageConvert.Instance.pageToPageInfo(page);
@@ -245,11 +244,11 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     @CacheEvict(value = CacheConstants.CACHE_USER_ID, key = "#userId")
     public void delete(Long userId){
         // 因为还有以uid为key的缓存，所在要手动清理一下
-        SysUser sysUser = sysUserDao.getById(userId);
+        SysUser sysUser = this.dao.getById(userId);
         if(null != sysUser){
             iCacheService.batchRemove(CacheConstants.CACHE_USER_UID, sysUser.getUid());
         }
-        sysUserDao.removeById(userId);
+        this.dao.removeById(userId);
         sysRoleDao.deleteRoleByUserId(userId);
 
     }
@@ -261,7 +260,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
      */
     @Override
     public String refreshSecretKey(Long userId){
-        SysUser sysUser = sysUserDao.getById(userId);
+        SysUser sysUser = this.dao.getById(userId);
         if(null == sysUser){
             return null;
         }
@@ -269,7 +268,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
         iCacheService.batchRemove(CacheConstants.CACHE_USER_UID, sysUser.getUid());
         iCacheService.batchRemove(CacheConstants.CACHE_USER_ID, userId.toString());
         // 刷新密钥
-        return sysUserDao.refreshSecretKey(userId);
+        return this.dao.refreshSecretKey(userId);
     }
 
     /**
@@ -282,7 +281,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
             iCacheService.batchRemove(CacheConstants.CACHE_USER_UID, null);
             iCacheService.batchRemove(CacheConstants.CACHE_USER_ID, null);
         }else{
-            SysUser sysUser = sysUserDao.getById(userId);
+            SysUser sysUser = this.dao.getById(userId);
             iCacheService.batchRemove(CacheConstants.CACHE_USER_UID, sysUser.getUid());
             iCacheService.batchRemove(CacheConstants.CACHE_USER_ID, userId.toString());
         }

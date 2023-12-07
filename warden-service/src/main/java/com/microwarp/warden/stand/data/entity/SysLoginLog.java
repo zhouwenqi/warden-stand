@@ -2,6 +2,7 @@ package com.microwarp.warden.stand.data.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.microwarp.warden.stand.common.core.enums.*;
+import com.microwarp.warden.stand.data.basic.LogicEntity;
 
 /**
  * entity - 登录日志

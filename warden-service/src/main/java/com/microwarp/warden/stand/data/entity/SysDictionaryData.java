@@ -1,13 +1,14 @@
 package com.microwarp.warden.stand.data.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.microwarp.warden.stand.data.basic.LogicEntity;
 
 /**
  * entity - 字典数据
  * @author zhouwenqi
  */
 @TableName("wd_sys_dictionary_data")
-public class SysDictionaryData extends LogicEntity  {
+public class SysDictionaryData extends LogicEntity {
     private static final long serialVersionUID = -3695754001554454624L;
     /** 字典id */
     private Long dictId;

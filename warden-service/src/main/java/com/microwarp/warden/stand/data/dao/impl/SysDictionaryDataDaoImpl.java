@@ -1,7 +1,7 @@
 package com.microwarp.warden.stand.data.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.microwarp.warden.stand.data.basic.BaseDaoImpl;
 import com.microwarp.warden.stand.data.convert.SysDictionaryDataConvert;
 import com.microwarp.warden.stand.data.dao.SysDictionaryDataDao;
 import com.microwarp.warden.stand.data.entity.SysDictionaryData;
@@ -17,7 +17,7 @@ import java.util.List;
  * dao - 字典数据 - impl
  */
 @Repository
-public class SysDictionaryDataDaoImpl extends ServiceImpl<SysDictionaryDataMapper,SysDictionaryData> implements SysDictionaryDataDao {
+public class SysDictionaryDataDaoImpl extends BaseDaoImpl<SysDictionaryDataMapper,SysDictionaryData> implements SysDictionaryDataDao {
     /**
      * 查询字典数据信息
      * @param id 字典数据id

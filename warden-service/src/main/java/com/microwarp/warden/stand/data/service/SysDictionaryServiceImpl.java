@@ -9,6 +9,7 @@ import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
 import com.microwarp.warden.stand.common.core.pageing.PageInfo;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
+import com.microwarp.warden.stand.data.basic.BaseServiceImpl;
 import com.microwarp.warden.stand.data.convert.PageConvert;
 import com.microwarp.warden.stand.data.convert.SysDictionaryConvert;
 import com.microwarp.warden.stand.data.dao.SysDictionaryDao;
@@ -28,9 +29,7 @@ import java.util.Arrays;
  * @author zhouwenqi
  */
 @Service
-public class SysDictionaryServiceImpl implements SysDictionaryService {
-    @Resource
-    private SysDictionaryDao sysDictionaryDao;
+public class SysDictionaryServiceImpl extends BaseServiceImpl<SysDictionary,SysDictionaryDao> implements SysDictionaryService {
     @Resource
     private SysDictionaryDataDao sysDictionaryDataDao;
     @Resource
@@ -44,7 +43,7 @@ public class SysDictionaryServiceImpl implements SysDictionaryService {
      * @return 字典信息
      */
     public SysDictionaryDTO findById(Long id){
-        return sysDictionaryDao.findById(id);
+        return this.dao.findById(id);
     }
 
     /**
@@ -53,7 +52,7 @@ public class SysDictionaryServiceImpl implements SysDictionaryService {
      * @return 字典信息
      */
     public SysDictionaryDTO findByCode(String code){
-        return sysDictionaryDao.findByCode(code);
+        return this.dao.findByCode(code);
     }
 
     /**
@@ -65,11 +64,11 @@ public class SysDictionaryServiceImpl implements SysDictionaryService {
     public SysDictionaryDTO create(SysDictionaryDTO sysDictionaryDTO){
         QueryWrapper<SysDictionary> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("code",sysDictionaryDTO.getCode());
-        if(sysDictionaryDao.count(queryWrapper) > 0){
+        if(this.dao.count(queryWrapper) > 0){
             throw new WardenParamterErrorException("字典编码不能重复");
         }
         SysDictionary sysDictionary = SysDictionaryConvert.Instance.sysDictionaryDtoToSysDictionary(sysDictionaryDTO);
-        sysDictionaryDao.save(sysDictionary);
+        this.dao.save(sysDictionary);
         return findById(sysDictionary.getId());
     }
 
@@ -82,7 +81,7 @@ public class SysDictionaryServiceImpl implements SysDictionaryService {
         if(null == sysDictionaryDTO.getId()){
             return;
         }
-        SysDictionary dictionary = sysDictionaryDao.getById(sysDictionaryDTO.getId());
+        SysDictionary dictionary = this.dao.getById(sysDictionaryDTO.getId());
         if(null == dictionary){
             throw new WardenParamterErrorException("字典不存在");
         }
@@ -90,7 +89,7 @@ public class SysDictionaryServiceImpl implements SysDictionaryService {
         if(StringUtils.isNotBlank(sysDictionaryDTO.getCode())){
             queryWrapper.eq("code",sysDictionaryDTO.getCode());
             queryWrapper.ne("id",sysDictionaryDTO.getId());
-            if(sysDictionaryDao.count(queryWrapper) > 0){
+            if(this.dao.count(queryWrapper) > 0){
                 throw new WardenParamterErrorException("字典编码不能重复");
             }
             // 手动删除缓存
@@ -98,7 +97,7 @@ public class SysDictionaryServiceImpl implements SysDictionaryService {
         }
 
         SysDictionary sysDictionary = SysDictionaryConvert.Instance.sysDictionaryDtoToSysDictionary(sysDictionaryDTO);
-        sysDictionaryDao.updateById(sysDictionary);
+        this.dao.updateById(sysDictionary);
     }
 
     /**
@@ -110,10 +109,10 @@ public class SysDictionaryServiceImpl implements SysDictionaryService {
         if(null == id || id.length < 1){
             return;
         }
-        sysDictionaryDao.removeBatchByIds(Arrays.asList(id));
+        this.dao.removeBatchByIds(Arrays.asList(id));
         sysDictionaryDataDao.deleteByDictId(id);
         // 手动删除缓存
-        String[] dictCodes = sysDictionaryDao.findDCodeByIds(id);
+        String[] dictCodes = this.dao.findDCodeByIds(id);
         if(dictCodes.length> 0){
             iCacheService.batchRemove(CacheConstants.CACHE_DICT_DATAS, dictCodes);
         }
@@ -150,7 +149,7 @@ public class SysDictionaryServiceImpl implements SysDictionaryService {
         PageInfo pageInfo = iSearchPageable.getPageInfo();
         Page<SysDictionary> page = new Page<>(pageInfo.getCurrent(),pageInfo.getPageSize());
         page.setOrders(PageConvert.Instance.sortFieldsToOrderItems(iSearchPageable.getSorts()));
-        sysDictionaryDao.page(page,queryWrapper);
+        this.dao.page(page,queryWrapper);
         ResultPage<SysDictionaryDTO> resultPage = new ResultPage<>();
         resultPage.setList(SysDictionaryConvert.Instance.sysDictionarysToSysDictionaryDTOs(page.getRecords()));
         pageInfo = PageConvert.Instance.pageToPageInfo(page);

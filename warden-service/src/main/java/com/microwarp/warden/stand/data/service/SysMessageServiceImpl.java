@@ -7,6 +7,7 @@ import com.microwarp.warden.stand.common.core.pageing.PageInfo;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
 import com.microwarp.warden.stand.common.security.JwtUser;
 import com.microwarp.warden.stand.common.utils.JwtUtil;
+import com.microwarp.warden.stand.data.basic.BaseServiceImpl;
 import com.microwarp.warden.stand.data.convert.PageConvert;
 import com.microwarp.warden.stand.data.convert.SysMessageConvert;
 import com.microwarp.warden.stand.data.dao.SysMessageDao;
@@ -29,9 +30,7 @@ import java.util.List;
  * @author zhouwenqi
  */
 @Service
-public class SysMessageServiceImpl extends BaseServiceImpl<SysMessage> implements SysMessageService {
-    @Resource
-    private SysMessageDao sysMessageDao;
+public class SysMessageServiceImpl extends BaseServiceImpl<SysMessage,SysMessageDao> implements SysMessageService {
     @Resource
     private SysUserDao sysUserDao;
 
@@ -42,7 +41,7 @@ public class SysMessageServiceImpl extends BaseServiceImpl<SysMessage> implement
      */
     @Override
     public SysMessageDTO findById(Long id){
-        SysMessage sysMessage = sysMessageDao.getById(id);
+        SysMessage sysMessage = this.dao.getById(id);
         return null == sysMessage ? null : SysMessageConvert.Instance.sysMessageToSysMessageDTO(sysMessage);
     }
 
@@ -57,7 +56,7 @@ public class SysMessageServiceImpl extends BaseServiceImpl<SysMessage> implement
         if(null == id || null == jwtUser || null == jwtUser.getUserId() || null == jwtUser.getType()){
             return null;
         }
-        return sysMessageDao.findById(id,jwtUser);
+        return this.dao.findById(id,jwtUser);
     }
     /**
      * 创建一条系统消息
@@ -67,7 +66,7 @@ public class SysMessageServiceImpl extends BaseServiceImpl<SysMessage> implement
     @Override
     public SysMessageDTO create(SysMessageDTO sysMessageDTO){
         SysMessage sysMessage = SysMessageConvert.Instance.sysMessageDtoToSysMessage(sysMessageDTO);
-        sysMessageDao.save(sysMessage);
+        this.dao.save(sysMessage);
         return findById(sysMessage.getId());
     }
 
@@ -82,7 +81,7 @@ public class SysMessageServiceImpl extends BaseServiceImpl<SysMessage> implement
         if(null == id || id.length < 1 ){
             return;
         }
-        sysMessageDao.setReadStatus(id,jwtUser,true);
+        this.dao.setReadStatus(id,jwtUser,true);
     }
 
     /**
@@ -95,7 +94,7 @@ public class SysMessageServiceImpl extends BaseServiceImpl<SysMessage> implement
         for(SysUser sysUser:list) {
             sysMessageDTO.setToId(sysUser.getId());
             SysMessage sysMessage = SysMessageConvert.Instance.sysMessageDtoToSysMessage(sysMessageDTO);
-            sysMessageDao.save(sysMessage);
+            this.dao.save(sysMessage);
         }
     }
 
@@ -105,7 +104,7 @@ public class SysMessageServiceImpl extends BaseServiceImpl<SysMessage> implement
      */
     @Override
     public void readAll(JwtUser jwtUser){
-        sysMessageDao.setReadStatus(null, jwtUser, true);
+        this.dao.setReadStatus(null, jwtUser, true);
     }
 
     /**
@@ -114,7 +113,7 @@ public class SysMessageServiceImpl extends BaseServiceImpl<SysMessage> implement
      */
     @Override
     public void delete(Long[]id, JwtUser jwtUser){
-        sysMessageDao.delete(id,jwtUser);
+        this.dao.delete(id,jwtUser);
     }
 
     /**
@@ -128,7 +127,7 @@ public class SysMessageServiceImpl extends BaseServiceImpl<SysMessage> implement
         queryWrapper.eq("to_id",jwtUser.getUserId());
         queryWrapper.eq("to_platform", JwtUtil.convertToPlatform(jwtUser.getType()));
         queryWrapper.eq("reading",false);
-        return sysMessageDao.count(queryWrapper);
+        return this.dao.count(queryWrapper);
     }
 
     /**
@@ -169,13 +168,12 @@ public class SysMessageServiceImpl extends BaseServiceImpl<SysMessage> implement
             if(null != searchDTO.getReading()){
                 queryWrapper.and(true,wrapper -> wrapper.eq("reading",searchDTO.getReading()));
             }
-
-            useBaseFilter(queryWrapper,searchDTO);
+            this.dao.useBaseFilter(queryWrapper,searchDTO);
         }
         PageInfo pageInfo = iSearchPageable.getPageInfo();
         Page<SysMessage> page = new Page<>(pageInfo.getCurrent(),pageInfo.getPageSize());
         page.setOrders(PageConvert.Instance.sortFieldsToOrderItems(iSearchPageable.getSorts()));
-        sysMessageDao.page(page,queryWrapper);
+        this.dao.page(page,queryWrapper);
         ResultPage<SysMessageDTO> resultPage = new ResultPage<>();
         resultPage.setList(SysMessageConvert.Instance.sysMessagesToSysMessageDTOs(page.getRecords()));
         pageInfo = PageConvert.Instance.pageToPageInfo(page);

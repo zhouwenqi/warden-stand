@@ -1,6 +1,7 @@
 package com.microwarp.warden.stand.data.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.microwarp.warden.stand.data.basic.BaseServiceImpl;
 import com.microwarp.warden.stand.data.dao.SysUserBlipDao;
 import com.microwarp.warden.stand.data.entity.SysUserBlip;
 import com.microwarp.warden.stand.facade.sysuser.service.SysUserBlipService;
@@ -12,9 +13,7 @@ import org.springframework.stereotype.Service;
  * @author zhouwenqi
  */
 @Service
-public class SysUserBlipServiceImpl implements SysUserBlipService {
-    @Autowired
-    private SysUserBlipDao sysUserBlipDao;
+public class SysUserBlipServiceImpl extends BaseServiceImpl<SysUserBlip,SysUserBlipDao> implements SysUserBlipService {
     /**
      * 检查用户是否被标记波动
      * @param userId 用户id
@@ -25,7 +24,7 @@ public class SysUserBlipServiceImpl implements SysUserBlipService {
         QueryWrapper<SysUserBlip> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id",userId);
         queryWrapper.eq("ip",ip);
-        return sysUserBlipDao.count(queryWrapper) > 0;
+        return this.dao.count(queryWrapper) > 0;
     }
 
     /**
@@ -34,14 +33,14 @@ public class SysUserBlipServiceImpl implements SysUserBlipService {
      * @param ip ip地址
      */
     public void add(Long userId,String ip){
-        SysUserBlip sysUserBlip = sysUserBlipDao.find(userId,ip);
+        SysUserBlip sysUserBlip = this.dao.find(userId,ip);
         if(null != sysUserBlip){
             return;
         }
         sysUserBlip = new SysUserBlip();
         sysUserBlip.setIp(ip);
         sysUserBlip.setUserId(userId);
-        sysUserBlipDao.save(sysUserBlip);
+        this.dao.save(sysUserBlip);
     }
 
     /**
@@ -53,7 +52,7 @@ public class SysUserBlipServiceImpl implements SysUserBlipService {
         QueryWrapper<SysUserBlip> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id",userId);
         queryWrapper.eq("ip",ip);
-        sysUserBlipDao.remove(queryWrapper);
+        this.dao.remove(queryWrapper);
     }
 
     /**
@@ -63,6 +62,6 @@ public class SysUserBlipServiceImpl implements SysUserBlipService {
     public void clear(Long userId){
         QueryWrapper<SysUserBlip> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id",userId);
-        sysUserBlipDao.remove(queryWrapper);
+        this.dao.remove(queryWrapper);
     }
 }

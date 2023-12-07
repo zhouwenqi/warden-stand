@@ -2,11 +2,8 @@ package com.microwarp.warden.stand.data.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.microwarp.warden.stand.common.exception.WardenException;
 import com.microwarp.warden.stand.common.utils.GoogleAuthUtil;
+import com.microwarp.warden.stand.data.basic.BaseDaoImpl;
 import com.microwarp.warden.stand.data.convert.SysUserConvert;
 import com.microwarp.warden.stand.data.dao.SysUserDao;
 import com.microwarp.warden.stand.data.entity.SysUser;
@@ -23,7 +20,7 @@ import java.util.List;
  * @author zhouwenqi
  */
 @Repository
-public class SysUserDaoImpl extends ServiceImpl<SysUserMapper,SysUser> implements SysUserDao {
+public class SysUserDaoImpl extends BaseDaoImpl<SysUserMapper,SysUser> implements SysUserDao {
     /**
      * 查询系统用户基本信息
      * @param id 用户id

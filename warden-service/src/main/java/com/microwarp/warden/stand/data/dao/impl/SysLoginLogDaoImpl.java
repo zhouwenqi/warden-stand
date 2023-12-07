@@ -1,7 +1,7 @@
 package com.microwarp.warden.stand.data.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.microwarp.warden.stand.data.basic.BaseDaoImpl;
 import com.microwarp.warden.stand.data.convert.SysLoginLogConvert;
 import com.microwarp.warden.stand.data.dao.SysLoginLogDao;
 import com.microwarp.warden.stand.data.entity.SysLoginLog;
@@ -15,7 +15,7 @@ import java.util.Arrays;
  * dao - 登录日志 - impl
  */
 @Repository
-public class SysLoginLogDaoImpl extends ServiceImpl<SysLoginLogMapper,SysLoginLog> implements SysLoginLogDao {
+public class SysLoginLogDaoImpl extends BaseDaoImpl<SysLoginLogMapper,SysLoginLog> implements SysLoginLogDao {
     /**
      * 查询操作日志信息
      * @param id 日志id

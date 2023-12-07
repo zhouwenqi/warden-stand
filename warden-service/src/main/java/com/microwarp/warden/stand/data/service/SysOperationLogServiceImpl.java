@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.microwarp.warden.stand.common.core.pageing.ISearchPageable;
 import com.microwarp.warden.stand.common.core.pageing.PageInfo;
 import com.microwarp.warden.stand.common.core.pageing.ResultPage;
+import com.microwarp.warden.stand.data.basic.BaseServiceImpl;
 import com.microwarp.warden.stand.data.convert.PageConvert;
 import com.microwarp.warden.stand.data.convert.SysOperationLogConvert;
 import com.microwarp.warden.stand.data.dao.SysOperationLogDao;
@@ -23,9 +24,7 @@ import java.util.Arrays;
  * @author zhouwenqi
  */
 @Service
-public class SysOperationLogServiceImpl extends BaseServiceImpl<SysOperationLog> implements SysOperationLogService {
-    @Resource
-    private SysOperationLogDao sysOperationLogDao;
+public class SysOperationLogServiceImpl extends BaseServiceImpl<SysOperationLog,SysOperationLogDao> implements SysOperationLogService {
 
     /**
      * 查询操作日志信息
@@ -33,7 +32,7 @@ public class SysOperationLogServiceImpl extends BaseServiceImpl<SysOperationLog>
      * @return 日志信息
      */
     public SysOperationLogDTO findById(Long id){
-        return sysOperationLogDao.findById(id);
+        return this.dao.findById(id);
     }
 
     /**
@@ -42,7 +41,7 @@ public class SysOperationLogServiceImpl extends BaseServiceImpl<SysOperationLog>
      */
     public void add(SysOperationLogDTO sysOperationLogDTO){
         SysOperationLog sysOperationLog = SysOperationLogConvert.Instance.sysOperationLogDtoToSysOperationLog(sysOperationLogDTO);
-        sysOperationLogDao.save(sysOperationLog);
+        this.dao.save(sysOperationLog);
     }
 
     /**
@@ -50,14 +49,14 @@ public class SysOperationLogServiceImpl extends BaseServiceImpl<SysOperationLog>
      * @param id 日志id
      */
     public void delete(Long... id){
-        sysOperationLogDao.delete(id);
+        this.dao.delete(id);
     }
 
     /**
      * 清空操作日志
      */
     public void clearAll(){
-        sysOperationLogDao.clearAll();
+        this.dao.clearAll();
     }
 
     /**
@@ -95,12 +94,12 @@ public class SysOperationLogServiceImpl extends BaseServiceImpl<SysOperationLog>
             if(null != searchDTO.getModuleType() && searchDTO.getModuleType().length > 0) {
                 queryWrapper.and(true, wrapper -> wrapper.eq("module_type", Arrays.asList(searchDTO.getModuleType())));
             }
-            useBaseFilter(queryWrapper,searchDTO);
+            this.dao.useBaseFilter(queryWrapper,searchDTO);
         }
         PageInfo pageInfo = iSearchPageable.getPageInfo();
         Page<SysOperationLog> page = new Page<>(pageInfo.getCurrent(),pageInfo.getPageSize());
         page.setOrders(PageConvert.Instance.sortFieldsToOrderItems(iSearchPageable.getSorts()));
-        sysOperationLogDao.page(page,queryWrapper);
+        this.dao.page(page,queryWrapper);
         ResultPage<SysOperationLogDTO> resultPage = new ResultPage<>();
         resultPage.setList(SysOperationLogConvert.Instance.sysOperationLogsToSysOperationLogDTOs(page.getRecords()));
         pageInfo = PageConvert.Instance.pageToPageInfo(page);
