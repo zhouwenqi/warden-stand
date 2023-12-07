@@ -2,9 +2,7 @@ package com.microwarp.warden.stand.admin.domain.vo;
 
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 
 /**
  * request - 二次验证请求
@@ -12,16 +10,15 @@ import javax.validation.constraints.NotNull;
  */
 public class GoogleVerifyRequest {
     /** 验证码 */
-    @NotNull(message = "验证码不能为空")
-    @Max(value = Long.MAX_VALUE,message = "验证码只能是6位数字")
-    @Min(value = Long.MIN_VALUE,message = "验证码只能是6位数字")
-    private Long code;
+    @NotBlank(message = "验证码不能为空")
+    @Pattern(regexp = "^[0-9]{6}",message = "验证码只能是6位数字")
+    private String code;
 
-    public Long getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(Long code) {
+    public void setCode(String code) {
         this.code = code;
     }
 }

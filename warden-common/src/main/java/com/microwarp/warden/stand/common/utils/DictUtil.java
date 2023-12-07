@@ -21,6 +21,7 @@ public class DictUtil {
         addEnum(MessageTypeEnum.class,MessageTypeEnum.values(),"消息类型");
         addEnum(PlatformTypeEnum.class,PlatformTypeEnum.values(),"平台类型");
         addEnum(TopicEnum.class,TopicEnum.values(),"消息主题");
+        addEnum(AgainVerifyTypeEnum.class,AgainVerifyTypeEnum.values(),"再次验证类型");
     }
     public static WardenDictionary getEnumDictionary(String key){
         return  WardenDictionary.DictMap.get(key);

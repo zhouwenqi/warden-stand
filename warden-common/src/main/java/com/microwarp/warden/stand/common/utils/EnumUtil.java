@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Administrator on 5/9/2023.
+ * util - enum
  */
 public class EnumUtil {
     public static List<Integer> getCodes(BaseEnum[] baseEnum){

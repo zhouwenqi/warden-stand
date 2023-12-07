@@ -1,6 +1,7 @@
 package com.microwarp.warden.stand.data.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.microwarp.warden.stand.common.core.enums.AgainVerifyTypeEnum;
 
 import java.io.Serializable;
 
@@ -15,8 +16,8 @@ public class SysConfig implements Serializable {
     private Boolean enabledRegister;
     /** 允许一个帐号生成多个有效token */
     private Boolean allowManyToken;
-    /** 开启再次验证功能 */
-    private Boolean enabledAgainVerify;
+    /** 再次验证功能 */
+    private AgainVerifyTypeEnum againVerify;
 
     public Boolean getEnabledRegister() {
         return enabledRegister;
@@ -34,11 +35,11 @@ public class SysConfig implements Serializable {
         this.allowManyToken = allowManyToken;
     }
 
-    public Boolean getEnabledAgainVerify() {
-        return enabledAgainVerify;
+    public AgainVerifyTypeEnum getAgainVerify() {
+        return againVerify;
     }
 
-    public void setEnabledAgainVerify(Boolean enabledAgainVerify) {
-        this.enabledAgainVerify = enabledAgainVerify;
+    public void setAgainVerify(AgainVerifyTypeEnum againVerify) {
+        this.againVerify = againVerify;
     }
 }

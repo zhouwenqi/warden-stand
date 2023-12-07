@@ -1,5 +1,6 @@
 package com.microwarp.warden.stand.admin.controller;
 
+import com.microwarp.warden.stand.admin.authentication.SecurityUser;
 import com.microwarp.warden.stand.admin.config.WardenAdminConfig;
 import com.microwarp.warden.stand.admin.domain.mapstruct.SysUserMapstruct;
 import com.microwarp.warden.stand.admin.domain.vo.ProfilePasswordRequest;
@@ -73,8 +74,9 @@ public class ProfileController extends BaseController {
         SysUserDTO sysUserDTO = SysUserMapstruct.Instance.sysUserProfileRequestToSysUserDTO(profileRequest);
         sysUserDTO.setId(getSecruityUser().getSysUser().getId());
         sysUserService.update(sysUserDTO);
+        SecurityUser securityUser = getSecruityUser();
         // 写入日志
-        writeLog("修改个人资料:"+sysUserDTO.getUid()+"["+sysUserDTO.getId()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_USER,sysUserDTO.getId());
+        writeLog("修改个人资料:"+securityUser.getUsername()+"["+sysUserDTO.getId()+"]", ActionTypeEnum.MODIFY, ModuleTypeEnum.SYS_USER,sysUserDTO.getId());
         return resultModel;
     }
 

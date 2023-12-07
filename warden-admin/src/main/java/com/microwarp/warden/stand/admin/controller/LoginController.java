@@ -94,9 +94,6 @@ public class LoginController extends BaseController {
                         throw new WardenParamterErrorException("验证码错误");
                     }
                     break;
-                case GOOGLE_AUTHENTICATOR:
-
-                    break;
             }
         }
 
@@ -161,8 +158,9 @@ public class LoginController extends BaseController {
         // 清除登录失败计数
         loginService.success(sysUserDetailsDTO.getId(),ip);
         // 是否开启二次验证
-        if(sysConfigDTO.getEnabledAgainVerify()) {
-            loginService.checkBlip(sysUserDetailsDTO.getId(), ip);
+        AgainVerifyTypeEnum againVerifyType = sysConfigDTO.getAgainVerify();
+        if(null != againVerifyType && !againVerifyType.equals(AgainVerifyTypeEnum.NONE)) {
+            loginService.checkBlip(sysUserDetailsDTO.getId(), ip, againVerifyType.equals(AgainVerifyTypeEnum.ALWAYS));
         }
         // 写入日志
         loginService.asyncWriteLog(sysUserDetailsDTO,"登录成功", ActionStatusEnum.SUCCESS,ip, AppTerminalEnum.PC_WEB, PlatformTypeEnum.BACKSTAGE);

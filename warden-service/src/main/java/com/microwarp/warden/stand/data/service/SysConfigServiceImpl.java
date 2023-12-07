@@ -2,6 +2,7 @@ package com.microwarp.warden.stand.data.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.microwarp.warden.stand.common.core.constant.CacheConstants;
+import com.microwarp.warden.stand.common.core.enums.AgainVerifyTypeEnum;
 import com.microwarp.warden.stand.data.basic.BaseServiceImpl;
 import com.microwarp.warden.stand.data.convert.SysConfigConvert;
 import com.microwarp.warden.stand.data.dao.SysConfigDao;
@@ -37,7 +38,7 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfig,SysConfigDao
             sysConfig = new SysConfig();
             sysConfig.setAllowManyToken(false);
             sysConfig.setEnabledRegister(false);
-            sysConfig.setEnabledAgainVerify(false);
+            sysConfig.setAgainVerify(AgainVerifyTypeEnum.NONE);
         }
         return SysConfigConvert.Instance.sysConfigToSysConfigDTO(sysConfig);
     }

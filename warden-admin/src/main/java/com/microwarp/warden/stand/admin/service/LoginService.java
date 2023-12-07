@@ -88,11 +88,17 @@ public class LoginService {
      * 检查用户是否需要二次验证并标记
      * @param userId 用户id
      * @param ip ip地址
+     * @param always 永远验证
      */
-    public void checkBlip(Long userId, String ip){
-        SysLoginLogDTO sysLoginLogDTO = sysLoginLogService.findLastByUserId(userId);
-        if(null != sysLoginLogDTO && !sysLoginLogDTO.getIp().equals(ip)){
-            sysUserBlipService.add(userId,ip);
+    public void checkBlip(Long userId, String ip, boolean always){
+        if(!always) {
+            SysLoginLogDTO sysLoginLogDTO = sysLoginLogService.findLastByUserId(userId);
+            if (null != sysLoginLogDTO && !sysLoginLogDTO.getIp().equals(ip)) {
+                sysUserBlipService.add(userId, ip);
+            }
+        }
+        else{
+            sysUserBlipService.add(userId, ip);
         }
     }
 

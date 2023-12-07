@@ -70,7 +70,7 @@ public class AdminExceptionController {
     }
 
     /**
-     * excel 帐号异常
+     * 帐号异常
      * @param exception
      * @param request
      * @param response

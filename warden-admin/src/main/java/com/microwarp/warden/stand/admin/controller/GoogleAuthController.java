@@ -4,7 +4,6 @@ import com.microwarp.warden.stand.admin.domain.vo.GoogleVerifyRequest;
 import com.microwarp.warden.stand.common.core.enums.*;
 import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
 import com.microwarp.warden.stand.common.model.ResultModel;
-import com.microwarp.warden.stand.common.security.JwtUser;
 import com.microwarp.warden.stand.common.utils.GoogleAuthUtil;
 import com.microwarp.warden.stand.common.utils.QrCodeUtil;
 import com.microwarp.warden.stand.common.utils.WebUtil;
@@ -20,8 +19,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.util.Base64;
 
 /**
  * controller - google验证器
@@ -58,7 +61,8 @@ public class GoogleAuthController extends BaseController {
     @GetMapping("qrcode")
     public void qrcode(HttpServletResponse response) throws Exception {
         SysConfigDTO sysConfigDTO = sysConfigService.findCurrent();
-        if(!sysConfigDTO.getEnabledAgainVerify()){
+        AgainVerifyTypeEnum againVerifyType = sysConfigDTO.getAgainVerify();
+        if(null == againVerifyType ||!againVerifyType.equals(AgainVerifyTypeEnum.NONE)) {
             return;
         }
         response.setHeader("Cache-Control","no-store");
@@ -78,6 +82,39 @@ public class GoogleAuthController extends BaseController {
     }
 
     /**
+     * 获取google验证二维码base64
+     * @return
+     */
+    @GetMapping("base64")
+    @ResponseBody
+    public ResultModel base64(){
+        SysConfigDTO sysConfigDTO = sysConfigService.findCurrent();
+        AgainVerifyTypeEnum againVerifyType = sysConfigDTO.getAgainVerify();
+        ResultModel resultModel = ResultModel.success();
+        if(null == againVerifyType || againVerifyType.equals(AgainVerifyTypeEnum.NONE)) {
+            resultModel.addData("imgData",null);
+            return resultModel;
+        }
+        SysUserDetailsDTO user = getSecruityUser().getSysUser();
+        String secretKey = user.getSecretKey();
+        if(StringUtils.isBlank(secretKey)){
+            secretKey = sysUserService.refreshSecretKey(user.getId());
+            user.setSecretKey(secretKey);
+        }
+        try {
+            String qrcodeContent = GoogleAuthUtil.getQrCodeContent(secretKey,user.getUid(),"warden-stand");
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            BufferedImage bufferedImage = QrCodeUtil.toBufferedImage(qrcodeContent, 300, 300);
+            ImageIO.write(bufferedImage, "png", outputStream);
+            resultModel.addData("imgData", Base64.getEncoder().encodeToString(outputStream.toByteArray()));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return resultModel;
+    }
+
+    /**
      * 校验二次验证
      * @param request 校验请求
      * @return
@@ -87,15 +124,15 @@ public class GoogleAuthController extends BaseController {
     public ResultModel verify(@RequestBody @Validated GoogleVerifyRequest request){
         SysUserDetailsDTO user = getSecruityUser().getSysUser();
         String secretKey = user.getSecretKey();
-        if(GoogleAuthUtil.check(secretKey,request.getCode(),System.currentTimeMillis())){
+        long code = Long.parseLong(request.getCode());
+        if(GoogleAuthUtil.check(secretKey,code,System.currentTimeMillis())){
             String ip = WebUtil.getIpAddr();
             sysUserBlipService.delete(user.getId(),ip);
             // 写入日志
-            writeLog("系统用户二次验证:["+ user.getUid()+"]", ActionTypeEnum.CONFIRM, ModuleTypeEnum.SYS_USER,user.getId());
+            writeLog("系统用户二次验证:["+ user.getUid()+"]", ActionTypeEnum.AGAIN_VERIFY, ModuleTypeEnum.SYS_USER,user.getId());
         }else{
             throw new WardenParamterErrorException("验证码错误");
         }
         return ResultModel.success();
     }
-
 }
