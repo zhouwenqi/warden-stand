@@ -15,6 +15,8 @@ public class SysConfig implements Serializable {
     private Boolean enabledRegister;
     /** 允许一个帐号生成多个有效token */
     private Boolean allowManyToken;
+    /** 开始再次验证功能 */
+    private Boolean enabledAgainVerify;
 
     public Boolean getEnabledRegister() {
         return enabledRegister;
@@ -30,5 +32,13 @@ public class SysConfig implements Serializable {
 
     public void setAllowManyToken(Boolean allowManyToken) {
         this.allowManyToken = allowManyToken;
+    }
+
+    public Boolean getEnabledAgainVerify() {
+        return enabledAgainVerify;
+    }
+
+    public void setEnabledAgainVerify(Boolean enabledAgainVerify) {
+        this.enabledAgainVerify = enabledAgainVerify;
     }
 }

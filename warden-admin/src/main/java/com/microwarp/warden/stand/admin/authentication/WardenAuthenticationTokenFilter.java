@@ -2,6 +2,7 @@ package com.microwarp.warden.stand.admin.authentication;
 
 import com.microwarp.warden.stand.admin.domain.pojo.TokenUser;
 import com.microwarp.warden.stand.admin.service.TokenCacheService;
+import com.microwarp.warden.stand.admin.utils.SpringUtil;
 import com.microwarp.warden.stand.admin.utils.TokenUtil;
 import com.microwarp.warden.stand.common.core.cache.ICacheService;
 import com.microwarp.warden.stand.common.core.config.WardenGlobalConfig;
@@ -9,14 +10,19 @@ import com.microwarp.warden.stand.common.core.constant.AttrConstants;
 import com.microwarp.warden.stand.common.core.constant.CacheConstants;
 import com.microwarp.warden.stand.common.exception.WardenTokenErrorException;
 import com.microwarp.warden.stand.common.security.UserType;
+import com.microwarp.warden.stand.common.utils.WebUtil;
 import com.microwarp.warden.stand.facade.sysconfig.service.SysConfigService;
+import com.microwarp.warden.stand.facade.sysuser.service.SysUserBlipService;
+import com.microwarp.warden.stand.facade.sysuser.service.SysUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.handler.HandlerExceptionResolverComposite;
 
+import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -29,23 +35,30 @@ import java.io.IOException;
  */
 public class WardenAuthenticationTokenFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(WardenAuthenticationTokenFilter.class);
-    @Autowired
+    @Resource
     private WardenGlobalConfig wardenGlobalConfig;
 
-    @Autowired
+    @Resource
     private HandlerExceptionResolver handlerExceptionResolver;
 
-    @Autowired
+    @Resource
     private SysConfigService sysConfigService;
 
-    @Autowired
+    @Resource
     private SysUserDetailsService sysUserDetailsService;
 
-    @Autowired
+    @Resource
     private TokenCacheService tokenCacheService;
+
 
     public WardenAuthenticationTokenFilter(){
         super();
+        this.wardenGlobalConfig = SpringUtil.getBean(WardenGlobalConfig.class);
+        this.handlerExceptionResolver = SpringUtil.getBean(HandlerExceptionResolverComposite.class);
+        this.sysConfigService = SpringUtil.getBean(SysConfigService.class);
+        this.sysUserDetailsService = SpringUtil.getBean(SysUserDetailsService.class);
+        this.tokenCacheService = SpringUtil.getBean(TokenCacheService.class);
+
     }
 
     @Override

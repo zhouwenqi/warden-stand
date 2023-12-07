@@ -14,7 +14,8 @@ public enum ActionTypeEnum implements BaseEnum {
     LOGIN(7,"登录"),
     QUIT(8,"退出"),
     PAYMENT(9,"支付"),
-    PUSH(10,"推送");
+    PUSH(10,"推送"),
+    CONFIRM(11,"二次验证");
     int code;
     String tag;
     ActionTypeEnum(int code, String tag){

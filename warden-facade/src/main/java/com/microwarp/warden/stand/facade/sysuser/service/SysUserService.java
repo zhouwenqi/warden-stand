@@ -75,6 +75,12 @@ public interface SysUserService {
     void delete(Long userId);
 
     /**
+     * 刷新用户密钥
+     * @param userId 用户id
+     * @return 新的密钥
+     */
+    String refreshSecretKey(Long userId);
+    /**
      * 清除用户详情缓存
      * @param userId 用户ID
      */

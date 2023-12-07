@@ -17,9 +17,12 @@ import com.microwarp.warden.stand.common.exception.WardenParamterErrorException;
 import com.microwarp.warden.stand.common.model.ResultModel;
 import com.microwarp.warden.stand.common.security.JwtUser;
 import com.microwarp.warden.stand.common.security.UserType;
+import com.microwarp.warden.stand.common.utils.GoogleAuthUtil;
 import com.microwarp.warden.stand.common.utils.JwtUtil;
 import com.microwarp.warden.stand.common.utils.WebUtil;
+import com.microwarp.warden.stand.facade.sysconfig.dto.SysConfigDTO;
 import com.microwarp.warden.stand.facade.sysconfig.service.SysConfigService;
+import com.microwarp.warden.stand.facade.sysloginlog.dto.SysLoginLogDTO;
 import com.microwarp.warden.stand.facade.sysuser.dto.SysUserDTO;
 import com.microwarp.warden.stand.facade.sysuser.dto.SysUserDetailsDTO;
 import com.microwarp.warden.stand.facade.sysuser.service.SysUserLockService;
@@ -91,6 +94,9 @@ public class LoginController extends BaseController {
                         throw new WardenParamterErrorException("验证码错误");
                     }
                     break;
+                case GOOGLE_AUTHENTICATOR:
+
+                    break;
             }
         }
 
@@ -143,7 +149,8 @@ public class LoginController extends BaseController {
         tokenUser.setType(UserType.SYSTEM);
         tokenUser.setUserId(sysUserDetailsDTO.getId().toString());
         tokenUser.setUsername(sysUserDetailsDTO.getUid());
-        if(!sysConfigService.findCurrent().getAllowManyToken()){
+        SysConfigDTO sysConfigDTO = sysConfigService.findCurrent();
+        if(!sysConfigDTO.getAllowManyToken()){
             SseMessage<String> message = new SseMessage<>();
             message.setMsgId(System.currentTimeMillis());
             message.setTopic(TopicEnum.EVENT_TOKEN_OFFLINE);
@@ -151,9 +158,12 @@ public class LoginController extends BaseController {
             tokenCacheService.clear(tokenUser);
         }
         tokenCacheService.add(tokenUser,token);
-
         // 清除登录失败计数
         loginService.success(sysUserDetailsDTO.getId(),ip);
+        // 是否开启二次验证
+        if(sysConfigDTO.getEnabledAgainVerify()) {
+            loginService.checkBlip(sysUserDetailsDTO.getId(), ip);
+        }
         // 写入日志
         loginService.asyncWriteLog(sysUserDetailsDTO,"登录成功", ActionStatusEnum.SUCCESS,ip, AppTerminalEnum.PC_WEB, PlatformTypeEnum.BACKSTAGE);
         return resultModel;

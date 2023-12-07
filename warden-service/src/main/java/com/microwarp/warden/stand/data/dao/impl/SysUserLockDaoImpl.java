@@ -40,6 +40,7 @@ public class SysUserLockDaoImpl extends ServiceImpl<SysUserLockMapper,SysUserLoc
         QueryWrapper<SysUserLock> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id",userId);
         queryWrapper.eq("ip",ip);
+        queryWrapper.last("limit 1");
         return baseMapper.selectOne(queryWrapper);
     }
 

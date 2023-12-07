@@ -255,6 +255,24 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser> implements SysU
     }
 
     /**
+     * 刷新用户密钥
+     * @param userId 用户id
+     * @return 新的密钥
+     */
+    @Override
+    public String refreshSecretKey(Long userId){
+        SysUser sysUser = sysUserDao.getById(userId);
+        if(null == sysUser){
+            return null;
+        }
+        // 先清掉缓存
+        iCacheService.batchRemove(CacheConstants.CACHE_USER_UID, sysUser.getUid());
+        iCacheService.batchRemove(CacheConstants.CACHE_USER_ID, userId.toString());
+        // 刷新密钥
+        return sysUserDao.refreshSecretKey(userId);
+    }
+
+    /**
      * 清除用户详情缓存
      * @param userId 用户ID
      */

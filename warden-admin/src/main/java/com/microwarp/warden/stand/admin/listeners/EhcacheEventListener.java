@@ -7,7 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by Administrator on 2023/8/22.
+ * ehcache 事件监听
+ * @author zhouwenqi
  */
 public class EhcacheEventListener implements CacheEventListener<Object,Object> {
     private static final Logger logger = LoggerFactory.getLogger(EhcacheEventListener.class);

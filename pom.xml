@@ -36,6 +36,7 @@
         <javax.persistence-api.version>2.2</javax.persistence-api.version>
         <pinyin4j.version>2.5.0</pinyin4j.version>
         <guava.version>21.0</guava.version>
+        <com.google.zxing-version>3.3.3</com.google.zxing-version>
         <!-- warden - package -->
         <warden-common.version>1.0-SNAPSHOT</warden-common.version>
         <warden-facade.version>1.0-SNAPSHOT</warden-facade.version>
@@ -122,6 +123,16 @@
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct-processor</artifactId>
                 <version>${org.mapstruct-processor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>core</artifactId>
+                <version>${com.google.zxing-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>javase</artifactId>
+                <version>${com.google.zxing-version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

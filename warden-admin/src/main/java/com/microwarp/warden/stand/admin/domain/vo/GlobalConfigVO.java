@@ -18,7 +18,7 @@ public class GlobalConfigVO {
     private Boolean enableRegister = false;
     /** 默认分页大小 */
     private int defaultPageSize = HttpConstants.DEFAULT_PAGE_SIZE;
-    /** 来宾帐号I */
+    /** 来宾帐号 */
     private String guestId;
     /** 启用验证码 */
     private Boolean enableCaptcha;

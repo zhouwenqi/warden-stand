@@ -32,11 +32,13 @@ public class SysConfigServiceImpl implements SysConfigService {
     @Cacheable(value = CacheConstants.CACHE_CONFIG_CURRENT, key="'current'", unless = "#result eq null")
     public SysConfigDTO findCurrent(){
         QueryWrapper<SysConfig> queryWrapper = new QueryWrapper<>();
+        queryWrapper.last("limit 1");
         SysConfig sysConfig = sysConfigDao.getOne(queryWrapper);
         if(null == sysConfig){
             sysConfig = new SysConfig();
             sysConfig.setAllowManyToken(false);
             sysConfig.setEnabledRegister(false);
+            sysConfig.setEnabledAgainVerify(false);
         }
         return SysConfigConvert.Instance.sysConfigToSysConfigDTO(sysConfig);
     }

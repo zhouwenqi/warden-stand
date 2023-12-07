@@ -34,6 +34,8 @@ public class SysUserDTO implements Serializable {
     private Long deptId;
     /** 岗位id */
     private Long postId;
+    /** 秘钥 */
+    private String secretKey;
     /** 关闭 */
     private Boolean disabled;
     /** 创建时间 */
@@ -135,6 +137,14 @@ public class SysUserDTO implements Serializable {
 
     public void setPostId(Long postId) {
         this.postId = postId;
+    }
+
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
     }
 
     public Boolean getDisabled() {

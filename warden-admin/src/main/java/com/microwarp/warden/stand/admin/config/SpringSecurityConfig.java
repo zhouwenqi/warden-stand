@@ -1,9 +1,6 @@
 package com.microwarp.warden.stand.admin.config;
 
-import com.microwarp.warden.stand.admin.authentication.WardenAccessDeninedHandler;
-import com.microwarp.warden.stand.admin.authentication.WardenAuthenticationEntryPoint;
-import com.microwarp.warden.stand.admin.authentication.WardenAuthenticationTokenFilter;
-import com.microwarp.warden.stand.admin.authentication.WardenAuthenticationUserFilter;
+import com.microwarp.warden.stand.admin.authentication.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -39,18 +36,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManager() throws Exception{
         return super.authenticationManager();
     }
-    @Bean
-    public WardenAuthenticationEntryPoint wardenAuthenticationEntryPoint(){
-        return new WardenAuthenticationEntryPoint();
-    }
-    @Bean
-    public WardenAuthenticationTokenFilter wardenAuthenticationTokenFilter(){
-        return new WardenAuthenticationTokenFilter();
-    }
-    @Bean
-    public WardenAuthenticationUserFilter wardenAuthenticationUserFilter() throws Exception{
-        return new WardenAuthenticationUserFilter();
-    }
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception{
@@ -60,14 +45,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/logout").permitAll()
+                .antMatchers("/logout","/googleauth/**").permitAll()
                 .anyRequest().authenticated();
         httpSecurity.logout().logoutUrl("/login");
         httpSecurity.headers().cacheControl();
-        httpSecurity.exceptionHandling().authenticationEntryPoint(wardenAuthenticationEntryPoint())
+        httpSecurity.exceptionHandling().authenticationEntryPoint(new WardenAuthenticationEntryPoint())
                 .accessDeniedHandler(new WardenAccessDeninedHandler()).and()
-                .addFilterBefore(wardenAuthenticationUserFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(wardenAuthenticationTokenFilter(), WardenAuthenticationUserFilter.class);
+                .addFilterBefore(new WardenAuthenticationUserFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new WardenAuthenticationTokenFilter(), WardenAuthenticationUserFilter.class)
+                .addFilterAfter(new WardenAgainVerifyFilter(),WardenAuthenticationTokenFilter.class);
     }
 
     /**

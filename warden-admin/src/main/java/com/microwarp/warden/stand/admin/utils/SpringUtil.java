@@ -8,7 +8,8 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by Administrator on 2023/8/22.
+ * util - Spring
+ * @author zhouwenqi
  */
 @Component
 public class SpringUtil implements ApplicationContextAware {

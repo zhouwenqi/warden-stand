@@ -71,6 +71,7 @@ public class SysDictionaryDaoImpl extends ServiceImpl<SysDictionaryMapper,SysDic
         }
         QueryWrapper<SysDictionary> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("code",code);
+        queryWrapper.last("limit 1");
         SysDictionary sysDictionary = baseMapper.selectOne(queryWrapper);
         if(null == sysDictionary){
             return null;

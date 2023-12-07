@@ -16,7 +16,8 @@ public enum ResultCode {
     REQUIRE_TOKEN(901,"缺少Token凭证"),
     ERROR_TOKEN(902,"Token校验失败"),
     ACCOUNT_FAILED(903,"帐号异常"),
-    REQUIRE_LOGIN(912,"需要登录");
+    REQUIRE_LOGIN(912,"需要登录"),
+    REQUIRE_AGAIN_VERIFY(913,"需要二次验证");
     private final int code;
     private final String message;
     ResultCode(int code,String message){

@@ -6,9 +6,11 @@ import com.microwarp.warden.stand.common.core.constant.SecurityConstants;
 import com.microwarp.warden.stand.common.core.enums.ActionStatusEnum;
 import com.microwarp.warden.stand.common.core.enums.AppTerminalEnum;
 import com.microwarp.warden.stand.common.core.enums.PlatformTypeEnum;
+import com.microwarp.warden.stand.facade.sysconfig.service.SysConfigService;
 import com.microwarp.warden.stand.facade.sysloginlog.dto.SysLoginLogDTO;
 import com.microwarp.warden.stand.facade.sysloginlog.service.SysLoginLogService;
 import com.microwarp.warden.stand.facade.sysuser.dto.SysUserDetailsDTO;
+import com.microwarp.warden.stand.facade.sysuser.service.SysUserBlipService;
 import com.microwarp.warden.stand.facade.sysuser.service.SysUserLockService;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -32,6 +34,8 @@ public class LoginService {
     private SysUserLockService sysUserLockService;
     @Autowired
     private SysLoginLogService sysLoginLogService;
+    @Autowired
+    private SysUserBlipService sysUserBlipService;
 
     public static Map<String,LoginFailed> loginFailedMap = new HashMap<>();
 
@@ -53,21 +57,43 @@ public class LoginService {
         return loginFailed;
     }
 
-    public void failed(Long userId,String ip){
+    public void failed(Long userId, String ip){
         LoginFailed loginFailed = getLoginFailed(userId,ip);
         loginFailed.setCount(loginFailed.getCount() + 1);
         loginFailed.setFailedTime(new Date());
     }
 
+    /**
+     * 移除内存中的登录失败统计
+     * @param userId
+     * @param ip
+     */
     public void success(Long userId,String ip){
         String key = userId+":"+ip;
         loginFailedMap.remove(key);
     }
 
+    /**
+     * 添加一条锁
+     * @param userId 用户id
+     * @param ip ip地址
+     */
     public void lock(Long userId,String ip){
         sysUserLockService.add(userId,ip,DateUtils.addMinutes(new Date(), SecurityConstants.LOGIN_LOCK_TIME));
         String key = userId+":"+ip;
         loginFailedMap.remove(key);
+    }
+
+    /**
+     * 检查用户是否需要二次验证并标记
+     * @param userId 用户id
+     * @param ip ip地址
+     */
+    public void checkBlip(Long userId, String ip){
+        SysLoginLogDTO sysLoginLogDTO = sysLoginLogService.findLastByUserId(userId);
+        if(null != sysLoginLogDTO && !sysLoginLogDTO.getIp().equals(ip)){
+            sysUserBlipService.add(userId,ip);
+        }
     }
 
     /**
