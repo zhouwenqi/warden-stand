@@ -62,7 +62,7 @@ public class GoogleAuthController extends BaseController {
     public void qrcode(HttpServletResponse response) throws Exception {
         SysConfigDTO sysConfigDTO = sysConfigService.findCurrent();
         AgainVerifyTypeEnum againVerifyType = sysConfigDTO.getAgainVerify();
-        if(null == againVerifyType ||!againVerifyType.equals(AgainVerifyTypeEnum.NONE)) {
+        if(null == againVerifyType || againVerifyType.equals(AgainVerifyTypeEnum.NONE)) {
             return;
         }
         response.setHeader("Cache-Control","no-store");
@@ -77,7 +77,7 @@ public class GoogleAuthController extends BaseController {
 
         String qrcodeContent = GoogleAuthUtil.getQrCodeContent(secretKey,user.getUid(),"warden-stand");
         ServletOutputStream outputStream = response.getOutputStream();
-        QrCodeUtil.writeToStream(qrcodeContent,outputStream,300,200);
+        QrCodeUtil.writeToStream(qrcodeContent,outputStream,300,300);
         IoUtils.closeQuietly(outputStream);
     }
 

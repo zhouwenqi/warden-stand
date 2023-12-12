@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.microwarp</groupId>
+    <groupId>com.microwarp.warden</groupId>
     <artifactId>warden-stand</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
@@ -45,22 +45,22 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.microwarp</groupId>
+                <groupId>com.microwarp.warden</groupId>
                 <artifactId>warden-common</artifactId>
                 <version>${warden-common.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.microwarp</groupId>
+                <groupId>com.microwarp.warden</groupId>
                 <artifactId>warden-facade</artifactId>
                 <version>${warden-facade.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.microwarp</groupId>
+                <groupId>com.microwarp.warden</groupId>
                 <artifactId>warden-data-mysql</artifactId>
                 <version>${warden-data-mysql.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.microwarp</groupId>
+                <groupId>com.microwarp.warden</groupId>
                 <artifactId>warden-service</artifactId>
                 <version>${warden-service.version}</version>
             </dependency>
